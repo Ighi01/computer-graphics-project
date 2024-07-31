@@ -1,0 +1,11 @@
+Model Information:
+* title:	Road pack (not including the road)
+* source:	https://sketchfab.com/3d-models/road-pack-not-including-the-road-021707f910d04907ab576c856a749628
+* author:	drcrazzie (https://sketchfab.com/drcrazzie)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Road pack (not including the road)" (https://sketchfab.com/3d-models/road-pack-not-including-the-road-021707f910d04907ab576c856a749628) by drcrazzie (https://sketchfab.com/drcrazzie) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

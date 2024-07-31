@@ -1,0 +1,11 @@
+Model Information:
+* title:	Classic Street Light Pack
+* source:	https://sketchfab.com/3d-models/classic-street-light-pack-367bf01e57b2492ab29eed7a8b58ee57
+* author:	Nelesh_surve (https://sketchfab.com/Nelesh_surve)
+
+Model License:
+* license type:	CC-BY-NC-ND-4.0 (http://creativecommons.org/licenses/by-nc-nd/4.0/)
+* requirements:	Author must be credited. No commercial use. Modified versions can not be distributed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Classic Street Light Pack" (https://sketchfab.com/3d-models/classic-street-light-pack-367bf01e57b2492ab29eed7a8b58ee57) by Nelesh_surve (https://sketchfab.com/Nelesh_surve) licensed under CC-BY-NC-ND-4.0 (http://creativecommons.org/licenses/by-nc-nd/4.0/)

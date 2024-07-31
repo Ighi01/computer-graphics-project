@@ -1,0 +1,1616 @@
+newmtl Steeringwheelintbadgeopac1Mtl
+Material Color
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.396078 0.396078 0.396078 
+
+d 0.980392
+
+Ns 0
+
+map_Ka Steeringwheelintbadgeopac1_diff.png
+map_Kd Steeringwheelintbadgeopac1_diff.png
+map_d Steeringwheelintbadgeopac1_diff.png
+
+newmtl Steeringwheelcoloured1Mtl
+Material Color
+Ka 0.00258583 0.00258583 0.00258583
+Kd 0.00258583 0.00258583 0.00258583
+Ks 0.000223091 0.000223091 0.000223091 
+
+d 1
+
+Ns 0
+
+newmtl Steeringwheelairbagsopac1Mtl
+Material Color
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.396078 0.396078 0.396078 
+
+d 0.980392
+
+Ns 0
+
+map_Ka Steeringwheelairbagsopac1_diff.png
+map_Kd Steeringwheelairbagsopac1_diff.png
+map_d Steeringwheelairbagsopac1_diff.png
+
+newmtl Steeringwheelcarbon11Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ka Steeringwheelcarbon11_diff.png
+map_Kd Steeringwheelcarbon11_diff.png
+map_d Steeringwheelcarbon11_diff.png
+
+map_Ns Steeringwheelgloss1_spec.png
+
+newmtl Steeringwheelwhite1Mtl
+Material Color
+Ka 0.804559 0.804559 0.84337
+Kd 0.804559 0.804559 0.84337
+Ks 0.318669 0.318669 0.334041 
+
+d 1
+
+Ns 0
+
+newmtl Steeringwheelstitching2opac1Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 0.980392
+
+Ns 0
+
+map_Ka Steeringwheelstitching2opac1_diff.png
+map_Kd Steeringwheelstitching2opac1_diff.png
+map_d Steeringwheelstitching2opac1_diff.png
+
+map_Bump Steeringwheelstitching2opac1_nmap.png
+
+map_Ns Steeringwheelstitching2opac1_spec.png
+
+newmtl M3enginethings00711Mtl
+Material Color
+Ka 0.0414519 0.0414519 0.0414519
+Kd 0.0414519 0.0414519 0.0414519
+Ks 0.00357624 0.00357624 0.00357624 
+
+d 1
+
+Ns 0
+
+map_Ns M3enginethings11_spec.png
+
+newmtl Steeringwheelstitchingopac1Mtl
+Material Color
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.396078 0.396078 0.396078 
+
+d 0.980392
+
+Ns 0
+
+map_Ka Steeringwheelstitchingopac1_diff.png
+map_Kd Steeringwheelstitchingopac1_diff.png
+map_d Steeringwheelstitchingopac1_diff.png
+
+newmtl Steeringwheelsymbolsopac1Mtl
+Material Color
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.396078 0.396078 0.396078 
+
+d 0.980392
+
+Ns 0
+
+map_Ka Steeringwheelsymbolsopac1_diff.png
+map_Kd Steeringwheelsymbolsopac1_diff.png
+map_d Steeringwheelsymbolsopac1_diff.png
+
+newmtl Interiorwx1opac1Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 0.980392
+
+Ns 0
+
+map_Ka Interiorwx1opac1_diff.png
+map_Kd Interiorwx1opac1_diff.png
+map_d Interiorwx1opac1_diff.png
+
+map_Bump Interiorwx1opac1_nmap.png
+
+map_Ns Interiorwx1opac1_spec.png
+
+newmtl Steeringwheelleather1Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ka Steeringwheelleather1_diff.png
+map_Kd Steeringwheelleather1_diff.png
+map_d Steeringwheelleather1_diff.png
+
+map_Bump Steeringwheelleather1_nmap.png
+
+map_Ns Steeringwheelleather1_spec.png
+
+newmtl Steeringwheelgloss1Mtl
+Material Color
+Ka 0.00258583 0.00258583 0.00258583
+Kd 0.00258583 0.00258583 0.00258583
+Ks 0.000223091 0.000223091 0.000223091 
+
+d 1
+
+Ns 0
+
+map_Ns Steeringwheelgloss1_spec.png
+
+newmtl Steeringwheeldarkaluminum1Mtl
+Material Color
+Ka 0.0780566 0.0780566 0.0780566
+Kd 0.0780566 0.0780566 0.0780566
+Ks 0.00673429 0.00673429 0.00673429 
+
+d 1
+
+Ns 0
+
+map_Ns Steeringwheeldarkaluminum1_spec.png
+
+newmtl Interiordarkaluminum1Mtl
+Material Color
+Ka 0.103634 0.108711 0.14198
+Kd 0.103634 0.108711 0.14198
+Ks 0.00894098 0.009379 0.0122493 
+
+d 1
+
+Ns 0
+
+map_Ns Steeringwheeldarkaluminum1_spec.png
+
+newmtl Frontbumperradiator1Mtl
+Material Color
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.396078 0.396078 0.396078 
+
+d 1
+
+Ns 0
+
+map_Ka Frontbumperradiator1_diff.png
+map_Kd Frontbumperradiator1_diff.png
+map_d Frontbumperradiator1_diff.png
+
+newmtl Steeringwheelblackaluminumtextured1Mtl
+Material Color
+Ka 0.0169881 0.0169881 0.0169881
+Kd 0.0169881 0.0169881 0.0169881
+Ks 0.00146564 0.00146564 0.00146564 
+
+d 1
+
+Ns 0
+
+map_Bump Steeringwheelblackaluminumtextured1_nmap.png
+
+map_Ns Steeringwheelblackaluminumtextured1_spec.png
+
+newmtl Meshpart2Mtl
+Material Color
+Ka 0.00258583 0.00258583 0.00258583
+Kd 0.00258583 0.00258583 0.00258583
+Ks 0.000223091 0.000223091 0.000223091 
+
+d 1
+
+Ns 0
+
+map_Ka Meshpart2_diff.png
+map_Kd Meshpart2_diff.png
+map_d Meshpart2_diff.png
+
+map_Bump Meshpart2_nmap.png
+
+map_Ns Meshpart2_spec.png
+
+newmtl Hoodpainttextured1Mtl
+Material Color
+Ka 0.0050282 0.0759261 0.0528416
+Kd 0.0050282 0.0759261 0.0528416
+Ks 0.000433806 0.00655049 0.00455889 
+
+d 1
+
+Ns 0
+
+map_Bump Hoodpainttextured1_nmap.png
+
+map_Ns Hoodpainttextured1_spec.png
+
+newmtl Trunktaillightlight1Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ka Trunktaillightlight1_diff.png
+map_Kd Trunktaillightlight1_diff.png
+map_d Trunktaillightlight1_diff.png
+
+newmtl Frontleftdoorgrillehex1Mtl
+Material Color
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.396078 0.396078 0.396078 
+
+d 1
+
+Ns 0
+
+map_Ka Frontleftdoorgrillehex1_diff.png
+map_Kd Frontleftdoorgrillehex1_diff.png
+map_d Frontleftdoorgrillehex1_diff.png
+
+newmtl Steeringwheelbadge11Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ka Steeringwheelbadge11_diff.png
+map_Kd Steeringwheelbadge11_diff.png
+map_d Steeringwheelbadge11_diff.png
+
+map_Bump Steeringwheelbadge11_nmap.png
+
+map_Ns Steeringwheelbadge11_spec.png
+
+newmtl 3rdbrakelight1Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ka 3rdbrakelight1_diff.png
+map_Kd 3rdbrakelight1_diff.png
+map_d 3rdbrakelight1_diff.png
+
+newmtl Frontleftdoorwindowstickeropac1Mtl
+Material Color
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.396078 0.396078 0.396078 
+
+d 0.980392
+
+Ns 0
+
+map_Ka Frontleftdoorwindowstickeropac1_diff.png
+map_Kd Frontleftdoorwindowstickeropac1_diff.png
+map_d Frontleftdoorwindowstickeropac1_diff.png
+
+newmtl Trunkalcantara1Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ka Trunkalcantara1_diff.png
+map_Kd Trunkalcantara1_diff.png
+map_d Trunkalcantara1_diff.png
+
+map_Bump Trunkalcantara1_nmap.png
+
+map_Ns Trunkalcantara1_spec.png
+
+newmtl Frontleftdoorwindow1Mtl
+Material Color
+Ka 0.00258583 0.00258583 0.00258583
+Kd 0.00258583 0.00258583 0.00258583
+Ks 0.000223091 0.000223091 0.000223091 
+
+d 0.603922
+
+Ns 0
+
+map_Ns Frontleftdoorwindow1_spec.png
+
+newmtl Frontleftdoorscrewsopac1Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 0.980392
+
+Ns 0
+
+map_Ka Frontleftdoorscrewsopac1_diff.png
+map_Kd Frontleftdoorscrewsopac1_diff.png
+map_d Frontleftdoorscrewsopac1_diff.png
+
+map_Bump Frontleftdoorscrewsopac1_nmap.png
+
+map_Ns Frontleftdoorscrewsopac1_spec.png
+
+newmtl Frontleftdoorpaint1Mtl
+Material Color
+Ka 0.851252 0.827726 0.827726
+Kd 0.851252 0.827726 0.827726
+Ks 0.337162 0.327844 0.327844 
+
+d 1
+
+Ns 0
+
+newmtl Interiorlight1Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ka Interiorlight1_diff.png
+map_Kd Interiorlight1_diff.png
+map_d Interiorlight1_diff.png
+
+map_Bump Interiorlight1_nmap.png
+
+map_Ns Interiorlight1_spec.png
+
+newmtl Frontleftdoormirrorlight1Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ka Frontleftdoormirrorlight1_diff.png
+map_Kd Frontleftdoormirrorlight1_diff.png
+map_d Frontleftdoormirrorlight1_diff.png
+
+newmtl Frontleftdoormirrorglass1Mtl
+Material Color
+Ka 0.022013 0.022013 0.022013
+Kd 0.022013 0.022013 0.022013
+Ks 0.00189916 0.00189916 0.00189916 
+
+d 0.301961
+
+Ns 0
+
+map_Ns Frontleftdoormirrorglass1_spec.png
+
+newmtl Frontleftdoormirrorchrome1Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.147981 0.145991 0.152005 
+
+d 1
+
+Ns 0
+
+newmtl Interiorinfotainment1Mtl
+Material Color
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.396078 0.396078 0.396078 
+
+d 1
+
+Ns 0
+
+map_Ka Interiorinfotainment1_diff.png
+map_Kd Interiorinfotainment1_diff.png
+map_d Interiorinfotainment1_diff.png
+
+newmtl Frontleftdoorchrome1Mtl
+Material Color
+Ka 0.00258583 0.00258583 0.00258583
+Kd 0.00258583 0.00258583 0.00258583
+Ks 0.00102419 0.00102419 0.00102419 
+
+d 1
+
+Ns 0
+
+newmtl Trunkmlipgloss2Mtl
+Material Color
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.0862745 0.0862745 0.0862745 
+
+d 1
+
+Ns 0
+
+map_Ka Trunkmlipgloss2_diff.png
+map_Kd Trunkmlipgloss2_diff.png
+map_d Trunkmlipgloss2_diff.png
+
+newmtl Stem1Mtl
+Material Color
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.666667 0.666667 0.666667 
+
+d 1
+
+Ns 255
+
+map_Ka Stem1_diff.png
+map_Kd Stem1_diff.png
+map_d Stem1_diff.png
+
+newmtl Frontleftdoorleather21Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ka Frontleftdoorleather21_diff.png
+map_Kd Frontleftdoorleather21_diff.png
+map_d Frontleftdoorleather21_diff.png
+
+map_Bump Frontleftdoorleather21_nmap.png
+
+map_Ns Frontleftdoorleather21_spec.png
+
+newmtl Frontleftdoorbase1Mtl
+Material Color
+Ka 0 0 0
+Kd 0 0 0
+Ks 0 0 0 
+
+d 1
+
+Ns 0
+
+map_Ns Frontleftdoorbase1_spec.png
+
+newmtl Interiordecal1opac1Mtl
+Material Color
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.396078 0.396078 0.396078 
+
+d 0.980392
+
+Ns 0
+
+map_Ka Interiordecal1opac1_diff.png
+map_Kd Interiordecal1opac1_diff.png
+map_d Interiordecal1opac1_diff.png
+
+newmtl Headlightlight1Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ka Headlightlight1_diff.png
+map_Kd Headlightlight1_diff.png
+map_d Headlightlight1_diff.png
+
+map_Ns Steeringwheelgloss1_spec.png
+
+newmtl Frontleftdoorgrille81Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ka Frontleftdoorgrille81_diff.png
+map_Kd Frontleftdoorgrille81_diff.png
+map_d Frontleftdoorgrille81_diff.png
+
+map_Bump Frontleftdoorgrille81_nmap.png
+
+map_Ns Frontleftdoorgrille81_spec.png
+
+newmtl Trunkmlipgloss1Mtl
+Material Color
+Ka 0.00258583 0.00258583 0.00258583
+Kd 0.00258583 0.00258583 0.00258583
+Ks 0.000223091 0.000223091 0.000223091 
+
+d 1
+
+Ns 0
+
+map_Ns Frontleftdoorwindow1_spec.png
+
+newmtl Frontleftdoordarkaluminumtextured1Mtl
+Material Color
+Ka 0.0780566 0.0780566 0.0780566
+Kd 0.0780566 0.0780566 0.0780566
+Ks 0.00673429 0.00673429 0.00673429 
+
+d 1
+
+Ns 0
+
+map_Bump Frontleftdoordarkaluminumtextured1_nmap.png
+
+map_Ns Frontleftdoordarkaluminumtextured1_spec.png
+
+newmtl Frontleftdoorambientlight1Mtl
+Material Color
+Ka 1 1 0
+Kd 1 1 0
+Ks 0.0901961 0.0901961 0 
+
+d 1
+
+Ns 0
+
+newmtl Frontleftdooraluminum1Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ns Steeringwheeldarkaluminum1_spec.png
+
+newmtl Hooddoortagopac1Mtl
+Material Color
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.396078 0.396078 0.396078 
+
+d 0.980392
+
+Ns 0
+
+map_Ka Hooddoortagopac1_diff.png
+map_Kd Hooddoortagopac1_diff.png
+map_d Hooddoortagopac1_diff.png
+
+newmtl Window1Mtl
+Material Color
+Ka 0.00258583 0.00258583 0.00258583
+Kd 0.00258583 0.00258583 0.00258583
+Ks 0.000223091 0.000223091 0.000223091 
+
+d 0.65098
+
+Ns 0
+
+map_Ns Frontleftdoorwindow1_spec.png
+
+newmtl Trunktextured1Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ka Trunktextured1_diff.png
+map_Kd Trunktextured1_diff.png
+map_d Trunktextured1_diff.png
+
+map_Bump Hoodpainttextured1_nmap.png
+
+map_Ns Trunktextured1_spec.png
+
+newmtl Hoodcleartextured1Mtl
+Material Color
+Ka 0.0169881 0.0169881 0.0169881
+Kd 0.0169881 0.0169881 0.0169881
+Ks 0.00146564 0.00146564 0.00146564 
+
+d 0.352941
+
+Ns 0
+
+map_Bump Hoodpainttextured1_nmap.png
+
+map_Ns Hoodcleartextured1_spec.png
+
+newmtl Meshpart1Mtl
+Material Color
+Ka 0.00258583 0.00258583 0.00258583
+Kd 0.00258583 0.00258583 0.00258583
+Ks 0.000223091 0.000223091 0.000223091 
+
+d 1
+
+Ns 0
+
+map_Ka Meshpart1_diff.png
+map_Kd Meshpart1_diff.png
+map_d Meshpart1_diff.png
+
+map_Bump Meshpart1_nmap.png
+
+map_Ns Meshpart1_spec.png
+
+newmtl Trunktaillightlight21Mtl
+Material Color
+Ka 0.315763 0 0
+Kd 0.315763 0 0
+Ks 0.0272423 0 0 
+
+d 1
+
+Ns 0
+
+newmtl Trunkdoortagopac1Mtl
+Material Color
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.0627451 0.0627451 0.0627451 
+
+d 0.980392
+
+Ns 0
+
+map_Ka Trunkdoortagopac1_diff.png
+map_Kd Trunkdoortagopac1_diff.png
+map_d Trunkdoortagopac1_diff.png
+
+newmtl Trunklight1Mtl
+Material Color
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.396078 0.396078 0.396078 
+
+d 1
+
+Ns 0
+
+map_Ka Trunklight1_diff.png
+map_Kd Trunklight1_diff.png
+map_d Trunklight1_diff.png
+
+newmtl Trunkbadgereartextured1Mtl
+Material Color
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.396078 0.396078 0.396078 
+
+d 1
+
+Ns 0
+
+map_Ka Trunkbadgereartextured1_diff.png
+map_Kd Trunkbadgereartextured1_diff.png
+map_d Trunkbadgereartextured1_diff.png
+
+newmtl Headlightglass1Mtl
+Material Color
+Ka 0.00258583 0.00258583 0.00258583
+Kd 0.00258583 0.00258583 0.00258583
+Ks 0.000223091 0.000223091 0.000223091 
+
+d 0.552941
+
+Ns 0
+
+map_Ns Frontleftdoorwindow1_spec.png
+
+newmtl Rearbumperlight1Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ka Rearbumperlight1_diff.png
+map_Kd Rearbumperlight1_diff.png
+map_d Rearbumperlight1_diff.png
+
+newmtl Rearleftdoorwindow1Mtl
+Material Color
+Ka 0.00258583 0.00258583 0.00258583
+Kd 0.00258583 0.00258583 0.00258583
+Ks 0.000223091 0.000223091 0.000223091 
+
+d 0.701961
+
+Ns 0
+
+map_Ns Frontleftdoorwindow1_spec.png
+
+newmtl Interioraluminum2Mtl
+Material Color
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.396078 0.396078 0.396078 
+
+d 1
+
+Ns 0
+
+map_Ka Trunkmlipgloss2_diff.png
+map_Kd Trunkmlipgloss2_diff.png
+map_d Trunkmlipgloss2_diff.png
+
+newmtl Interiortilingcolourzone21Mtl
+Material Color
+Ka 0.180144 0 0
+Kd 0.180144 0 0
+Ks 0.0155419 0 0 
+
+d 1
+
+Ns 0
+
+map_Ka Interiortilingcolourzone21_diff.png
+map_Kd Interiortilingcolourzone21_diff.png
+map_d Interiortilingcolourzone21_diff.png
+
+map_Bump Interiortilingcolourzone21_nmap.png
+
+map_Ns Interiortilingcolourzone21_spec.png
+
+newmtl Interiorplastic1Mtl
+Material Color
+Ka 0.00258583 0.00258583 0.00258583
+Kd 0.00258583 0.00258583 0.00258583
+Ks 0.000223091 0.000223091 0.000223091 
+
+d 1
+
+Ns 0
+
+map_Bump Steeringwheelleather1_nmap.png
+
+map_Ns Steeringwheelleather1_spec.png
+
+newmtl Interiorgrille6opac1Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 0.980392
+
+Ns 0
+
+map_Ka Interiorgrille6opac1_diff.png
+map_Kd Interiorgrille6opac1_diff.png
+map_d Interiorgrille6opac1_diff.png
+
+map_Bump Interiorgrille6opac1_nmap.png
+
+map_Ns Interiorgrille6opac1_spec.png
+
+newmtl Interiorgrille1opac1Mtl
+Material Color
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.396078 0.396078 0.396078 
+
+d 0.980392
+
+Ns 0
+
+map_Ka Interiorgrille1opac1_diff.png
+map_Kd Interiorgrille1opac1_diff.png
+map_d Interiorgrille1opac1_diff.png
+
+newmtl Frontbumperlight1Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ka Frontleftdoormirrorlight1_diff.png
+map_Kd Frontleftdoormirrorlight1_diff.png
+map_d Frontleftdoormirrorlight1_diff.png
+
+map_Ns Steeringwheeldarkaluminum1_spec.png
+
+newmtl Interiordarkaluminumtextured1Mtl
+Material Color
+Ka 0.0780566 0.0780566 0.0780566
+Kd 0.0780566 0.0780566 0.0780566
+Ks 0.00673429 0.00673429 0.00673429 
+
+d 1
+
+Ns 0
+
+map_Bump Steeringwheelblackaluminumtextured1_nmap.png
+
+map_Ns Steeringwheelblackaluminumtextured1_spec.png
+
+newmtl Interioralcantara1Mtl
+Material Color
+Ka 0 0.0103978 0.116576
+Kd 0 0.0103978 0.116576
+Ks 0 0.000897065 0.0100575 
+
+d 1
+
+Ns 0
+
+map_Ka Trunkalcantara1_diff.png
+map_Kd Trunkalcantara1_diff.png
+map_d Trunkalcantara1_diff.png
+
+map_Bump Trunkalcantara1_nmap.png
+
+map_Ns Trunkalcantara1_spec.png
+
+newmtl M3opac1Mtl
+Material Color
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.396078 0.396078 0.396078 
+
+d 0.980392
+
+Ns 0
+
+map_Ka M3opac1_diff.png
+map_Kd M3opac1_diff.png
+map_d M3opac1_diff.png
+
+newmtl Windscreendefrostlinesopac1Mtl
+Material Color
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.396078 0.396078 0.396078 
+
+d 0.980392
+
+Ns 0
+
+map_Ka Windscreendefrostlinesopac1_diff.png
+map_Kd Windscreendefrostlinesopac1_diff.png
+map_d Windscreendefrostlinesopac1_diff.png
+
+newmtl Undercarriage1Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ka Undercarriage1_diff.png
+map_Kd Undercarriage1_diff.png
+map_d Undercarriage1_diff.png
+
+map_Bump Undercarriage1_nmap.png
+
+map_Ns Undercarriage1_spec.png
+
+newmtl Engineclear1Mtl
+Material Color
+Ka 0.0169881 0.0169881 0.0169881
+Kd 0.0169881 0.0169881 0.0169881
+Ks 0.00146564 0.00146564 0.00146564 
+
+d 0.352941
+
+Ns 0
+
+map_Ns Engineclear1_spec.png
+
+newmtl Boltsm321Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ka Boltsm321_diff.png
+map_Kd Boltsm321_diff.png
+map_d Boltsm321_diff.png
+
+map_Bump M3enginethings0011_nmap.png
+
+map_Ns Boltsm321_spec.png
+
+newmtl Drl1Mtl
+Material Color
+Ka 0.0231036 0.0231036 0.0242229
+Kd 0.0231036 0.0231036 0.0242229
+Ks 0.00199325 0.00199325 0.00208982 
+
+d 1
+
+Ns 0
+
+map_Ka Drl1_diff.png
+map_Kd Drl1_diff.png
+map_d Drl1_diff.png
+
+map_Ns Steeringwheeldarkaluminum1_spec.png
+
+newmtl Drl21Mtl
+Material Color
+Ka 0.0231036 0.0231036 0.0242229
+Kd 0.0231036 0.0231036 0.0242229
+Ks 0.00199325 0.00199325 0.00208982 
+
+d 1
+
+Ns 0
+
+map_Ka Drl21_diff.png
+map_Kd Drl21_diff.png
+map_d Drl21_diff.png
+
+newmtl Taillightreflector1Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ka Rearbumperlight1_diff.png
+map_Kd Rearbumperlight1_diff.png
+map_d Rearbumperlight1_diff.png
+
+map_Ns Steeringwheeldarkaluminum1_spec.png
+
+newmtl Taillightglass21Mtl
+Material Color
+Ka 0.00258583 0.00258583 0.00258583
+Kd 0.00258583 0.00258583 0.00258583
+Ks 0.000223091 0.000223091 0.000223091 
+
+d 0.603922
+
+Ns 0
+
+map_Ns Frontleftdoormirrorglass1_spec.png
+
+newmtl Base1Mtl
+Material Color
+Ka 0.00258583 0.00258583 0.00258583
+Kd 0.00258583 0.00258583 0.00258583
+Ks 0.000223091 0.000223091 0.000223091 
+
+d 1
+
+Ns 0
+
+map_Ns Frontleftdoorbase1_spec.png
+
+newmtl Basspart1Mtl
+Material Color
+Ka 0.00715504 0.018913 0.0315514
+Kd 0.00715504 0.018913 0.0315514
+Ks 0.00283396 0.00749103 0.0124968 
+
+d 1
+
+Ns 0
+
+newmtl Basspart2Mtl
+Material Color
+Ka 0.0545923 0.415148 0
+Kd 0.0545923 0.415148 0
+Ks 0.00492401 0.0374447 0 
+
+d 1
+
+Ns 0
+
+newmtl Jack1Mtl
+Material Color
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.0313726 0.0313726 0.0313726 
+
+d 1
+
+Ns 0
+
+map_Ka Jack1_diff.png
+map_Kd Jack1_diff.png
+map_d Jack1_diff.png
+
+newmtl Adjustable1Mtl
+Material Color
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.0313726 0.0313726 0.0313726 
+
+d 1
+
+Ns 0
+
+map_Ka Adjustable1_diff.png
+map_Kd Adjustable1_diff.png
+map_d Adjustable1_diff.png
+
+newmtl M3engine30041Mtl
+Material Color
+Ka 0.0494335 0.0494335 0.0494335
+Kd 0.0494335 0.0494335 0.0494335
+Ks 0.0195795 0.0195795 0.0195795 
+
+d 1
+
+Ns 0
+
+newmtl Circle004circle0061Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ka Circle004circle0061_diff.png
+map_Kd Circle004circle0061_diff.png
+map_d Circle004circle0061_diff.png
+
+map_Ns Circle004circle0061_spec.png
+
+newmtl Circle003circle0041Mtl
+Material Color
+Ka 0.940601 0.940601 0.940601
+Kd 0.940601 0.940601 0.940601
+Ks 0.372552 0.372552 0.372552 
+
+d 1
+
+Ns 0
+
+newmtl M3enginecover003m3enginecover0051Mtl
+Material Color
+Ka 0.00902149 0.00902149 0.00902149
+Kd 0.00902149 0.00902149 0.00902149
+Ks 0.000778325 0.000778325 0.000778325 
+
+d 1
+
+Ns 0
+
+map_Bump M3enginethings0011_nmap.png
+
+map_Ns M3enginecover003m3enginecover0051_spec.png
+
+newmtl Meshesclamp1Mtl
+Material Color
+Ka 0.190463 0.190463 0.190463
+Kd 0.190463 0.190463 0.190463
+Ks 0.0164321 0.0164321 0.0164321 
+
+d 1
+
+Ns 0
+
+map_Ka Meshesclamp1_diff.png
+map_Kd Meshesclamp1_diff.png
+map_d Meshesclamp1_diff.png
+
+map_Bump Meshesclamp1_nmap.png
+
+map_Ns Meshesclamp1_spec.png
+
+newmtl M3enginethings11Mtl
+Material Color
+Ka 0.00258583 0.00258583 0.00258583
+Kd 0.00258583 0.00258583 0.00258583
+Ks 0.000223091 0.000223091 0.000223091 
+
+d 1
+
+Ns 0
+
+map_Ns M3enginethings11_spec.png
+
+newmtl Mesheshose11Mtl
+Material Color
+Ka 0 0 0
+Kd 0 0 0
+Ks 0 0 0 
+
+d 1
+
+Ns 0
+
+map_Ka Meshesclamp1_diff.png
+map_Kd Meshesclamp1_diff.png
+map_d Meshesclamp1_diff.png
+
+map_Bump Meshesclamp1_nmap.png
+
+map_Ns Meshesclamp1_spec.png
+
+newmtl Meshesstraight11Mtl
+Material Color
+Ka 0.529523 0.529523 0.529523
+Kd 0.529523 0.529523 0.529523
+Ks 0.0456844 0.0456844 0.0456844 
+
+d 1
+
+Ns 0
+
+map_Ns Meshesstraight11_spec.png
+
+newmtl Meshes90short10Mtl
+Material Color
+Ka 0.598942 0.605484 0.645555
+Kd 0.598942 0.605484 0.645555
+Ks 0.237228 0.239819 0.255691 
+
+d 1
+
+Ns 0
+
+newmtl Meshespipetoflat71Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ka Meshespipetoflat71_diff.png
+map_Kd Meshespipetoflat71_diff.png
+map_d Meshespipetoflat71_diff.png
+
+map_Bump Meshespipetoflat71_nmap.png
+
+map_Ns Meshespipetoflat71_spec.png
+
+newmtl M3enginethings31Mtl
+Material Color
+Ka 0.00902149 0.00902149 0.00902149
+Kd 0.00902149 0.00902149 0.00902149
+Ks 0.000778325 0.000778325 0.000778325 
+
+d 1
+
+Ns 0
+
+map_Ns M3enginethings11_spec.png
+
+newmtl Meshesstraight18Mtl
+Material Color
+Ka 0 0 0
+Kd 0 0 0
+Ks 0 0 0 
+
+d 0.501961
+
+Ns 0
+
+map_Ns Meshesstraight18_spec.png
+
+newmtl M3enginethings0051Mtl
+Material Color
+Ka 0.190463 0.190463 0.190463
+Kd 0.190463 0.190463 0.190463
+Ks 0.0164321 0.0164321 0.0164321 
+
+d 1
+
+Ns 0
+
+map_Ns Meshesstraight11_spec.png
+
+newmtl M3enginethings0061Mtl
+Material Color
+Ka 1 0.7593 0
+Kd 1 0.7593 0
+Ks 0.0862745 0.0655082 0 
+
+d 1
+
+Ns 0
+
+map_Ns M3enginethings11_spec.png
+
+newmtl M3enginethings0011Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ka M3enginethings0011_diff.png
+map_Kd M3enginethings0011_diff.png
+map_d M3enginethings0011_diff.png
+
+map_Bump M3enginethings0011_nmap.png
+
+map_Ns M3enginethings0011_spec.png
+
+newmtl MishimotoFilter0071Mtl
+Material Color
+Ka 0.940601 0.940601 0.940601
+Kd 0.940601 0.940601 0.940601
+Ks 0.0848385 0.0848385 0.0848385 
+
+d 1
+
+Ns 0
+
+newmtl MishimotoFilterBase0031Mtl
+Material Color
+Ka 0 0 0
+Kd 0 0 0
+Ks 0 0 0 
+
+d 1
+
+Ns 0
+
+map_Ns Meshesstraight11_spec.png
+
+newmtl M3engine3111Mtl
+Material Color
+Ka 0.00258583 0.00258583 0.00258583
+Kd 0.00258583 0.00258583 0.00258583
+Ks 0.000223091 0.000223091 0.000223091 
+
+d 1
+
+Ns 0
+
+map_Ns M3engine3111_spec.png
+
+newmtl M3turbo1Mtl
+Material Color
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.666667 0.666667 0.666667 
+
+d 1
+
+Ns 255
+
+map_Ka M3turbo1_diff.png
+map_Kd M3turbo1_diff.png
+map_d M3turbo1_diff.png
+
+newmtl Mbadge1Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ka Mbadge1_diff.png
+map_Kd Mbadge1_diff.png
+map_d Mbadge1_diff.png
+
+map_Bump Mbadge1_nmap.png
+
+map_Ns Mbadge1_spec.png
+
+newmtl M3turbo0011Mtl
+Material Color
+Ka 0.867136 0.487765 0.0356144
+Kd 0.867136 0.487765 0.0356144
+Ks 0.343454 0.193193 0.0141061 
+
+d 1
+
+Ns 0
+
+newmtl M3engine30032Mtl
+Material Color
+Ka 0.00902149 0.00902149 0.00902149
+Kd 0.00902149 0.00902149 0.00902149
+Ks 0.000778325 0.000778325 0.000778325 
+
+d 1
+
+Ns 0
+
+map_Ns Meshesstraight18_spec.png
+
+newmtl M3enginethings30061Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ka M3enginethings0011_diff.png
+map_Kd M3enginethings0011_diff.png
+map_d M3enginethings0011_diff.png
+
+map_Bump M3enginethings0011_nmap.png
+
+map_Ns Boltsm321_spec.png
+
+newmtl M3enginecover005m3enginecover0152Mtl
+Material Color
+Ka 0 0 0
+Kd 0 0 0
+Ks 0 0 0 
+
+d 1
+
+Ns 0
+
+map_Ns M3enginethings11_spec.png
+
+newmtl Meshesplate1Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ka Meshesclamp1_diff.png
+map_Kd Meshesclamp1_diff.png
+map_d Meshesclamp1_diff.png
+
+map_Bump Meshesclamp1_nmap.png
+
+map_Ns Meshesclamp1_spec.png
+
+newmtl FrontSplitter1Mtl
+Material Color
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.0627451 0.0627451 0.0627451 
+
+d 1
+
+Ns 0
+
+map_Ka FrontSplitter1_diff.png
+map_Kd FrontSplitter1_diff.png
+map_d FrontSplitter1_diff.png
+
+newmtl Lugs1Mtl
+Material Color
+Ka 0.701169 0.701169 0.701169
+Kd 0.701169 0.701169 0.701169
+Ks 0.467446 0.467446 0.467446 
+
+d 1
+
+Ns 255
+
+map_Ka Wheelcolor1_diff.png
+map_Kd Wheelcolor1_diff.png
+map_d Wheelcolor1_diff.png
+
+map_Bump Wheelcolor1_nmap.png
+
+map_Ns Wheelcolor1_spec.png
+
+newmtl Rpm11Mtl
+Material Color
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.396078 0.396078 0.396078 
+
+d 1
+
+Ns 0
+
+map_Ka Rpm11_diff.png
+map_Kd Rpm11_diff.png
+map_d Rpm11_diff.png
+
+newmtl Gauge1Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ka Gauge1_diff.png
+map_Kd Gauge1_diff.png
+map_d Gauge1_diff.png
+
+newmtl Ln1Mtl
+Material Color
+Ka 0.0915184 0.0134734 0.0134734
+Kd 0.0915184 0.0134734 0.0134734
+Ks 0.0362484 0.00533652 0.00533652 
+
+d 1
+
+Ns 0
+
+newmtl Wheelcolor1Mtl
+Material Color
+Ka 0.00258583 0.00258583 0.00258583
+Kd 0.00258583 0.00258583 0.00258583
+Ks 0.00172388 0.00172388 0.00172388 
+
+d 1
+
+Ns 255
+
+map_Ka Wheelcolor1_diff.png
+map_Kd Wheelcolor1_diff.png
+map_d Wheelcolor1_diff.png
+
+map_Bump Wheelcolor1_nmap.png
+
+map_Ns Wheelcolor1_spec.png
+
+newmtl Tire1Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ka Tire1_diff.png
+map_Kd Tire1_diff.png
+map_d Tire1_diff.png
+
+map_Bump Tire1_nmap.png
+
+map_Ns Tire1_spec.png
+
+newmtl Union1Mtl
+Material Color
+Ka 0.00658496 0.00658496 0.00658496
+Kd 0.00658496 0.00658496 0.00658496
+Ks 0.00260816 0.00260816 0.00260816 
+
+d 1
+
+Ns 0
+
+newmtl Union2Mtl
+Material Color
+Ka 0.541798 0.541798 0.541798
+Kd 0.541798 0.541798 0.541798
+Ks 0.214595 0.214595 0.214595 
+
+d 1
+
+Ns 0
+
+map_Ka Union2_diff.png
+map_Kd Union2_diff.png
+map_d Union2_diff.png
+
+newmtl Calliperbadgerl1Mtl
+Material Color
+Ka 1 1 1
+Kd 1 1 1
+Ks 0.396078 0.396078 0.396078 
+
+d 0.980392
+
+Ns 0
+
+map_Ka Calliperbadgerl1_diff.png
+map_Kd Calliperbadgerl1_diff.png
+map_d Calliperbadgerl1_diff.png
+
+newmtl Calliperzonerl1Mtl
+Material Color
+Ka 0.373615 0.368591 0.383775
+Kd 0.373615 0.368591 0.383775
+Ks 0.0322335 0.0318 0.03311 
+
+d 1
+
+Ns 0
+
+map_Ka Calliperzonerl1_diff.png
+map_Kd Calliperzonerl1_diff.png
+map_d Calliperzonerl1_diff.png
+
+map_Ns Calliperzonerl1_spec.png
+
+newmtl Calliperpaintrl1Mtl
+Material Color
+Ka 0.297653 0.157281 0.0399472
+Kd 0.297653 0.157281 0.0399472
+Ks 0.0256798 0.0135693 0.00344642 
+
+d 1
+
+Ns 0
+
+map_Ns Calliperpaintrl1_spec.png
+

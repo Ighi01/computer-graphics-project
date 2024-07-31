@@ -1,0 +1,11 @@
+Model Information:
+* title:	BMW e38 Cyberbody
+* source:	https://sketchfab.com/3d-models/bmw-e38-cyberbody-ff3d4b9cc7b6425f86cd7bca9c5f7ac6
+* author:	INANIS (https://sketchfab.com/inanis_exe)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "BMW e38 Cyberbody" (https://sketchfab.com/3d-models/bmw-e38-cyberbody-ff3d4b9cc7b6425f86cd7bca9c5f7ac6) by INANIS (https://sketchfab.com/inanis_exe) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

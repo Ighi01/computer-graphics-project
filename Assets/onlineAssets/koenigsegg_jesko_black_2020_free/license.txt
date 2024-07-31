@@ -1,0 +1,11 @@
+Model Information:
+* title:	Koenigsegg Jesko Black 2020 (Free)
+* source:	https://sketchfab.com/3d-models/koenigsegg-jesko-black-2020-free-b0d670ce60b54a4ea94070e9325a95ce
+* author:	SparkyEdit (https://sketchfab.com/SparkyStore)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Koenigsegg Jesko Black 2020 (Free)" (https://sketchfab.com/3d-models/koenigsegg-jesko-black-2020-free-b0d670ce60b54a4ea94070e9325a95ce) by SparkyEdit (https://sketchfab.com/SparkyStore) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
