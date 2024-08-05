@@ -34,48 +34,48 @@ struct RoomVertex {
 
 // MAIN ! 
 class A10 : public BaseProject {
-	protected:
+protected:
 
 	DescriptorSetLayout DSLGlobal;
-    DescriptorSet DSGlobal;
+	DescriptorSet DSGlobal;
 
 	DescriptorSetLayout DSLRoom;
 	DescriptorSet DSroom;
 
-    VertexDescriptor VDRoom;
+	VertexDescriptor VDRoom;
 	Pipeline PRoom;
-    TextMaker txt;
+	TextMaker txt;
 
 	Model Mroom;
 	Texture Tbase01, Tfloor;
-	
+
 	// Other application parameters
 	int currScene = 0;
 	int subpass = 0;
-		
+
 	glm::vec3 CamPos = glm::vec3(0.0, 0.1, 5.0);
 	glm::mat4 ViewMatrix;
 
 	float Ar;
-	
+
 	// Here you set the main application parameters
 	void setWindowParameters() {
 		// window size, titile and initial background
 		windowWidth = 800;
 		windowHeight = 600;
 		windowTitle = "CG-PROJECT";
-    	windowResizable = GLFW_TRUE;
-		initialBackgroundColor = {0.1f, 0.1f, 0.1f, 1.0f};
-		
+		windowResizable = GLFW_TRUE;
+		initialBackgroundColor = { 0.1f, 0.1f, 0.1f, 1.0f };
+
 		Ar = (float)windowWidth / (float)windowHeight;
 	}
-	
+
 	// What to do when the window changes size
 	void onWindowResize(int w, int h) {
 		std::cout << "Window resized to: " << w << " x " << h << "\n";
 		Ar = (float)w / (float)h;
 	}
-	
+
 	// Here you load and setup all your Vulkan Models and Texutures.
 	// Here you also create your Descriptor set layouts and load the shaders for the pipelines
 	void localInit() {
@@ -87,21 +87,21 @@ class A10 : public BaseProject {
 					{1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 0, 1},
 					{2, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1, 1},
 					{3, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, sizeof(RoomMatParUniformBufferObject), 1}
-		});
+			});
 
 		VDRoom.init(this, {
 				  {0, sizeof(RoomVertex), VK_VERTEX_INPUT_RATE_VERTEX}
-		}, {
-			{0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(RoomVertex, pos),
-					sizeof(glm::vec3), POSITION},
-			{0, 1, VK_FORMAT_R32G32B32_SFLOAT, offsetof(RoomVertex, norm),
-					sizeof(glm::vec3), NORMAL},
-			{0, 2, VK_FORMAT_R32G32_SFLOAT, offsetof(RoomVertex, UV),
-					sizeof(glm::vec2), UV}
-		});
+			}, {
+				{0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(RoomVertex, pos),
+						sizeof(glm::vec3), POSITION},
+				{0, 1, VK_FORMAT_R32G32B32_SFLOAT, offsetof(RoomVertex, norm),
+						sizeof(glm::vec3), NORMAL},
+				{0, 2, VK_FORMAT_R32G32_SFLOAT, offsetof(RoomVertex, UV),
+						sizeof(glm::vec2), UV}
+			});
 
 		PRoom.init(this, &VDRoom, "shaders/RoomVert.spv", "shaders/RoomFrag.spv", { &DSLGlobal, &DSLRoom });
-		Mroom.init(this, &VDRoom, "models/scene.gltf", GLTF);
+		Mroom.init(this, &VDRoom, "models/3d-model.obj", OBJ);
 
 		Tbase01.init(this, "textures/Metal01_baseColor.jpeg");
 		Tfloor.init(this, "textures/Floor_normal.png");
@@ -117,17 +117,17 @@ class A10 : public BaseProject {
 		std::cout << "Uniform Blocks in the Pool  : " << DPSZs.uniformBlocksInPool << "\n";
 		std::cout << "Textures in the Pool        : " << DPSZs.texturesInPool << "\n";
 		std::cout << "Descriptor Sets in the Pool : " << DPSZs.setsInPool << "\n";
-		
+
 		ViewMatrix = glm::translate(glm::mat4(1), -CamPos);
 	}
-	
+
 	// Here you create your pipelines and Descriptor Sets!
 	void pipelinesAndDescriptorSetsInit() {
 		PRoom.create();
-		DSroom.init(this, &DSLRoom, {&Tbase01, &Tfloor});
+		DSroom.init(this, &DSLRoom, { &Tbase01, &Tfloor });
 		DSGlobal.init(this, &DSLGlobal, {});
 
-		txt.pipelinesAndDescriptorSetsInit();		
+		txt.pipelinesAndDescriptorSetsInit();
 	}
 
 	// Here you destroy your pipelines and Descriptor Sets!
@@ -143,19 +143,19 @@ class A10 : public BaseProject {
 	// All the object classes defined in Starter.hpp have a method .cleanup() for this purpose
 	// You also have to destroy the pipelines: since they need to be rebuilt, they have two different
 	// methods: .cleanup() recreates them, while .destroy() delete them completely
-	void localCleanup() {	
+	void localCleanup() {
 		Tbase01.cleanup();
 		Tfloor.cleanup();
 		Mroom.cleanup();
 		DSLRoom.cleanup();
 		PRoom.destroy();
-		txt.localCleanup();		
+		txt.localCleanup();
 	}
-	
+
 	// Here it is the creation of the command buffer:
 	// You send to the GPU all the objects you want to draw,
 	// with their buffers and textures
-	
+
 	void populateCommandBuffer(VkCommandBuffer commandBuffer, int currentImage) {
 		PRoom.bind(commandBuffer);
 		Mroom.bind(commandBuffer);
@@ -177,13 +177,13 @@ class A10 : public BaseProject {
 		glm::vec3 m = glm::vec3(0.0f), r = glm::vec3(0.0f);
 		bool fire = false;
 		getSixAxis(deltaT, m, r, fire);
-		
+
 		static float autoTime = true;
 		static float cTime = 0.0;
 		const float turnTime = 72.0f;
 		const float angTurnTimeFact = 2.0f * M_PI / turnTime;
-		
-		if(autoTime) {
+
+		if (autoTime) {
 			cTime = cTime + deltaT;
 			cTime = (cTime > turnTime) ? (cTime - turnTime) : cTime;
 		}
@@ -191,15 +191,15 @@ class A10 : public BaseProject {
 		static float tTime = 0.0;
 		const float TturnTime = 60.0f;
 		const float TangTurnTimeFact = 1.0f / TturnTime;
-		
-		if(autoTime) {
+
+		if (autoTime) {
 			tTime = tTime + deltaT;
 			tTime = (tTime > TturnTime) ? (tTime - TturnTime) : tTime;
 		}
-		
+
 		const float ROT_SPEED = glm::radians(120.0f);
 		const float MOVE_SPEED = 20.0f;
-		
+
 		static float ShowCloud = 1.0f;
 		static float ShowTexture = 1.0f;
 		
@@ -240,7 +240,7 @@ class A10 : public BaseProject {
 		}
 
 		// Standard procedure to quit when the ESC key is pressed
-		if(glfwGetKey(window, GLFW_KEY_ESCAPE)) {
+		if (glfwGetKey(window, GLFW_KEY_ESCAPE)) {
 			glfwSetWindowShouldClose(window, GL_TRUE);
 		}
 
@@ -358,8 +358,8 @@ ShowTexture    = 0;
 
 		glm::mat4 Mv = ViewMatrix;
 
-		glm::mat4 ViewPrj =  M * Mv;
-		glm::mat4 baseTr = glm::mat4(1.0f);								
+		glm::mat4 ViewPrj = M * Mv;
+		glm::mat4 baseTr = glm::mat4(1.0f);
 
 		// updates global uniforms
 		// Global
@@ -370,7 +370,6 @@ ShowTexture    = 0;
 		DSGlobal.map(currentImage, &gubo, 0);
 
 		// objects
-
 		RoomUniformBufferObject roomUbo{};
 		RoomMatParUniformBufferObject roomMatParUbo{};
 
@@ -379,14 +378,17 @@ ShowTexture    = 0;
 		roomUbo.mMat = glm::mat4(1.0f);
 		roomUbo.nMat = glm::mat4(1.0f);
 		roomUbo.mvpMat = ViewPrj * roomUbo.mMat;
-		
+
 		DSroom.map(currentImage, &roomUbo, 0);
 
 		roomMatParUbo.Power = 200.0;
 
 		DSroom.map(currentImage, &roomMatParUbo, 3);
 	}
+
 };
+
+
 
 // This is the main: probably you do not need to touch this!
 int main() {
