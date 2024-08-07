@@ -44,11 +44,16 @@ class A10 : public BaseProject {
 
     VertexDescriptor VDRoom;
 	Pipeline PRoom;
+
     TextMaker txt;
 
+	/*
 	Model Mroom;
 	Texture Tbase01, Tfloor;
-	
+	*/
+
+	Model Morange_car;
+	Texture Tbase, Tspec;
 	// Other application parameters
 	int currScene = 0;
 	int subpass = 0;
@@ -101,10 +106,10 @@ class A10 : public BaseProject {
 		});
 
 		PRoom.init(this, &VDRoom, "shaders/RoomVert.spv", "shaders/RoomFrag.spv", { &DSLGlobal, &DSLRoom });
-		Mroom.init(this, &VDRoom, "models/scene.gltf", GLTF);
+		Morange_car.init(this, &VDRoom, "models/orange-car/scene.gltf", GLTF);
 
-		Tbase01.init(this, "textures/Metal01_baseColor.jpeg");
-		Tfloor.init(this, "textures/Floor_normal.png");
+		Tbase.init(this, "models/orange-car/textures/Material_diffuse.png");
+		Tspec.init(this, "models/orange-car/textures/Material.001_diffuse.png");
 
 		DPSZs.uniformBlocksInPool = 20;
 		DPSZs.texturesInPool = 20;
@@ -124,7 +129,7 @@ class A10 : public BaseProject {
 	// Here you create your pipelines and Descriptor Sets!
 	void pipelinesAndDescriptorSetsInit() {
 		PRoom.create();
-		DSroom.init(this, &DSLRoom, {&Tbase01, &Tfloor});
+		DSroom.init(this, &DSLRoom, {&Tbase, &Tspec});
 		DSGlobal.init(this, &DSLGlobal, {});
 
 		txt.pipelinesAndDescriptorSetsInit();		
@@ -144,10 +149,11 @@ class A10 : public BaseProject {
 	// You also have to destroy the pipelines: since they need to be rebuilt, they have two different
 	// methods: .cleanup() recreates them, while .destroy() delete them completely
 	void localCleanup() {	
-		Tbase01.cleanup();
-		Tfloor.cleanup();
-		Mroom.cleanup();
+		Tbase.cleanup();
+		Tspec.cleanup();
+		Morange_car.cleanup();
 		DSLRoom.cleanup();
+		DSLGlobal.cleanup();
 		PRoom.destroy();
 		txt.localCleanup();		
 	}
@@ -158,11 +164,11 @@ class A10 : public BaseProject {
 	
 	void populateCommandBuffer(VkCommandBuffer commandBuffer, int currentImage) {
 		PRoom.bind(commandBuffer);
-		Mroom.bind(commandBuffer);
+		Morange_car.bind(commandBuffer);
 		DSGlobal.bind(commandBuffer, PRoom, 0, currentImage);
 		DSroom.bind(commandBuffer, PRoom, 1, currentImage);
 		vkCmdDrawIndexed(commandBuffer,
-			static_cast<uint32_t>(Mroom.indices.size()), 1, 0, 0, 0);
+			static_cast<uint32_t>(Morange_car.indices.size()), 1, 0, 0, 0);
 
 		txt.populateCommandBuffer(commandBuffer, currentImage, currScene);
 	}
