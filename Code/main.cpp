@@ -15,17 +15,17 @@ struct GlobalUniformBufferObject {
 	alignas(16) glm::vec3 eyePos;
 };
 
-struct RoomUniformBufferObject {
+struct SimpleUniformBufferObject {
 	alignas(16) glm::mat4 mvpMat;
 	alignas(16) glm::mat4 mMat;
 	alignas(16) glm::mat4 nMat;
 };
 
-struct RoomMatParUniformBufferObject {
+struct SimpleMatParUniformBufferObject {
 	alignas(4)  float Power;
 };
 
-struct RoomVertex {
+struct SimpleVertex {
 	glm::vec3 pos;
 	glm::vec3 norm;
 	glm::vec2 UV;
@@ -39,21 +39,22 @@ class A10 : public BaseProject {
 	DescriptorSetLayout DSLGlobal;
     DescriptorSet DSGlobal;
 
-	DescriptorSetLayout DSLRoom;
-	DescriptorSet DSroom;
+	DescriptorSetLayout DSLCity;
+	DescriptorSet DSCity;
+	DescriptorSet DStile4;
+	DescriptorSet DStile002;
 
-    VertexDescriptor VDRoom;
-	Pipeline PRoom;
+    VertexDescriptor VDSimple;
+	Pipeline PSimple;
 
     TextMaker txt;
 
-	/*
-	Model Mroom;
-	Texture Tbase01, Tfloor;
-	*/
+	Model Mblack_car;
+	Model Mtile4;
+	Model Mtile002;
 
-	Model Morange_car;
-	Texture Tbase, Tspec;
+	Texture Tcity;
+
 	// Other application parameters
 	int currScene = 0;
 	int subpass = 0;
@@ -87,33 +88,37 @@ class A10 : public BaseProject {
 		DSLGlobal.init(this, {
 					{0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS, sizeof(GlobalUniformBufferObject), 1}
 			});
-		DSLRoom.init(this, {
-					{0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, sizeof(RoomUniformBufferObject), 1},
-					{1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 0, 1},
-					{2, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 1, 1},
-					{3, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, sizeof(RoomMatParUniformBufferObject), 1}
-		});
 
-		VDRoom.init(this, {
-				  {0, sizeof(RoomVertex), VK_VERTEX_INPUT_RATE_VERTEX}
+		DSLCity.init(this, {
+					{0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, sizeof(SimpleUniformBufferObject), 1},
+					{1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 0, 1},
+					{2, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, sizeof(SimpleMatParUniformBufferObject), 1}
+			});
+
+
+		VDSimple.init(this, {
+				  {0, sizeof(SimpleVertex), VK_VERTEX_INPUT_RATE_VERTEX}
 		}, {
-			{0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(RoomVertex, pos),
+			{0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(SimpleVertex, pos),
 					sizeof(glm::vec3), POSITION},
-			{0, 1, VK_FORMAT_R32G32B32_SFLOAT, offsetof(RoomVertex, norm),
+			{0, 1, VK_FORMAT_R32G32B32_SFLOAT, offsetof(SimpleVertex, norm),
 					sizeof(glm::vec3), NORMAL},
-			{0, 2, VK_FORMAT_R32G32_SFLOAT, offsetof(RoomVertex, UV),
+			{0, 2, VK_FORMAT_R32G32_SFLOAT, offsetof(SimpleVertex, UV),
 					sizeof(glm::vec2), UV}
 		});
 
-		PRoom.init(this, &VDRoom, "shaders/RoomVert.spv", "shaders/RoomFrag.spv", { &DSLGlobal, &DSLRoom });
-		Morange_car.init(this, &VDRoom, "models/orange-car/scene.gltf", GLTF);
+		PSimple.init(this, &VDSimple, "shaders/SimpleVert.spv", "shaders/SimpleFrag.spv", { &DSLGlobal, &DSLCity });
+		//PSimple.setAdvancedFeatures(VK_COMPARE_OP_LESS_OR_EQUAL, VK_POLYGON_MODE_FILL,
+		//	VK_CULL_MODE_NONE, false);
+		Mblack_car.init(this, &VDSimple, "models/transport_cool_003_transport_cool_003.001.mgcg", MGCG);
+		Mtile4.init(this, &VDSimple, "models/road_tile_1x1_007.mgcg", MGCG);
+		Mtile002.init(this, &VDSimple, "models/road_tile_1x1_002.mgcg", MGCG);
 
-		Tbase.init(this, "models/orange-car/textures/Material_diffuse.png");
-		Tspec.init(this, "models/orange-car/textures/Material.001_diffuse.png");
+		Tcity.init(this, "textures/Textures_City.png");
 
-		DPSZs.uniformBlocksInPool = 20;
-		DPSZs.texturesInPool = 20;
-		DPSZs.setsInPool = 20;
+		DPSZs.uniformBlocksInPool = 100;
+		DPSZs.texturesInPool = 100;
+		DPSZs.setsInPool = 100;
 
 		std::cout << "Initializing text\n";
 		txt.init(this, &outText);
@@ -128,19 +133,22 @@ class A10 : public BaseProject {
 	
 	// Here you create your pipelines and Descriptor Sets!
 	void pipelinesAndDescriptorSetsInit() {
-		PRoom.create();
-		DSroom.init(this, &DSLRoom, {&Tbase, &Tspec});
+		PSimple.create();
 		DSGlobal.init(this, &DSLGlobal, {});
-
+		DSCity.init(this, &DSLCity, { &Tcity });
+		DStile4.init(this, &DSLCity, {&Tcity});
+		DStile002.init(this, &DSLCity, { &Tcity });
 		txt.pipelinesAndDescriptorSetsInit();		
 	}
 
 	// Here you destroy your pipelines and Descriptor Sets!
 	// All the object classes defined in Starter.hpp have a method .cleanup() for this purpose
 	void pipelinesAndDescriptorSetsCleanup() {
-		PRoom.cleanup();
+		PSimple.cleanup();
 		DSGlobal.cleanup();
-		DSroom.cleanup();
+		DStile4.cleanup();
+		DStile002.cleanup();
+		DSCity.cleanup();
 		txt.pipelinesAndDescriptorSetsCleanup();
 	}
 
@@ -149,12 +157,16 @@ class A10 : public BaseProject {
 	// You also have to destroy the pipelines: since they need to be rebuilt, they have two different
 	// methods: .cleanup() recreates them, while .destroy() delete them completely
 	void localCleanup() {	
-		Tbase.cleanup();
-		Tspec.cleanup();
-		Morange_car.cleanup();
-		DSLRoom.cleanup();
+		Tcity.cleanup();
+
+		Mblack_car.cleanup();
+		Mtile4.cleanup();
+		Mtile002.cleanup();
+
+		DSLCity.cleanup();
 		DSLGlobal.cleanup();
-		PRoom.destroy();
+
+		PSimple.destroy();
 		txt.localCleanup();		
 	}
 	
@@ -163,12 +175,26 @@ class A10 : public BaseProject {
 	// with their buffers and textures
 	
 	void populateCommandBuffer(VkCommandBuffer commandBuffer, int currentImage) {
-		PRoom.bind(commandBuffer);
-		Morange_car.bind(commandBuffer);
-		DSGlobal.bind(commandBuffer, PRoom, 0, currentImage);
-		DSroom.bind(commandBuffer, PRoom, 1, currentImage);
+		PSimple.bind(commandBuffer);
+		Mblack_car.bind(commandBuffer);
+		DSGlobal.bind(commandBuffer, PSimple, 0, currentImage);
+		DSCity.bind(commandBuffer, PSimple, 1, currentImage);
 		vkCmdDrawIndexed(commandBuffer,
-			static_cast<uint32_t>(Morange_car.indices.size()), 1, 0, 0, 0);
+			static_cast<uint32_t>(Mblack_car.indices.size()), 1, 0, 0, 0);
+
+		PSimple.bind(commandBuffer);
+		Mtile4.bind(commandBuffer);
+		DSGlobal.bind(commandBuffer, PSimple, 0, currentImage);
+		DStile4.bind(commandBuffer, PSimple, 1, currentImage);
+		vkCmdDrawIndexed(commandBuffer,
+			static_cast<uint32_t>(Mtile4.indices.size()), 1, 0, 0, 0);
+
+		PSimple.bind(commandBuffer);
+		Mtile002.bind(commandBuffer);
+		DSGlobal.bind(commandBuffer, PSimple, 0, currentImage);
+		DStile002.bind(commandBuffer, PSimple, 1, currentImage);
+		vkCmdDrawIndexed(commandBuffer,
+			static_cast<uint32_t>(Mtile002.indices.size()), 1, 0, 0, 0);
 
 		txt.populateCommandBuffer(commandBuffer, currentImage, currScene);
 	}
@@ -377,20 +403,30 @@ ShowTexture    = 0;
 
 		// objects
 
-		RoomUniformBufferObject roomUbo{};
-		RoomMatParUniformBufferObject roomMatParUbo{};
+		SimpleUniformBufferObject simpleUbo{};
+		SimpleMatParUniformBufferObject simpleMatParUbo{};
 
-		//roomUbo.mMat = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
-		//roomUbo.nMat = glm::inverse(glm::transpose(roomUbo.mMat));
-		roomUbo.mMat = glm::mat4(1.0f);
-		roomUbo.nMat = glm::mat4(1.0f);
-		roomUbo.mvpMat = ViewPrj * roomUbo.mMat;
-		
-		DSroom.map(currentImage, &roomUbo, 0);
+		//simpleUbo.mMat = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f));
+		simpleUbo.mMat = glm::translate(glm::mat4(1.0f), glm::vec3(0,0,5));
+		simpleUbo.nMat = glm::inverse(glm::transpose(simpleUbo.mMat));
+		simpleUbo.mvpMat = ViewPrj * simpleUbo.mMat;
+		DSCity.map(currentImage, &simpleUbo, 0);
 
-		roomMatParUbo.Power = 200.0;
+		//simpleUbo.mMat = glm::translate(glm::mat4(1.0f), glm::vec3(0,5,0));
+		simpleUbo.mMat = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(0,1,0));
+		simpleUbo.nMat = glm::inverse(glm::transpose(simpleUbo.mMat));
+		simpleUbo.mvpMat = ViewPrj * simpleUbo.mMat;
+		DStile4.map(currentImage, &simpleUbo, 0);
 
-		DSroom.map(currentImage, &roomMatParUbo, 3);
+		simpleUbo.mMat = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 8))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));;
+		simpleUbo.nMat = glm::inverse(glm::transpose(simpleUbo.mMat));
+		simpleUbo.mvpMat = ViewPrj * simpleUbo.mMat;
+		DStile002.map(currentImage, &simpleUbo, 0);
+
+		simpleMatParUbo.Power = 200.0;
+		DSCity.map(currentImage, &simpleMatParUbo, 2);
+		DStile4.map(currentImage, &simpleMatParUbo, 2);
+		DStile002.map(currentImage, &simpleMatParUbo, 2);
 	}
 };
 
