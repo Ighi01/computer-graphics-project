@@ -413,7 +413,7 @@ ShowTexture    = 0;
 		DStile4.map(currentImage, &simpleUbo, 0);
 
 		//simpleUbo.mMat = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f));
-		simpleUbo.mMat = glm::translate(glm::mat4(1.0f), glm::vec3(0,0,5)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.5));
+		simpleUbo.mMat = glm::translate(glm::mat4(1.0f), glm::vec3(0,0,5)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.4));
 		simpleUbo.nMat = glm::inverse(glm::transpose(simpleUbo.mMat));
 		simpleUbo.mvpMat = ViewPrj * simpleUbo.mMat;
 		DSCity.map(currentImage, &simpleUbo, 0);
