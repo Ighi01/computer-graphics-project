@@ -108,9 +108,9 @@ class A10 : public BaseProject {
 		});
 
 		PSimple.init(this, &VDSimple, "shaders/SimpleVert.spv", "shaders/SimpleFrag.spv", { &DSLGlobal, &DSLCity });
-		//PSimple.setAdvancedFeatures(VK_COMPARE_OP_LESS_OR_EQUAL, VK_POLYGON_MODE_FILL,
-		//	VK_CULL_MODE_NONE, false);
-		Mblack_car.init(this, &VDSimple, "models/transport_cool_003_transport_cool_003.001.mgcg", MGCG);
+		PSimple.setAdvancedFeatures(VK_COMPARE_OP_LESS_OR_EQUAL, VK_POLYGON_MODE_FILL,
+			VK_CULL_MODE_NONE, false);
+		Mblack_car.init(this, &VDSimple, "models/transport_air_008_transport_air_008.001.mgcg", MGCG);
 		Mtile4.init(this, &VDSimple, "models/road_tile_1x1_007.mgcg", MGCG);
 		Mtile002.init(this, &VDSimple, "models/road_tile_1x1_002.mgcg", MGCG);
 
@@ -406,17 +406,17 @@ ShowTexture    = 0;
 		SimpleUniformBufferObject simpleUbo{};
 		SimpleMatParUniformBufferObject simpleMatParUbo{};
 
-		//simpleUbo.mMat = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f));
-		simpleUbo.mMat = glm::translate(glm::mat4(1.0f), glm::vec3(0,0,5));
-		simpleUbo.nMat = glm::inverse(glm::transpose(simpleUbo.mMat));
-		simpleUbo.mvpMat = ViewPrj * simpleUbo.mMat;
-		DSCity.map(currentImage, &simpleUbo, 0);
-
 		//simpleUbo.mMat = glm::translate(glm::mat4(1.0f), glm::vec3(0,5,0));
-		simpleUbo.mMat = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(0,1,0));
+		simpleUbo.mMat = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(0, 1, 0));
 		simpleUbo.nMat = glm::inverse(glm::transpose(simpleUbo.mMat));
 		simpleUbo.mvpMat = ViewPrj * simpleUbo.mMat;
 		DStile4.map(currentImage, &simpleUbo, 0);
+
+		//simpleUbo.mMat = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f));
+		simpleUbo.mMat = glm::translate(glm::mat4(1.0f), glm::vec3(0,0,5)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.5));
+		simpleUbo.nMat = glm::inverse(glm::transpose(simpleUbo.mMat));
+		simpleUbo.mvpMat = ViewPrj * simpleUbo.mMat;
+		DSCity.map(currentImage, &simpleUbo, 0);
 
 		simpleUbo.mMat = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 8))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));;
 		simpleUbo.nMat = glm::inverse(glm::transpose(simpleUbo.mMat));
@@ -424,8 +424,8 @@ ShowTexture    = 0;
 		DStile002.map(currentImage, &simpleUbo, 0);
 
 		simpleMatParUbo.Power = 200.0;
-		DSCity.map(currentImage, &simpleMatParUbo, 2);
 		DStile4.map(currentImage, &simpleMatParUbo, 2);
+		DSCity.map(currentImage, &simpleMatParUbo, 2);
 		DStile002.map(currentImage, &simpleMatParUbo, 2);
 	}
 };
