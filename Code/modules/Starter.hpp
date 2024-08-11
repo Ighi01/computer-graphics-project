@@ -1813,17 +1813,14 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 		}
 	}
 		
-	void getSixAxis(float &deltaT,
-					glm::vec3 &m,
-					glm::vec3 &r,
-					bool &fire) {
-						
+	void getSixAxis(float& deltaT, glm::vec3& m, glm::vec3& r, bool& fire) {
+
 		static auto startTime = std::chrono::high_resolution_clock::now();
 		static float lastTime = 0.0f;
-		
+
 		auto currentTime = std::chrono::high_resolution_clock::now();
 		float time = std::chrono::duration<float, std::chrono::seconds::period>
-					(currentTime - startTime).count();
+			(currentTime - startTime).count();
 		deltaT = time - lastTime;
 		lastTime = time;
 
@@ -1834,56 +1831,39 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 		double m_dy = ypos - old_ypos;
 		old_xpos = xpos; old_ypos = ypos;
 
-		const float MOUSE_RES = 10.0f;				
+		const float MOUSE_RES = 10.0f;
 		glfwSetInputMode(window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
-		if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
+		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
 			r.y = -m_dx / MOUSE_RES;
 			r.x = -m_dy / MOUSE_RES;
 		}
 
-		if(glfwGetKey(window, GLFW_KEY_LEFT)) {
-			r.y = -1.0f;
-		}
-		if(glfwGetKey(window, GLFW_KEY_RIGHT)) {
-			r.y = 1.0f;
-		}
-		if(glfwGetKey(window, GLFW_KEY_UP)) {
-			r.x = -1.0f;
-		}
-		if(glfwGetKey(window, GLFW_KEY_DOWN)) {
-			r.x = 1.0f;
-		}
-		if(glfwGetKey(window, GLFW_KEY_Q)) {
-			r.z = 1.0f;
-		}
-		if(glfwGetKey(window, GLFW_KEY_E)) {
-			r.z = -1.0f;
-		}
-
-		if(glfwGetKey(window, GLFW_KEY_A)) {
-			m.x = -1.0f;
-		}
-		if(glfwGetKey(window, GLFW_KEY_D)) {
+		if (glfwGetKey(window, GLFW_KEY_W)) {
 			m.x = 1.0f;
 		}
-		if(glfwGetKey(window, GLFW_KEY_S)) {
-			m.z = 1.0f;
+		if (glfwGetKey(window, GLFW_KEY_S)) {
+			m.x = -1.0f;
 		}
-		if(glfwGetKey(window, GLFW_KEY_W)) {
-			m.z = -1.0f;
-		}
-		if(glfwGetKey(window, GLFW_KEY_R)) {
+
+		if (glfwGetKey(window, GLFW_KEY_A)) {
 			m.y = 1.0f;
 		}
-		if(glfwGetKey(window, GLFW_KEY_F)) {
+		if (glfwGetKey(window, GLFW_KEY_D)) {
 			m.y = -1.0f;
 		}
-		
+
+		if (glfwGetKey(window, GLFW_KEY_Q)) {
+			m.z = 1.0f;
+		}
+		if (glfwGetKey(window, GLFW_KEY_E)) {
+			m.z = -1.0f;
+		}
+
 		fire = glfwGetKey(window, GLFW_KEY_SPACE) | (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS);
-		handleGamePad(GLFW_JOYSTICK_1,m,r,fire);
-		handleGamePad(GLFW_JOYSTICK_2,m,r,fire);
-		handleGamePad(GLFW_JOYSTICK_3,m,r,fire);
-		handleGamePad(GLFW_JOYSTICK_4,m,r,fire);
+		handleGamePad(GLFW_JOYSTICK_1, m, r, fire);
+		handleGamePad(GLFW_JOYSTICK_2, m, r, fire);
+		handleGamePad(GLFW_JOYSTICK_3, m, r, fire);
+		handleGamePad(GLFW_JOYSTICK_4, m, r, fire);
 	}
 	
 	// Public part of the base class

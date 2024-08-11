@@ -129,6 +129,8 @@ class A10 : public BaseProject {
 		std::cout << "Descriptor Sets in the Pool : " << DPSZs.setsInPool << "\n";
 		
 		ViewMatrix = glm::translate(glm::mat4(1), -CamPos);
+		Mblack_car.Wm = glm::rotate(Mblack_car.Wm, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		Mblack_car.Wm = glm::scale(glm::mat4(1.0f), glm::vec3(0.4f)) * Mblack_car.Wm;
 	}
 	
 	// Here you create your pipelines and Descriptor Sets!
@@ -201,6 +203,8 @@ class A10 : public BaseProject {
 
 	// Here is where you update the uniforms.
 	// Very likely this will be where you will be writing the logic of your application.
+	bool start = false;
+
 	void updateUniformBuffer(uint32_t currentImage) {
 		static bool debounce = false;
 		static int curDebounce = 0;
@@ -229,161 +233,50 @@ class A10 : public BaseProject {
 			tTime = (tTime > TturnTime) ? (tTime - TturnTime) : tTime;
 		}
 		
-		const float ROT_SPEED = glm::radians(120.0f);
-		const float MOVE_SPEED = 20.0f;
+		float Y_SPEED = 0.75f;  
+		float X_SPEED = 1.0f;  
+		float Z_SPEED = 2.5f;  
+		float SPEED = 5.0f;   
 		
-		static float ShowCloud = 1.0f;
-		static float ShowTexture = 1.0f;
+		float followSpeed = 1.0f;  
+		float maxDistance = -20.0f;  
+		float minDistance = -5.0f;   
+		float speedFactor = 0.1f;    
+		float currentSpeed = 0.0f;
+
+		glm::vec3 right = glm::vec3(1.0f, 0.0f, 0.0f);
+		glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+		glm::vec3 forward = glm::vec3(0.0f, 0.0f, 1.0f);
+
+		if (start) 
+		{
+			Mblack_car.Wm = glm::rotate(Mblack_car.Wm, m.x * X_SPEED * deltaT, right);
+			Mblack_car.Wm = glm::rotate(Mblack_car.Wm, m.y * Y_SPEED * deltaT, up); 
+			Mblack_car.Wm = glm::rotate(Mblack_car.Wm, m.z * Z_SPEED * deltaT, forward);
+		    Mblack_car.Wm = glm::translate(Mblack_car.Wm, forward * SPEED * deltaT);
+		}
+
+		glm::vec3 planePosition = glm::vec3(Mblack_car.Wm[3]);
 		
-		// The Fly model update proc.
-		ViewMatrix = glm::rotate(glm::mat4(1), ROT_SPEED * r.x * deltaT,
-								 glm::vec3(1, 0, 0)) * ViewMatrix;
-		ViewMatrix = glm::rotate(glm::mat4(1), ROT_SPEED * r.y * deltaT,
-								 glm::vec3(0, 1, 0)) * ViewMatrix;
-		ViewMatrix = glm::rotate(glm::mat4(1), -ROT_SPEED * r.z * deltaT,
-								 glm::vec3(0, 0, 1)) * ViewMatrix;
-		ViewMatrix = glm::translate(glm::mat4(1), -glm::vec3(
-								   MOVE_SPEED * m.x * deltaT, MOVE_SPEED * m.y * deltaT, MOVE_SPEED * m.z * deltaT))
-													   * ViewMatrix;
-		static float subpassTimer = 0.0;
+		currentSpeed = glm::length(forward * SPEED);
+
+		float fixedDistance = glm::mix(minDistance, maxDistance, currentSpeed * speedFactor);
+
+		glm::vec3 desiredCamPos = planePosition + forward * fixedDistance + up * 2.0f;
+		glm::vec3 lateralMove = (glm::vec3(desiredCamPos.x, desiredCamPos.y, desiredCamPos.z) - glm::vec3(CamPos.x, CamPos.y, CamPos.z)) * followSpeed * deltaT;
+		CamPos += lateralMove;
+
+		ViewMatrix = glm::lookAt(CamPos, planePosition, up);
 
 		if(glfwGetKey(window, GLFW_KEY_SPACE)) {
-			if(!debounce) {
-				debounce = true;
-				curDebounce = GLFW_KEY_SPACE;
-				if(currScene != 1) {
-					currScene = (currScene+1) % outText.size();
-
-				}
-				if(currScene == 1) {
-					if(subpass >= 4) {
-						currScene = 0;
-					}
-				}
-				std::cout << "Scene : " << currScene << "\n";
-				
-				RebuildPipeline();
-			}
-		} else {
-			if((curDebounce == GLFW_KEY_SPACE) && debounce) {
-				debounce = false;
-				curDebounce = 0;
-			}
+			start = true;
 		}
 
 		// Standard procedure to quit when the ESC key is pressed
 		if(glfwGetKey(window, GLFW_KEY_ESCAPE)) {
 			glfwSetWindowShouldClose(window, GL_TRUE);
 		}
-
-
-		if(glfwGetKey(window, GLFW_KEY_V)) {
-			if(!debounce) {
-				debounce = true;
-				curDebounce = GLFW_KEY_V;
-
-				printMat4("ViewMatrix  ", ViewMatrix);				
-				std::cout << "cTime    = " << cTime    << ";\n";
-				std::cout << "tTime    = " << tTime    << ";\n";
-				std::cout << "ShowCloud    = " << ShowCloud    << ";\n";
-				std::cout << "ShowTexture    = " << ShowTexture    << ";\n";
-			}
-		} else {
-			if((curDebounce == GLFW_KEY_V) && debounce) {
-				debounce = false;
-				curDebounce = 0;
-			}
-		}
-
-		if(glfwGetKey(window, GLFW_KEY_C)) {
-			if(!debounce) {
-				debounce = true;
-				curDebounce = GLFW_KEY_C;
-				
-				ShowCloud = 1.0f - ShowCloud;
-			}
-		} else {
-			if((curDebounce == GLFW_KEY_C) && debounce) {
-				debounce = false;
-				curDebounce = 0;
-			}
-		}
-
-		if(glfwGetKey(window, GLFW_KEY_T)) {
-			if(!debounce) {
-				debounce = true;
-				curDebounce = GLFW_KEY_T;
-				
-				ShowTexture = 1.0f - ShowTexture;
-			}
-		} else {
-			if((curDebounce == GLFW_KEY_T) && debounce) {
-				debounce = false;
-				curDebounce = 0;
-			}
-		}
-
 	
-		if(currScene == 1) {
-			switch(subpass) {
-			  case 0:
-ViewMatrix   = glm::mat4(-0.0656882, -0.162777, 0.984474, 0, 0.0535786, 0.984606, 0.166374, 0, -0.996401, 0.0636756, -0.0559558, 0, 0.0649244, -0.531504, -3.26128, 1);
-cTime    = 22.3604;
-tTime    = 22.3604;
-ShowCloud    = 1;
-ShowTexture    = 1;
-autoTime = false;
-				break;
-			  case 1:
-ViewMatrix   = glm::mat4(-0.312507, -0.442291, 0.840666, 0, 0.107287, 0.862893, 0.493868, 0, -0.943837, 0.24453, -0.222207, 0, -0.0157694, -0.186147, -1.54649, 1);
-cTime    = 38.9919;
-tTime    = 38.9919;
-ShowCloud    = 0;
-ShowTexture    = 1;
-				break;
-			  case 2:
-ViewMatrix   = glm::mat4(-0.992288, 0.00260993, -0.12393, 0, -0.0396232, 0.940648, 0.337063, 0, 0.117454, 0.339374, -0.93329, 0, 0.0335061, -0.0115242, -2.99662, 1);
-cTime    = 71.0587;
-tTime    = 11.0587;
-ShowCloud    = 1;
-ShowTexture    = 1;
-				break;
-			  case 3:
-ViewMatrix   = glm::mat4(0.0942192, -0.242781, 0.965495, 0, 0.560756, 0.814274, 0.150033, 0, -0.822603, 0.527272, 0.212861, 0, -0.567191, -0.254532, -1.79143, 1);
-cTime    = 55.9355;
-tTime    = 7.93549;
-ShowCloud    = 1;
-ShowTexture    = 0;
-				break;
-			}
-		}
-		
-		if(currScene == 1) {
-			subpassTimer += deltaT;
-			if(subpassTimer > 4.0f) {
-				subpassTimer = 0.0f;
-				subpass++;
-				std::cout << "Scene : " << currScene << " subpass: " << subpass << "\n";
-				char buf[20];
-				sprintf(buf, "A10_%d.png", subpass);
-				saveScreenshot(buf, currentImage);
-				if(subpass == 4) {
-					ViewMatrix = glm::translate(glm::mat4(1), -CamPos);
-					cTime    = 0;
-					tTime    = 0;
-					ShowCloud    = 1;
-					ShowTexture    = 1;
-					autoTime = true;
-					
-					
-					currScene = 0;
-					std::cout << "Scene : " << currScene << "\n";
-					RebuildPipeline();
-				}
-			}
-		}
-
-
 		// Here is where you actually update your uniforms
 		glm::mat4 M = glm::perspective(glm::radians(45.0f), Ar, 0.1f, 160.0f);
 		M[1][1] *= -1;
@@ -406,16 +299,14 @@ ShowTexture    = 0;
 		SimpleUniformBufferObject simpleUbo{};
 		SimpleMatParUniformBufferObject simpleMatParUbo{};
 
-		//simpleUbo.mMat = glm::translate(glm::mat4(1.0f), glm::vec3(0,5,0));
 		simpleUbo.mMat = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(0, 1, 0));
 		simpleUbo.nMat = glm::inverse(glm::transpose(simpleUbo.mMat));
 		simpleUbo.mvpMat = ViewPrj * simpleUbo.mMat;
 		DStile4.map(currentImage, &simpleUbo, 0);
 
-		//simpleUbo.mMat = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f));
-		simpleUbo.mMat = glm::translate(glm::mat4(1.0f), glm::vec3(0,0,5)) * glm::scale(glm::mat4(1.0f), glm::vec3(0.4));
-		simpleUbo.nMat = glm::inverse(glm::transpose(simpleUbo.mMat));
+		simpleUbo.mMat = Mblack_car.Wm * baseTr;
 		simpleUbo.mvpMat = ViewPrj * simpleUbo.mMat;
+		simpleUbo.nMat = glm::inverse(glm::transpose(simpleUbo.mMat));
 		DSCity.map(currentImage, &simpleUbo, 0);
 
 		simpleUbo.mMat = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 8))* glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0, 1, 0));;
