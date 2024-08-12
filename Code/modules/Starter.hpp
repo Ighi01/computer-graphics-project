@@ -1813,7 +1813,63 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 		}
 	}
 		
-	void getSixAxis(float& deltaT, glm::vec3& m, glm::vec3& r, bool& fire) {
+	double lastUpdateTime = glfwGetTime();
+	const double debounceTime = 0.2f;
+	int speedCounter = 1;
+
+	void handle_commands(bool& start, float& speedFactor) {
+
+
+		if (glfwGetKey(window, GLFW_KEY_ESCAPE)) {
+			glfwSetWindowShouldClose(window, GL_TRUE);
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_SPACE)) {
+			start = true;
+		}
+		
+		double currentTime = glfwGetTime(); 
+
+		if (currentTime - lastUpdateTime > debounceTime) {
+			if (glfwGetKey(window, GLFW_KEY_UP)) {
+				speedCounter++;
+				if (speedCounter > 4)
+					speedCounter = 4;
+
+				lastUpdateTime = currentTime;
+			}
+
+			if (glfwGetKey(window, GLFW_KEY_DOWN)) {
+				speedCounter--;
+				if (speedCounter < 0)
+					speedCounter = 0;
+
+				lastUpdateTime = currentTime;
+			}
+		}
+
+		switch (speedCounter)
+		{
+		case 0:
+			speedFactor = 0.25f;
+			break;
+		case 1:
+			speedFactor = 0.5f;
+			break;
+		case 2:
+			speedFactor = 1.0f;
+			break;
+		case 3:
+			speedFactor = 1.5f;
+			break;
+		default:
+			speedFactor = 2.0f;
+			break;
+		}
+
+	}
+
+	void getSixAxis(float& deltaT, glm::vec3& m) {
 
 		static auto startTime = std::chrono::high_resolution_clock::now();
 		static float lastTime = 0.0f;
@@ -1824,20 +1880,6 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 		deltaT = time - lastTime;
 		lastTime = time;
 
-		static double old_xpos = 0, old_ypos = 0;
-		double xpos, ypos;
-		glfwGetCursorPos(window, &xpos, &ypos);
-		double m_dx = xpos - old_xpos;
-		double m_dy = ypos - old_ypos;
-		old_xpos = xpos; old_ypos = ypos;
-
-		const float MOUSE_RES = 10.0f;
-		glfwSetInputMode(window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
-		if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS) {
-			r.y = -m_dx / MOUSE_RES;
-			r.x = -m_dy / MOUSE_RES;
-		}
-
 		if (glfwGetKey(window, GLFW_KEY_W)) {
 			m.x = 1.0f;
 		}
@@ -1846,24 +1888,24 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 		}
 
 		if (glfwGetKey(window, GLFW_KEY_A)) {
-			m.y = 1.0f;
-		}
-		if (glfwGetKey(window, GLFW_KEY_D)) {
-			m.y = -1.0f;
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_Q)) {
-			m.z = 1.0f;
-		}
-		if (glfwGetKey(window, GLFW_KEY_E)) {
 			m.z = -1.0f;
 		}
+		if (glfwGetKey(window, GLFW_KEY_D)) {
+			m.z = 1.0f;
+		}
 
-		fire = glfwGetKey(window, GLFW_KEY_SPACE) | (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS);
+		if (glfwGetKey(window, GLFW_KEY_LEFT)) {
+			m.y = 1.0f;
+		}
+		if (glfwGetKey(window, GLFW_KEY_RIGHT)) {
+			m.y = -1.0f;
+		}
+		/*
 		handleGamePad(GLFW_JOYSTICK_1, m, r, fire);
 		handleGamePad(GLFW_JOYSTICK_2, m, r, fire);
 		handleGamePad(GLFW_JOYSTICK_3, m, r, fire);
 		handleGamePad(GLFW_JOYSTICK_4, m, r, fire);
+		*/
 	}
 	
 	// Public part of the base class

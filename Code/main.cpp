@@ -5,8 +5,7 @@
 #include "modules/TextMaker.hpp"
 
 std::vector<SingleText> outText = {
-	{2, {"Adding an object", "Press SPACE to save the screenshots","",""}, 0, 0},
-	{1, {"Saving Screenshots. Please wait.", "", "",""}, 0, 0}
+	{2, {"Plane Simulator", "Press SPACE to start the engine","",""}, 0, 0}
 };
 
 struct GlobalUniformBufferObject {
@@ -49,7 +48,7 @@ class A10 : public BaseProject {
 
     TextMaker txt;
 
-	Model Mblack_car;
+	Model Mplane;
 	Model Mtile4;
 	Model Mtile002;
 
@@ -67,8 +66,8 @@ class A10 : public BaseProject {
 	// Here you set the main application parameters
 	void setWindowParameters() {
 		// window size, titile and initial background
-		windowWidth = 800;
-		windowHeight = 600;
+		windowWidth = 1920;  
+		windowHeight = 1080; 
 		windowTitle = "CG-PROJECT";
     	windowResizable = GLFW_TRUE;
 		initialBackgroundColor = {0.1f, 0.1f, 0.1f, 1.0f};
@@ -110,7 +109,7 @@ class A10 : public BaseProject {
 		PSimple.init(this, &VDSimple, "shaders/SimpleVert.spv", "shaders/SimpleFrag.spv", { &DSLGlobal, &DSLCity });
 		PSimple.setAdvancedFeatures(VK_COMPARE_OP_LESS_OR_EQUAL, VK_POLYGON_MODE_FILL,
 			VK_CULL_MODE_NONE, false);
-		Mblack_car.init(this, &VDSimple, "models/transport_air_008_transport_air_008.001.mgcg", MGCG);
+		Mplane.init(this, &VDSimple, "models/transport_air_008_transport_air_008.001.mgcg", MGCG);
 		Mtile4.init(this, &VDSimple, "models/road_tile_1x1_007.mgcg", MGCG);
 		Mtile002.init(this, &VDSimple, "models/road_tile_1x1_002.mgcg", MGCG);
 
@@ -129,8 +128,8 @@ class A10 : public BaseProject {
 		std::cout << "Descriptor Sets in the Pool : " << DPSZs.setsInPool << "\n";
 		
 		ViewMatrix = glm::translate(glm::mat4(1), -CamPos);
-		Mblack_car.Wm = glm::rotate(Mblack_car.Wm, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		Mblack_car.Wm = glm::scale(glm::mat4(1.0f), glm::vec3(0.4f)) * Mblack_car.Wm;
+		Mplane.Wm = glm::rotate(Mplane.Wm, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		Mplane.Wm = glm::scale(glm::mat4(1.0f), glm::vec3(0.4f)) * Mplane.Wm;
 	}
 	
 	// Here you create your pipelines and Descriptor Sets!
@@ -161,7 +160,7 @@ class A10 : public BaseProject {
 	void localCleanup() {	
 		Tcity.cleanup();
 
-		Mblack_car.cleanup();
+		Mplane.cleanup();
 		Mtile4.cleanup();
 		Mtile002.cleanup();
 
@@ -178,11 +177,11 @@ class A10 : public BaseProject {
 	
 	void populateCommandBuffer(VkCommandBuffer commandBuffer, int currentImage) {
 		PSimple.bind(commandBuffer);
-		Mblack_car.bind(commandBuffer);
+		Mplane.bind(commandBuffer);
 		DSGlobal.bind(commandBuffer, PSimple, 0, currentImage);
 		DSCity.bind(commandBuffer, PSimple, 1, currentImage);
 		vkCmdDrawIndexed(commandBuffer,
-			static_cast<uint32_t>(Mblack_car.indices.size()), 1, 0, 0, 0);
+			static_cast<uint32_t>(Mplane.indices.size()), 1, 0, 0, 0);
 
 		PSimple.bind(commandBuffer);
 		Mtile4.bind(commandBuffer);
@@ -205,86 +204,63 @@ class A10 : public BaseProject {
 	// Very likely this will be where you will be writing the logic of your application.
 	bool start = false;
 
+	float X_SPEED = 0.5f;
+	float Y_SPEED = 0.25f;
+	float Z_SPEED = 1.5f;
+	float SPEED = 10.0f;
+
+	float followSpeed = 1.0f;
+	float minDistance = -4.0f;
+	float maxDistance = -20.0f;
+
+	glm::vec3 right = glm::vec3(1.0f, 0.0f, 0.0f);
+	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+	glm::vec3 forward = glm::vec3(0.0f, 0.0f, 1.0f);
+
 	void updateUniformBuffer(uint32_t currentImage) {
-		static bool debounce = false;
-		static int curDebounce = 0;
 
 		float deltaT;
-		glm::vec3 m = glm::vec3(0.0f), r = glm::vec3(0.0f);
-		bool fire = false;
-		getSixAxis(deltaT, m, r, fire);
+		glm::vec3 m = glm::vec3(0.0f);
+		float speedFactor;
 		
-		static float autoTime = true;
+		getSixAxis(deltaT, m);
+		handle_commands(start, speedFactor);
+
 		static float cTime = 0.0;
 		const float turnTime = 72.0f;
 		const float angTurnTimeFact = 2.0f * M_PI / turnTime;
 		
-		if(autoTime) {
-			cTime = cTime + deltaT;
-			cTime = (cTime > turnTime) ? (cTime - turnTime) : cTime;
-		}
+		cTime = cTime + deltaT;
+		cTime = (cTime > turnTime) ? (cTime - turnTime) : cTime;
 
-		static float tTime = 0.0;
-		const float TturnTime = 60.0f;
-		const float TangTurnTimeFact = 1.0f / TturnTime;
-		
-		if(autoTime) {
-			tTime = tTime + deltaT;
-			tTime = (tTime > TturnTime) ? (tTime - TturnTime) : tTime;
-		}
-		
-		float Y_SPEED = 0.75f;  
-		float X_SPEED = 1.0f;  
-		float Z_SPEED = 2.5f;  
-		float SPEED = 5.0f;   
-		
-		float followSpeed = 1.0f;  
-		float maxDistance = -20.0f;  
-		float minDistance = -5.0f;   
-		float speedFactor = 0.1f;    
-		float currentSpeed = 0.0f;
-
-		glm::vec3 right = glm::vec3(1.0f, 0.0f, 0.0f);
-		glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-		glm::vec3 forward = glm::vec3(0.0f, 0.0f, 1.0f);
-
-		if (start) 
+		if (start)
 		{
-			Mblack_car.Wm = glm::rotate(Mblack_car.Wm, m.x * X_SPEED * deltaT, right);
-			Mblack_car.Wm = glm::rotate(Mblack_car.Wm, m.y * Y_SPEED * deltaT, up); 
-			Mblack_car.Wm = glm::rotate(Mblack_car.Wm, m.z * Z_SPEED * deltaT, forward);
-		    Mblack_car.Wm = glm::translate(Mblack_car.Wm, forward * SPEED * deltaT);
+			glm::mat4 rotationMatrix = glm::rotate(glm::rotate(glm::rotate(glm::mat4(1.0f),m.x * X_SPEED * deltaT, right),m.y * Y_SPEED * deltaT, up),m.z * Z_SPEED * deltaT, forward);
+			Mplane.Wm = glm::translate(Mplane.Wm * rotationMatrix, forward * SPEED * speedFactor * deltaT);
 		}
-
-		glm::vec3 planePosition = glm::vec3(Mblack_car.Wm[3]);
 		
-		currentSpeed = glm::length(forward * SPEED);
+		glm::vec3 planePosition = glm::vec3(Mplane.Wm[3]);
 
-		float fixedDistance = glm::mix(minDistance, maxDistance, currentSpeed * speedFactor);
-
-		glm::vec3 desiredCamPos = planePosition + forward * fixedDistance + up * 2.0f;
-		glm::vec3 lateralMove = (glm::vec3(desiredCamPos.x, desiredCamPos.y, desiredCamPos.z) - glm::vec3(CamPos.x, CamPos.y, CamPos.z)) * followSpeed * deltaT;
-		CamPos += lateralMove;
-
-		ViewMatrix = glm::lookAt(CamPos, planePosition, up);
-
-		if(glfwGetKey(window, GLFW_KEY_SPACE)) {
-			start = true;
+		if (start)
+		{
+			glm::vec3 cameraOffset = - glm::normalize(glm::vec3(Mplane.Wm[2])) * glm::mix(minDistance, maxDistance, speedFactor / 2.0f);
+			glm::vec3 desiredCamPos = planePosition - cameraOffset;
+			if (CamPos.y < 0.0f)
+			{
+				CamPos.y = 0.0f;
+			}
+			CamPos += (desiredCamPos - CamPos) * followSpeed * deltaT;
 		}
 
-		// Standard procedure to quit when the ESC key is pressed
-		if(glfwGetKey(window, GLFW_KEY_ESCAPE)) {
-			glfwSetWindowShouldClose(window, GL_TRUE);
-		}
-	
-		// Here is where you actually update your uniforms
+		ViewMatrix = glm::lookAt(CamPos, planePosition, glm::vec3(Mplane.Wm[1]));
+
 		glm::mat4 M = glm::perspective(glm::radians(45.0f), Ar, 0.1f, 160.0f);
 		M[1][1] *= -1;
 
 		glm::mat4 Mv = ViewMatrix;
 
-		glm::mat4 ViewPrj =  M * Mv;
-		glm::mat4 baseTr = glm::mat4(1.0f);								
+		glm::mat4 ViewPrj = M * Mv;
+		glm::mat4 baseTr = glm::mat4(1.0f);					
 
 		// updates global uniforms
 		// Global
@@ -294,8 +270,7 @@ class A10 : public BaseProject {
 		gubo.eyePos = glm::vec3(glm::inverse(ViewMatrix) * glm::vec4(0, 0, 0, 1));
 		DSGlobal.map(currentImage, &gubo, 0);
 
-		// objects
-
+		// Objects
 		SimpleUniformBufferObject simpleUbo{};
 		SimpleMatParUniformBufferObject simpleMatParUbo{};
 
@@ -304,7 +279,7 @@ class A10 : public BaseProject {
 		simpleUbo.mvpMat = ViewPrj * simpleUbo.mMat;
 		DStile4.map(currentImage, &simpleUbo, 0);
 
-		simpleUbo.mMat = Mblack_car.Wm * baseTr;
+		simpleUbo.mMat = Mplane.Wm * baseTr;
 		simpleUbo.mvpMat = ViewPrj * simpleUbo.mMat;
 		simpleUbo.nMat = glm::inverse(glm::transpose(simpleUbo.mMat));
 		DSCity.map(currentImage, &simpleUbo, 0);
