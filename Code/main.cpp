@@ -32,7 +32,7 @@ struct SimpleVertex {
 
 
 // MAIN ! 
-class A10 : public BaseProject {
+class CGProject : public BaseProject {
 	protected:
 
 	DescriptorSetLayout DSLGlobal;
@@ -819,15 +819,13 @@ class A10 : public BaseProject {
 	float X_SPEED = 0.5f;
 	float Y_SPEED = 0.25f;
 	float Z_SPEED = 1.5f;
-	float SPEED = 10.0f;
+	float SPEED = 20.0f;
 
 	float followSpeed = 0.5f;
-	float minDistance = -4.0f;
+	float minDistance = -6.0f;
 	float maxDistance = -20.0f;
 
-	glm::vec3 right = glm::vec3(1.0f, 0.0f, 0.0f);
 	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-	glm::vec3 forward = glm::vec3(0.0f, 0.0f, 1.0f);
 
 	void updateUniformBuffer(uint32_t currentImage) {
 
@@ -847,24 +845,25 @@ class A10 : public BaseProject {
 
 		if (start)
 		{
-			glm::mat4 rotationMatrix = glm::rotate(glm::rotate(glm::rotate(glm::mat4(1.0f), m.x * X_SPEED * deltaT, right), m.y * Y_SPEED * deltaT, up), m.z * Z_SPEED * deltaT, forward);
-			Mplane.Wm = glm::translate(Mplane.Wm * rotationMatrix, forward * SPEED * speedFactor * deltaT);
+			glm::mat4 rotationMatrix = glm::rotate(glm::rotate(glm::rotate(glm::mat4(1.0f), m.x * X_SPEED * deltaT, glm::vec3(1.0f, 0.0f, 0.0f)), m.y * Y_SPEED * deltaT, glm::vec3(0.0f, 1.0f, 0.0f)), m.z * Z_SPEED * deltaT, glm::vec3(0.0f, 0.0f, 1.0f));
+			Mplane.Wm = glm::translate(Mplane.Wm * rotationMatrix, glm::vec3(0.0f, 0.0f, 1.0f) * SPEED * speedFactor * deltaT);
 		}
 
 		glm::vec3 planePosition = glm::vec3(Mplane.Wm[3]);
 
 		if (start)
 		{
-			glm::vec3 cameraOffset = -glm::normalize(glm::vec3(Mplane.Wm[2])) * glm::mix(minDistance, maxDistance, speedFactor / 2.0f);
+			glm::vec3 cameraOffset = - glm::normalize(glm::vec3(Mplane.Wm[2])) * glm::mix(minDistance, maxDistance, speedFactor / 2.0f);
 			glm::vec3 desiredCamPos = planePosition - cameraOffset;
 			if (CamPos.y < 0.0f)
 			{
 				CamPos.y = 0.0f;
 			}
-			CamPos += (desiredCamPos - CamPos) * followSpeed * deltaT;
+			CamPos += (desiredCamPos - CamPos) * followSpeed * speedFactor* deltaT;
+			up += (glm::vec3(Mplane.Wm[1]) - up) * followSpeed * deltaT;
 		}
 
-		ViewMatrix = glm::lookAt(CamPos, planePosition, glm::vec3(Mplane.Wm[1]));
+		ViewMatrix = glm::lookAt(CamPos, planePosition, up);
 
 		glm::mat4 M = glm::perspective(glm::radians(45.0f), Ar, 0.1f, 160.0f);
 		M[1][1] *= -1;
@@ -1277,7 +1276,7 @@ class A10 : public BaseProject {
 
 // This is the main: probably you do not need to touch this!
 int main() {
-    A10 app;
+	CGProject app;
 
     try {
         app.run();
