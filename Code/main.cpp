@@ -818,7 +818,7 @@ class CGProject : public BaseProject {
 
 	float X_SPEED = 0.5f;
 	float Y_SPEED = 0.25f;
-	float Z_SPEED = 1.5f;
+	float Z_SPEED = 0.75f;
 	float SPEED = 20.0f;
 
 	float followSpeed = 0.5f;
