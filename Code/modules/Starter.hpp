@@ -1813,11 +1813,11 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 		}
 	}
 		
-	double lastUpdateTime = glfwGetTime();
-	const double debounceTime = 0.2f;
-	int speedCounter = 1;
+	int oldCameraDirection = -1;
+	float oldSpeedFactor = 1.0f;
+	double now = -1.0;
 
-	void handle_commands(bool& start, float& speedFactor) {
+	void handle_commands(bool& start, float& speedFactor, int& cameraDirection, bool& instantCamera) {
 
 
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE)) {
@@ -1827,45 +1827,38 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 		if (glfwGetKey(window, GLFW_KEY_SPACE)) {
 			start = true;
 		}
-		
-		double currentTime = glfwGetTime(); 
 
-		if (currentTime - lastUpdateTime > debounceTime) {
-			if (glfwGetKey(window, GLFW_KEY_UP)) {
-				speedCounter++;
-				if (speedCounter > 4)
-					speedCounter = 4;
-
-				lastUpdateTime = currentTime;
-			}
-
-			if (glfwGetKey(window, GLFW_KEY_DOWN)) {
-				speedCounter--;
-				if (speedCounter < 0)
-					speedCounter = 0;
-
-				lastUpdateTime = currentTime;
-			}
+		if (glfwGetKey(window, GLFW_KEY_1)) {
+			oldSpeedFactor = 0.5f;
 		}
 
-		switch (speedCounter)
-		{
-		case 0:
-			speedFactor = 0.25f;
-			break;
-		case 1:
-			speedFactor = 0.5f;
-			break;
-		case 2:
-			speedFactor = 1.0f;
-			break;
-		case 3:
-			speedFactor = 1.5f;
-			break;
-		default:
-			speedFactor = 2.0f;
-			break;
+		if (glfwGetKey(window, GLFW_KEY_2)) {
+			oldSpeedFactor = 1.0f;
 		}
+
+		if (glfwGetKey(window, GLFW_KEY_3)) {
+			oldSpeedFactor = 1.5f;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_4)) {
+			oldSpeedFactor = 2.0f;
+		}
+
+		speedFactor = oldSpeedFactor;
+		cameraDirection = -1;
+		instantCamera = false;
+
+
+		if (glfwGetKey(window, GLFW_KEY_B)) {
+			cameraDirection = 1;
+		}
+
+		if (cameraDirection != oldCameraDirection || (static_cast<double>(std::time(nullptr)) - now) < 0.1f) {
+			instantCamera = true;
+			now = static_cast<double>(std::time(nullptr));
+		}
+
+		oldCameraDirection = cameraDirection;
 
 	}
 
@@ -1886,18 +1879,16 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 		if (glfwGetKey(window, GLFW_KEY_S)) {
 			m.x = -1.0f;
 		}
-
-		if (glfwGetKey(window, GLFW_KEY_A)) {
+		if (glfwGetKey(window, GLFW_KEY_Q)) {
 			m.z = -1.0f;
 		}
-		if (glfwGetKey(window, GLFW_KEY_D)) {
+		if (glfwGetKey(window, GLFW_KEY_E)) {
 			m.z = 1.0f;
 		}
-
-		if (glfwGetKey(window, GLFW_KEY_LEFT)) {
+		if (glfwGetKey(window, GLFW_KEY_A)) {
 			m.y = 1.0f;
 		}
-		if (glfwGetKey(window, GLFW_KEY_RIGHT)) {
+		if (glfwGetKey(window, GLFW_KEY_D)) {
 			m.y = -1.0f;
 		}
 		/*

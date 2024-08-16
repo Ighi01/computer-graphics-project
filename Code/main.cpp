@@ -162,7 +162,7 @@ class CGProject : public BaseProject {
 	int currScene = 0;
 	int subpass = 0;
 
-	glm::vec3 CamPos = glm::vec3(8.0, 4.5, 8.0);
+	glm::vec3 CamPos = glm::vec3(9.5, 2.5, 8.0);
 	glm::mat4 ViewMatrix;
 
 	float Ar;
@@ -275,8 +275,8 @@ class CGProject : public BaseProject {
 		ViewMatrix = glm::translate(glm::mat4(1), -CamPos);
 		Mplane.Wm = glm::rotate(Mplane.Wm, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		Mplane.Wm = glm::rotate(Mplane.Wm, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		Mplane.Wm = glm::translate(Mplane.Wm, glm::vec3(-20.0f, -0.5f, 0.0f));
-		Mplane.Wm = glm::scale(glm::mat4(1.0f), glm::vec3(0.4f)) * Mplane.Wm;
+		Mplane.Wm = glm::translate(Mplane.Wm, glm::vec3(-8.0f, 2.0f, 10.0f));
+		Mplane.Wm *= glm::scale(glm::mat4(1.0f), glm::vec3(0.4f * 0.1));
 	}
 	
 	// Here you create your pipelines and Descriptor Sets!
@@ -819,11 +819,17 @@ class CGProject : public BaseProject {
 	float X_SPEED = 0.5f;
 	float Y_SPEED = 0.25f;
 	float Z_SPEED = 0.75f;
-	float SPEED = 20.0f;
+	float SPEED = 10.0f;
 
 	float followSpeed = 0.5f;
-	float minDistance = -6.0f;
-	float maxDistance = -20.0f;
+	float cameraSpeed = 20.0f;
+	float minDistance = -3.0f * 0.1;
+	float maxDistance = -10.0f * 0.1;
+
+	float maxX = 100.0;
+	float maxZ = 100.0;
+	float maxDown = 1.0;
+	float maxUp = 50.0;
 
 	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 
@@ -832,9 +838,11 @@ class CGProject : public BaseProject {
 		float deltaT;
 		glm::vec3 m = glm::vec3(0.0f);
 		float speedFactor;
+		int cameraDirection;
+		bool instantCamera;
 
 		getSixAxis(deltaT, m);
-		handle_commands(start, speedFactor);
+		handle_commands(start, speedFactor, cameraDirection,instantCamera);
 
 		static float cTime = 0.0;
 		const float turnTime = 72.0f;
@@ -845,21 +853,45 @@ class CGProject : public BaseProject {
 
 		if (start)
 		{
-			glm::mat4 rotationMatrix = glm::rotate(glm::rotate(glm::rotate(glm::mat4(1.0f), m.x * X_SPEED * deltaT, glm::vec3(1.0f, 0.0f, 0.0f)), m.y * Y_SPEED * deltaT, glm::vec3(0.0f, 1.0f, 0.0f)), m.z * Z_SPEED * deltaT, glm::vec3(0.0f, 0.0f, 1.0f));
+			glm::mat4 rotationMatrix = glm::mat4(1.0f);
+			bool block = false;
+
+			if (Mplane.Wm[3].y <= maxDown) {
+				rotationMatrix = glm::rotate(rotationMatrix, - X_SPEED * deltaT, glm::vec3(1.0f, 0.0f, 0.0f));
+				block = true;
+			}
+			if (Mplane.Wm[3].y >= maxUp) {
+				rotationMatrix = glm::rotate(rotationMatrix, X_SPEED * deltaT, glm::vec3(1.0f, 0.0f, 0.0f));
+				block = true;
+			}
+			if (glm::abs(Mplane.Wm[3].x) >= maxX || glm::abs(Mplane.Wm[3].z) >= maxZ) {
+				rotationMatrix = glm::rotate(rotationMatrix, - Y_SPEED * deltaT, glm::vec3(0.0f, 1.0f, 0.0f));
+				block = true;
+			}
+
+			if(!block){
+				rotationMatrix = glm::rotate(glm::rotate(glm::rotate(glm::mat4(1.0f), m.x * X_SPEED * deltaT, glm::vec3(1.0f, 0.0f, 0.0f)), m.y * Y_SPEED * deltaT, glm::vec3(0.0f, 1.0f, 0.0f)), m.z * Z_SPEED * deltaT, glm::vec3(0.0f, 0.0f, 1.0f));
+			}
 			Mplane.Wm = glm::translate(Mplane.Wm * rotationMatrix, glm::vec3(0.0f, 0.0f, 1.0f) * SPEED * speedFactor * deltaT);
 		}
 
 		glm::vec3 planePosition = glm::vec3(Mplane.Wm[3]);
+		glm::vec3 desiredCamPos;
 
 		if (start)
 		{
-			glm::vec3 cameraOffset = - glm::normalize(glm::vec3(Mplane.Wm[2])) * glm::mix(minDistance, maxDistance, speedFactor / 2.0f);
-			glm::vec3 desiredCamPos = planePosition - cameraOffset;
-			if (CamPos.y < 0.0f)
-			{
-				CamPos.y = 0.0f;
+			glm::vec3 cameraOffset = glm::vec3(cameraDirection) * glm::normalize(glm::vec3(Mplane.Wm[2])) * ( (cameraDirection < 0) ? glm::mix(minDistance, maxDistance, speedFactor) : glm::mix(2 * minDistance, 2 * maxDistance, speedFactor));
+			desiredCamPos = planePosition - cameraOffset;
+			if (instantCamera) {
+				CamPos = desiredCamPos;
 			}
-			CamPos += (desiredCamPos - CamPos) * followSpeed * speedFactor* deltaT;
+			else {
+				CamPos += (desiredCamPos - CamPos) * followSpeed * speedFactor * deltaT;
+			}
+			if (CamPos.y < 0)
+			{
+				CamPos.y = 0;
+			}
 			up += (glm::vec3(Mplane.Wm[1]) - up) * followSpeed * deltaT;
 		}
 
