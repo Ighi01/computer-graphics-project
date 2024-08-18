@@ -154,13 +154,8 @@ class CGProject : public BaseProject {
 	Model Mstore005;
 	Model Mgreen;
 
-
 	Texture Tcity;
 	Texture Tmedieval;
-
-	// Other application parameters
-	int currScene = 0;
-	int subpass = 0;
 
 	glm::vec3 CamPos = glm::vec3(9.5, 2.5, 8.0);
 	glm::mat4 ViewMatrix;
@@ -174,7 +169,7 @@ class CGProject : public BaseProject {
 		windowHeight = 1080;
 		windowTitle = "CG-PROJECT";
     	windowResizable = GLFW_TRUE;
-		initialBackgroundColor = { 0.5372549f, 0.65882353f, 0.77254902f, 1.0f };
+		initialBackgroundColor = { 0.4f, 0.7f, 1.0f, 1.0f };
 		
 		Ar = (float)windowWidth / (float)windowHeight;
 	}
@@ -276,7 +271,7 @@ class CGProject : public BaseProject {
 		Mplane.Wm = glm::rotate(Mplane.Wm, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		Mplane.Wm = glm::rotate(Mplane.Wm, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		Mplane.Wm = glm::translate(Mplane.Wm, glm::vec3(-8.0f, 2.0f, 10.0f));
-		Mplane.Wm *= glm::scale(glm::mat4(1.0f), glm::vec3(0.4f * 0.1));
+		Mplane.Wm *= glm::scale(glm::mat4(1.0f), glm::vec3(0.04f));
 	}
 	
 	// Here you create your pipelines and Descriptor Sets!
@@ -809,7 +804,7 @@ class CGProject : public BaseProject {
 		vkCmdDrawIndexed(commandBuffer,
 			static_cast<uint32_t>(Mgreen.indices.size()), 1, 0, 0, 0);
 
-		txt.populateCommandBuffer(commandBuffer, currentImage, currScene);
+		txt.populateCommandBuffer(commandBuffer, currentImage, 0);
 	}
 
 	// Here is where you update the uniforms.
@@ -822,9 +817,9 @@ class CGProject : public BaseProject {
 	float SPEED = 10.0f;
 
 	float followSpeed = 0.5f;
-	float cameraSpeed = 20.0f;
-	float minDistance = -3.0f * 0.1;
-	float maxDistance = -10.0f * 0.1;
+	float minDistance = -0.2f;
+	float maxDistance = -1.0f;
+	float camUpOffset = 15.0f;
 
 	float maxX = 100.0;
 	float maxZ = 100.0;
@@ -842,14 +837,7 @@ class CGProject : public BaseProject {
 		bool instantCamera;
 
 		getSixAxis(deltaT, m);
-		handle_commands(start, speedFactor, cameraDirection,instantCamera);
-
-		static float cTime = 0.0;
-		const float turnTime = 72.0f;
-		const float angTurnTimeFact = 2.0f * M_PI / turnTime;
-
-		cTime = cTime + deltaT;
-		cTime = (cTime > turnTime) ? (cTime - turnTime) : cTime;
+		handle_commands(start, speedFactor, cameraDirection, instantCamera);
 
 		if (start)
 		{
@@ -857,7 +845,7 @@ class CGProject : public BaseProject {
 			bool block = false;
 
 			if (Mplane.Wm[3].y <= maxDown) {
-				rotationMatrix = glm::rotate(rotationMatrix, - X_SPEED * deltaT, glm::vec3(1.0f, 0.0f, 0.0f));
+				rotationMatrix = glm::rotate(rotationMatrix, -X_SPEED * deltaT, glm::vec3(1.0f, 0.0f, 0.0f));
 				block = true;
 			}
 			if (Mplane.Wm[3].y >= maxUp) {
@@ -865,11 +853,11 @@ class CGProject : public BaseProject {
 				block = true;
 			}
 			if (glm::abs(Mplane.Wm[3].x) >= maxX || glm::abs(Mplane.Wm[3].z) >= maxZ) {
-				rotationMatrix = glm::rotate(rotationMatrix, - Y_SPEED * deltaT, glm::vec3(0.0f, 1.0f, 0.0f));
+				rotationMatrix = glm::rotate(rotationMatrix, -Y_SPEED * deltaT, glm::vec3(0.0f, 1.0f, 0.0f));
 				block = true;
 			}
 
-			if(!block){
+			if (!block) {
 				rotationMatrix = glm::rotate(glm::rotate(glm::rotate(glm::mat4(1.0f), m.x * X_SPEED * deltaT, glm::vec3(1.0f, 0.0f, 0.0f)), m.y * Y_SPEED * deltaT, glm::vec3(0.0f, 1.0f, 0.0f)), m.z * Z_SPEED * deltaT, glm::vec3(0.0f, 0.0f, 1.0f));
 			}
 			Mplane.Wm = glm::translate(Mplane.Wm * rotationMatrix, glm::vec3(0.0f, 0.0f, 1.0f) * SPEED * speedFactor * deltaT);
@@ -880,8 +868,9 @@ class CGProject : public BaseProject {
 
 		if (start)
 		{
-			glm::vec3 cameraOffset = glm::vec3(cameraDirection) * glm::normalize(glm::vec3(Mplane.Wm[2])) * ( (cameraDirection < 0) ? glm::mix(minDistance, maxDistance, speedFactor) : glm::mix(2 * minDistance, 2 * maxDistance, speedFactor));
-			desiredCamPos = planePosition - cameraOffset;
+			glm::vec3 cameraOffset = glm::vec3(cameraDirection) * glm::normalize(glm::vec3(Mplane.Wm[2])) * ((cameraDirection < 0) ? glm::mix(minDistance, maxDistance, speedFactor) : glm::mix(2 * minDistance, 2 * maxDistance, speedFactor));
+			desiredCamPos = planePosition - cameraOffset + glm::vec3(Mplane.Wm[1]) * camUpOffset;
+			
 			if (instantCamera) {
 				CamPos = desiredCamPos;
 			}
@@ -905,12 +894,29 @@ class CGProject : public BaseProject {
 		glm::mat4 ViewPrj = M * Mv;
 		glm::mat4 baseTr = glm::mat4(1.0f);
 
-		// updates global uniforms
-		// Global
+		static float cTime = 50.0;
+		const float turnTime = 300.0f;
+
+		if (!glfwGetKey(window, GLFW_KEY_Z))
+			cTime += deltaT;
+
+		float angle = cTime * 2.0f * M_PI / turnTime;
+
 		GlobalUniformBufferObject gubo{};
-		gubo.lightDir = glm::vec3(cos(glm::radians(135.0f)) * cos(cTime * angTurnTimeFact), sin(glm::radians(135.0f)), cos(glm::radians(135.0f)) * sin(cTime * angTurnTimeFact));
-		gubo.lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-		gubo.eyePos = glm::vec3(glm::inverse(ViewMatrix) * glm::vec4(0, 0, 0, 1));
+
+		float lightIntensity = glm::clamp(sin(angle) * 0.5f + 0.5f, 0.0f, 1.0f);
+		
+		glm::vec3 dayColor = glm::vec3(0.4f, 0.7f, 1.0f);  
+		glm::vec3 nightColor = glm::vec3(0.01f, 0.01f, 0.05f);
+
+		glm::vec3 backgroundColor = glm::mix(nightColor, dayColor, lightIntensity);
+		setBackgroundColor(backgroundColor);
+
+		if (sin(angle) > 0.01) {
+			gubo.lightDir = glm::vec3(0.0f, sin(angle), cos(angle));;
+			gubo.lightColor = glm::vec4(lightIntensity, lightIntensity, lightIntensity, 1.0f);
+			gubo.eyePos = glm::vec3(glm::inverse(ViewMatrix) * glm::vec4(0, 0, 0, 1));
+		}
 		DSGlobal.map(currentImage, &gubo, 0);
 
 		// objects

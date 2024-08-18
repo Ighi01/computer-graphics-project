@@ -1580,6 +1580,15 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 			}
 		}
 	}
+	double now = -0.1f;
+	void setBackgroundColor(const glm::vec3& color) {
+		if ((static_cast<double>(std::time(nullptr)) - now) >= 0.1f){
+			now = static_cast<double>(std::time(nullptr));
+			initialBackgroundColor = { {color.r, color.g, color.b, 1.0f} };
+			vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
+			createCommandBuffers();
+		}
+	}
     
     void createSyncObjects() {
     	imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
@@ -1815,7 +1824,6 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 		
 	int oldCameraDirection = -1;
 	float oldSpeedFactor = 1.0f;
-	double now = -1.0;
 
 	void handle_commands(bool& start, float& speedFactor, int& cameraDirection, bool& instantCamera) {
 
@@ -1853,9 +1861,8 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 			cameraDirection = 1;
 		}
 
-		if (cameraDirection != oldCameraDirection || (static_cast<double>(std::time(nullptr)) - now) < 0.1f) {
+		if (cameraDirection != oldCameraDirection) {
 			instantCamera = true;
-			now = static_cast<double>(std::time(nullptr));
 		}
 
 		oldCameraDirection = cameraDirection;
@@ -1891,7 +1898,7 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 		if (glfwGetKey(window, GLFW_KEY_D)) {
 			m.y = -1.0f;
 		}
-		/*
+		/* TODO
 		handleGamePad(GLFW_JOYSTICK_1, m, r, fire);
 		handleGamePad(GLFW_JOYSTICK_2, m, r, fire);
 		handleGamePad(GLFW_JOYSTICK_3, m, r, fire);
