@@ -13,6 +13,7 @@
 #include <array>
 #include <cmath>
 #include <math.h>
+#include <future>
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEFAULT_ALIGNED_GENTYPES
@@ -1580,14 +1581,20 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 			}
 		}
 	}
-	double now = -0.1f;
-	void setBackgroundColor(const glm::vec3& color) {
-		if ((static_cast<double>(std::time(nullptr)) - now) >= 0.1f){
+
+	double now = -0.01f;
+
+	void setBackgroundColorAsync(const glm::vec3& color) {
+		if ((static_cast<double>(std::time(nullptr)) - now) >= 0.01f) {
 			now = static_cast<double>(std::time(nullptr));
+			std::async(std::launch::async, &BaseProject::setBackgroundColor, this, color);
+		}
+	}
+
+	void setBackgroundColor(const glm::vec3& color) {
 			initialBackgroundColor = { {color.r, color.g, color.b, 1.0f} };
 			vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
 			createCommandBuffers();
-		}
 	}
     
     void createSyncObjects() {
@@ -1824,8 +1831,9 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 		
 	int oldCameraDirection = -1;
 	float oldSpeedFactor = 1.0f;
+	int images = 0;
 
-	void handle_commands(bool& start, float& speedFactor, int& cameraDirection, bool& instantCamera) {
+	void handleCommands(bool& start, float& speedFactor, int& cameraDirection, bool& instantCamera, uint32_t currentImage) {
 
 
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE)) {
@@ -1833,7 +1841,14 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 		}
 
 		if (glfwGetKey(window, GLFW_KEY_SPACE)) {
-			start = true;
+			if (start) {
+				char buf[50];
+				sprintf_s(buf, "../Images/CGProject_%d.png", images++);
+				std::async(std::launch::async, &BaseProject::saveScreenshot, this, buf, currentImage);
+			}
+			else {
+				start = true;
+			}
 		}
 
 		if (glfwGetKey(window, GLFW_KEY_1)) {
@@ -2105,8 +2120,8 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 	
 	public:
 	bool screenshotSaved = false;
-	
-	void saveScreenshot(const char *filename, int currentBuffer) {
+
+	void saveScreenshot(const std::string& path, int currentBuffer){
 		VkResult result;
 		uint32_t width = swapChainExtent.width;
 		uint32_t height = swapChainExtent.height;
@@ -2355,10 +2370,11 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 			}
 			data += subResourceLayout.rowPitch;
 		}
-		stbi_write_png(filename, width, height, 3, pixelArray, width*3);
+
+		stbi_write_png(path.c_str(), width, height, 3, pixelArray, width * 3);
 		free(pixelArray);
 
-		std::cout << "Screenshot saved to disk" << std::endl;
+		std::cout << "Screenshot saved to " << path << std::endl;
 
 		// Clean up resources
 		vkUnmapMemory(device, dstImageMemory);

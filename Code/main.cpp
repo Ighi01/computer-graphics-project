@@ -280,7 +280,7 @@ class CGProject : public BaseProject {
 		bool instantCamera;
 
 		getSixAxis(deltaT, m);
-		handle_commands(start, speedFactor, cameraDirection, instantCamera);
+		handleCommands(start, speedFactor, cameraDirection, instantCamera, currentImage);
 
 		if (start)
 		{
@@ -363,7 +363,8 @@ class CGProject : public BaseProject {
 		glm::vec3 nightColor = glm::vec3(0.01f, 0.01f, 0.05f);
 
 		glm::vec3 backgroundColor = glm::mix(nightColor, dayColor, lightIntensity);
-		setBackgroundColor(backgroundColor);
+
+		setBackgroundColorAsync(backgroundColor);
 
 		if (sin(angle) > 0.01) {
 			gubo.lightDir[6] = glm::vec3(0.0f, sin(angle), cos(angle));;
