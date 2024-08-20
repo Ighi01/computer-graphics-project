@@ -13,9 +13,14 @@ std::vector<SingleText> outText = {
 };
 
 struct GlobalUniformBufferObject {
-	alignas(16) glm::vec3 lightDir;
-	alignas(16) glm::vec4 lightColor;
+	alignas(16) glm::vec3 lightDir[6];
+	alignas(16) glm::vec3 lightPos[6];
+	alignas(16) glm::vec4 lightColor[6];
+	alignas(4) float cosIn;
+	alignas(4) float cosOut;
 	alignas(16) glm::vec3 eyePos;
+	alignas(16) glm::vec4 eyeDir;
+	alignas(16) glm::vec4 lightOn;
 };
 
 struct SimpleUniformBufferObject {
@@ -57,6 +62,12 @@ class CGProject : public BaseProject {
 	glm::mat4 ViewMatrix;
 
 	float Ar;
+
+	glm::mat4 LWm[6];
+	glm::vec3 LCol[6];
+	float LInt[5];
+	float ScosIn, ScosOut;
+	glm::vec4 lightOn;
 
 	// Here you set the main application parameters
 	void setWindowParameters() {
@@ -128,6 +139,64 @@ class CGProject : public BaseProject {
 		Mplane.Wm = glm::rotate(Mplane.Wm, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		Mplane.Wm = glm::translate(Mplane.Wm, glm::vec3(-8.0f, 2.0f, 10.0f));
 		Mplane.Wm *= glm::scale(glm::mat4(1.0f), glm::vec3(0.04f));
+		
+		nlohmann::json js;
+		std::ifstream ifs("models/Lights.json");
+		if (!ifs.is_open()) {
+			std::cout << "Error! Lights file not found!";
+			exit(-1);
+		}
+		try {
+			std::cout << "Parsing JSON\n";
+			ifs >> js;
+			ifs.close();
+			nlohmann::json ns = js["nodes"];
+			nlohmann::json ld = js["extensions"]["KHR_lights_punctual"]["lights"];
+			for (int i = 0; i < 5; i++) {
+				glm::vec3 T;
+				glm::vec3 S;
+				glm::quat Q;
+				if (ns[i].contains("translation")) {
+					T = glm::vec3(ns[i]["translation"][0],
+						ns[i]["translation"][1],
+						ns[i]["translation"][2]);
+				}
+				else {
+					T = glm::vec3(0);
+				}
+				if (ns[i].contains("rotation")) {
+					Q = glm::quat(ns[i]["rotation"][3],
+						ns[i]["rotation"][0],
+						ns[i]["rotation"][1],
+						ns[i]["rotation"][2]);
+				}
+				else {
+					Q = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
+				}
+				if (ns[i].contains("scale")) {
+					S = glm::vec3(ns[i]["scale"][0],
+						ns[i]["scale"][1],
+						ns[i]["scale"][2]);
+				}
+				else {
+					S = glm::vec3(1);
+				}
+				LWm[i] = glm::translate(glm::mat4(1), T) *
+					glm::mat4(Q) *
+					glm::scale(glm::mat4(1), S);
+				nlohmann::json cl = ld[i]["color"];
+				LCol[i] = glm::vec3(cl[0], cl[1], cl[2]);
+				LInt[i] = ld[i]["intensity"];
+			}
+			ScosIn = cos((float)ld[5]["spot"]["innerConeAngle"]);
+			ScosOut = cos((float)ld[5]["spot"]["outerConeAngle"]);
+		}
+		catch (const nlohmann::json::exception& e) {
+			std::cout << e.what() << '\n';
+		}
+
+		lightOn = glm::vec4(1);
+		std::cout << "Light initialization completed!\n";
 	}
 	
 	// Here you create your pipelines and Descriptor Sets!
@@ -278,6 +347,16 @@ class CGProject : public BaseProject {
 
 		GlobalUniformBufferObject gubo{};
 
+		for (int i = 0; i < 5; i++) {
+			gubo.lightColor[i] = glm::vec4(LCol[i], LInt[i]);
+			gubo.lightDir[i] = LWm[i] * glm::vec4(0, 0, 1, 0);
+			gubo.lightPos[i] = LWm[i] * glm::vec4(0, 0, 0, 1);
+		}
+
+		gubo.cosIn = ScosIn;
+		gubo.cosOut = ScosOut;
+		gubo.lightOn = lightOn;
+
 		float lightIntensity = glm::clamp(sin(angle) * 0.5f + 0.5f, 0.0f, 1.0f);
 		
 		glm::vec3 dayColor = glm::vec3(0.4f, 0.7f, 1.0f);  
@@ -287,8 +366,8 @@ class CGProject : public BaseProject {
 		setBackgroundColor(backgroundColor);
 
 		if (sin(angle) > 0.01) {
-			gubo.lightDir = glm::vec3(0.0f, sin(angle), cos(angle));;
-			gubo.lightColor = glm::vec4(lightIntensity, lightIntensity, lightIntensity, 1.0f);
+			gubo.lightDir[6] = glm::vec3(0.0f, sin(angle), cos(angle));;
+			gubo.lightColor[6] = glm::vec4(lightIntensity, lightIntensity, lightIntensity, 1.0f);
 			gubo.eyePos = glm::vec3(glm::inverse(ViewMatrix) * glm::vec4(0, 0, 0, 1));
 		}
 		DSGlobal.map(currentImage, &gubo, 0);
