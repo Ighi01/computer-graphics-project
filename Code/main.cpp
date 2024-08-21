@@ -254,15 +254,15 @@ class CGProject : public BaseProject {
 	// Very likely this will be where you will be writing the logic of your application.
 	bool start = false;
 
-	float X_SPEED = 0.5f;
-	float Y_SPEED = 0.25f;
-	float Z_SPEED = 0.75f;
-	float SPEED = 10.0f;
+	float X_SPEED = 0.6f;
+	float Y_SPEED = 0.4f;
+	float Z_SPEED = 1.1f;
+	float SPEED = 7.5f;
 
-	float followSpeed = 0.5f;
-	float minDistance = -0.2f;
-	float maxDistance = -1.0f;
-	float camUpOffset = 15.0f;
+	float followSpeed = 1.0f;
+	float minDistance = -0.5f;
+	float maxDistance = -3.5f;
+	float camOffset = 0.5f;
 
 	float maxX = 100.0;
 	float maxZ = 100.0;
@@ -276,11 +276,12 @@ class CGProject : public BaseProject {
 		float deltaT;
 		glm::vec3 m = glm::vec3(0.0f);
 		float speedFactor;
-		int cameraDirection;
+		float cameraFactor;
 		bool instantCamera;
+		Direction direction;
 
 		getSixAxis(deltaT, m);
-		handleCommands(start, speedFactor, cameraDirection, instantCamera, currentImage);
+		handleCommands(start, speedFactor, cameraFactor, direction, instantCamera, currentImage);
 
 		if (start)
 		{
@@ -307,24 +308,47 @@ class CGProject : public BaseProject {
 		}
 
 		glm::vec3 planePosition = glm::vec3(Mplane.Wm[3]);
-		glm::vec3 desiredCamPos;
+		glm::vec3 desiredCamPos{};
+		glm::vec3 cameraOffset;
 
 		if (start)
 		{
-			glm::vec3 cameraOffset = glm::vec3(cameraDirection) * glm::normalize(glm::vec3(Mplane.Wm[2])) * ((cameraDirection < 0) ? glm::mix(minDistance, maxDistance, speedFactor) : glm::mix(2 * minDistance, 2 * maxDistance, speedFactor));
-			desiredCamPos = planePosition - cameraOffset + glm::vec3(Mplane.Wm[1]) * camUpOffset;
-			
+			switch (direction) {			
+			case FRONT:
+				cameraOffset = - glm::normalize(glm::vec3(Mplane.Wm[2])) * glm::mix(minDistance, maxDistance, cameraFactor / maxCameraFactor);
+				desiredCamPos = planePosition - cameraOffset + glm::normalize(glm::vec3(Mplane.Wm[1])) * camOffset;
+				break;			
+			case BACK:
+				cameraOffset = glm::normalize(glm::vec3(Mplane.Wm[2])) * glm::mix(minDistance, maxDistance, cameraFactor / maxCameraFactor);
+				desiredCamPos = planePosition - cameraOffset + glm::normalize(glm::vec3(Mplane.Wm[1])) * camOffset;
+				break;
+			case UP:
+				cameraOffset = glm::normalize(glm::vec3(Mplane.Wm[1])) * glm::mix(minDistance, maxDistance, cameraFactor / maxCameraFactor);
+				desiredCamPos = planePosition - cameraOffset + glm::normalize(glm::vec3(Mplane.Wm[1])) * camOffset;
+				break;
+			case LEFT:
+				cameraOffset = glm::normalize(glm::vec3(Mplane.Wm[0])) * glm::mix(minDistance, maxDistance, cameraFactor / maxCameraFactor);
+				desiredCamPos = planePosition - cameraOffset + glm::normalize(glm::vec3(Mplane.Wm[0])) * camOffset;
+				break;
+			case RIGHT:
+				cameraOffset = - glm::normalize(glm::vec3(Mplane.Wm[0])) * glm::mix(minDistance, maxDistance, cameraFactor / maxCameraFactor);
+				desiredCamPos = planePosition - cameraOffset - glm::normalize(glm::vec3(Mplane.Wm[0])) * camOffset;
+				break;
+			}
+
 			if (instantCamera) {
 				CamPos = desiredCamPos;
 			}
-			else {
+			else{
 				CamPos += (desiredCamPos - CamPos) * followSpeed * speedFactor * deltaT;
 			}
+
 			if (CamPos.y < 0)
 			{
 				CamPos.y = 0;
 			}
-			up += (glm::vec3(Mplane.Wm[1]) - up) * followSpeed * deltaT;
+
+			up += (glm::normalize(glm::vec3(Mplane.Wm[1])) - up) * followSpeed * deltaT;
 		}
 
 		ViewMatrix = glm::lookAt(CamPos, planePosition, up);

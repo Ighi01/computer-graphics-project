@@ -1828,13 +1828,26 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 			}
 		}
 	}
-		
-	int oldCameraDirection = -1;
+
+	enum Direction {
+		UP,
+		RIGHT,
+		LEFT,
+		FRONT,
+		BACK
+	};
+
 	float oldSpeedFactor = 1.0f;
+	float oldCameraFactor = 1.0f;
+	float maxCameraFactor = 4.0f;
 	int images = 0;
+	Direction defaultDirection = Direction::FRONT;
+	Direction oldDirection = defaultDirection;
 
-	void handleCommands(bool& start, float& speedFactor, int& cameraDirection, bool& instantCamera, uint32_t currentImage) {
+	void handleCommands(bool& start, float& speedFactor, float& cameraFactor, Direction& direction, bool& instantCamera, uint32_t currentImage) {
 
+		direction = defaultDirection;
+		instantCamera = false;
 
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE)) {
 			glfwSetWindowShouldClose(window, GL_TRUE);
@@ -1860,27 +1873,59 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 		}
 
 		if (glfwGetKey(window, GLFW_KEY_3)) {
-			oldSpeedFactor = 1.5f;
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_4)) {
 			oldSpeedFactor = 2.0f;
 		}
 
-		speedFactor = oldSpeedFactor;
-		cameraDirection = -1;
-		instantCamera = false;
-
-
-		if (glfwGetKey(window, GLFW_KEY_B)) {
-			cameraDirection = 1;
+		if (glfwGetKey(window, GLFW_KEY_4)) {
+			oldSpeedFactor = 3.0f;
 		}
 
-		if (cameraDirection != oldCameraDirection) {
+		if (glfwGetKey(window, GLFW_KEY_5)) {
+			oldCameraFactor = 0.0f;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_6)) {
+			oldCameraFactor = 0.5f;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_7)) {
+			oldCameraFactor = 1.0f;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_8)) {
+			oldCameraFactor = 2.0f;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_9)) {
+			oldCameraFactor = 3.0f;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_0)) {
+			oldCameraFactor = 4.0f;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_DOWN)) {
+			direction = Direction::BACK;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_UP)) {
+			direction = Direction::UP;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_LEFT)) {
+			direction = Direction::LEFT;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_RIGHT)) {
+			direction = Direction::RIGHT;
+		}
+
+		if ((oldDirection == Direction::BACK && direction != Direction::BACK) || (direction == Direction::BACK && oldDirection != Direction::BACK)) {
 			instantCamera = true;
 		}
-
-		oldCameraDirection = cameraDirection;
+		oldDirection = direction;
+		speedFactor = oldSpeedFactor;
+		cameraFactor = oldCameraFactor;
 
 	}
 
