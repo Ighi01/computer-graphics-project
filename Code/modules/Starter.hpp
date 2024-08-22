@@ -1837,17 +1837,52 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 		BACK
 	};
 
-	float oldSpeedFactor = 1.0f;
-	float oldCameraFactor = 1.0f;
-	float maxCameraFactor = 4.0f;
+	float minSpeedFactor = 0.5f;
+	float maxSpeedFactor = 3.0f;
+	float maxZoom = 4.0f;
 	int images = 0;
 	Direction defaultDirection = Direction::FRONT;
 	Direction oldDirection = defaultDirection;
 
-	void handleCommands(bool& start, float& speedFactor, float& cameraFactor, Direction& direction, bool& instantCamera, uint32_t currentImage) {
+	void handleCommands(float& deltaT, glm::vec3& movement, bool& start, float& zoom, float& speedFactor, Direction& direction, bool& instantCamera, uint32_t currentImage) {
+
+		static auto startTime = std::chrono::high_resolution_clock::now();
+		static float lastTime = 0.0f;
+
+		auto currentTime = std::chrono::high_resolution_clock::now();
+		float time = std::chrono::duration<float, std::chrono::seconds::period>
+			(currentTime - startTime).count();
+		deltaT = time - lastTime;
+		lastTime = time;
 
 		direction = defaultDirection;
 		instantCamera = false;
+
+		if (glfwGetKey(window, GLFW_KEY_W)) {
+			movement.x = 1.0f;
+		}
+		if (glfwGetKey(window, GLFW_KEY_S)) {
+			movement.x = -1.0f;
+		}
+		if (glfwGetKey(window, GLFW_KEY_Q)) {
+			movement.z = -1.0f;
+		}
+		if (glfwGetKey(window, GLFW_KEY_E)) {
+			movement.z = 1.0f;
+		}
+		if (glfwGetKey(window, GLFW_KEY_A)) {
+			movement.y = 1.0f;
+		}
+		if (glfwGetKey(window, GLFW_KEY_D)) {
+			movement.y = -1.0f;
+		}
+
+		/* TODO
+		handleGamePad(GLFW_JOYSTICK_1, m, r, fire);
+		handleGamePad(GLFW_JOYSTICK_2, m, r, fire);
+		handleGamePad(GLFW_JOYSTICK_3, m, r, fire);
+		handleGamePad(GLFW_JOYSTICK_4, m, r, fire);
+		*/
 
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE)) {
 			glfwSetWindowShouldClose(window, GL_TRUE);
@@ -1864,44 +1899,35 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 			}
 		}
 
-		if (glfwGetKey(window, GLFW_KEY_1)) {
-			oldSpeedFactor = 0.5f;
-		}
+		if (start) {
 
-		if (glfwGetKey(window, GLFW_KEY_2)) {
-			oldSpeedFactor = 1.0f;
-		}
+			if (glfwGetKey(window, GLFW_KEY_1)) {
+				speedFactor -= 0.15f;
+				if (speedFactor <= minSpeedFactor){
+					speedFactor = minSpeedFactor;
+				}
+			}
 
-		if (glfwGetKey(window, GLFW_KEY_3)) {
-			oldSpeedFactor = 2.0f;
-		}
+			if (glfwGetKey(window, GLFW_KEY_2)) {
+				speedFactor += 0.15f;
+				if (speedFactor >= maxSpeedFactor) {
+					speedFactor = maxSpeedFactor;
+				}
+			}
 
-		if (glfwGetKey(window, GLFW_KEY_4)) {
-			oldSpeedFactor = 3.0f;
-		}
+			if (glfwGetKey(window, GLFW_KEY_9)) {
+				zoom -= 0.15f;
+				if (zoom <= 0.0f) {
+					zoom = 0.0f;
+				}
+			}
 
-		if (glfwGetKey(window, GLFW_KEY_5)) {
-			oldCameraFactor = 0.0f;
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_6)) {
-			oldCameraFactor = 0.5f;
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_7)) {
-			oldCameraFactor = 1.0f;
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_8)) {
-			oldCameraFactor = 2.0f;
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_9)) {
-			oldCameraFactor = 3.0f;
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_0)) {
-			oldCameraFactor = 4.0f;
+			if (glfwGetKey(window, GLFW_KEY_0)) {
+				zoom += 0.15f;
+				if (zoom >= maxZoom) {
+					zoom = maxZoom;
+				}
+			}
 		}
 
 		if (glfwGetKey(window, GLFW_KEY_DOWN)) {
@@ -1923,47 +1949,8 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 		if ((oldDirection == Direction::BACK && direction != Direction::BACK) || (direction == Direction::BACK && oldDirection != Direction::BACK)) {
 			instantCamera = true;
 		}
+
 		oldDirection = direction;
-		speedFactor = oldSpeedFactor;
-		cameraFactor = oldCameraFactor;
-
-	}
-
-	void getSixAxis(float& deltaT, glm::vec3& m) {
-
-		static auto startTime = std::chrono::high_resolution_clock::now();
-		static float lastTime = 0.0f;
-
-		auto currentTime = std::chrono::high_resolution_clock::now();
-		float time = std::chrono::duration<float, std::chrono::seconds::period>
-			(currentTime - startTime).count();
-		deltaT = time - lastTime;
-		lastTime = time;
-
-		if (glfwGetKey(window, GLFW_KEY_W)) {
-			m.x = 1.0f;
-		}
-		if (glfwGetKey(window, GLFW_KEY_S)) {
-			m.x = -1.0f;
-		}
-		if (glfwGetKey(window, GLFW_KEY_Q)) {
-			m.z = -1.0f;
-		}
-		if (glfwGetKey(window, GLFW_KEY_E)) {
-			m.z = 1.0f;
-		}
-		if (glfwGetKey(window, GLFW_KEY_A)) {
-			m.y = 1.0f;
-		}
-		if (glfwGetKey(window, GLFW_KEY_D)) {
-			m.y = -1.0f;
-		}
-		/* TODO
-		handleGamePad(GLFW_JOYSTICK_1, m, r, fire);
-		handleGamePad(GLFW_JOYSTICK_2, m, r, fire);
-		handleGamePad(GLFW_JOYSTICK_3, m, r, fire);
-		handleGamePad(GLFW_JOYSTICK_4, m, r, fire);
-		*/
 	}
 	
 	// Public part of the base class

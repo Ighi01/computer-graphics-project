@@ -122,9 +122,9 @@ class CGProject : public BaseProject {
 
 		Tcity.init(this, "textures/Textures_City.png");
 
-		DPSZs.uniformBlocksInPool = 1000;
-		DPSZs.texturesInPool = 1000;
-		DPSZs.setsInPool = 1000;
+		DPSZs.uniformBlocksInPool = 350;
+		DPSZs.texturesInPool = 200;
+		DPSZs.setsInPool = 200;
 
 		std::cout << "Initializing text\n";
 		txt.init(this, &outText);
@@ -264,24 +264,23 @@ class CGProject : public BaseProject {
 	float maxDistance = -3.5f;
 	float camOffset = 0.5f;
 
-	float maxX = 100.0;
-	float maxZ = 100.0;
-	float maxDown = 1.0;
-	float maxUp = 50.0;
+	float maxX = 100.0f;
+	float maxZ = 100.0f;
+	float maxDown = 1.0f;
+	float maxUp = 50.0f;
 
+	float zoom = 1.0f;
+	float speedFactor = 1.0f;
 	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 
 	void updateUniformBuffer(uint32_t currentImage) {
 
 		float deltaT;
-		glm::vec3 m = glm::vec3(0.0f);
-		float speedFactor;
-		float cameraFactor;
+		glm::vec3 movement = glm::vec3(0.0f);
 		bool instantCamera;
 		Direction direction;
 
-		getSixAxis(deltaT, m);
-		handleCommands(start, speedFactor, cameraFactor, direction, instantCamera, currentImage);
+		handleCommands(deltaT, movement, start, zoom, speedFactor, direction, instantCamera, currentImage);
 
 		if (start)
 		{
@@ -302,7 +301,7 @@ class CGProject : public BaseProject {
 			}
 
 			if (!block) {
-				rotationMatrix = glm::rotate(glm::rotate(glm::rotate(glm::mat4(1.0f), m.x * X_SPEED * deltaT, glm::vec3(1.0f, 0.0f, 0.0f)), m.y * Y_SPEED * deltaT, glm::vec3(0.0f, 1.0f, 0.0f)), m.z * Z_SPEED * deltaT, glm::vec3(0.0f, 0.0f, 1.0f));
+				rotationMatrix = glm::rotate(glm::rotate(glm::rotate(glm::mat4(1.0f), movement.x * X_SPEED * deltaT, glm::vec3(1.0f, 0.0f, 0.0f)), movement.y * Y_SPEED * deltaT, glm::vec3(0.0f, 1.0f, 0.0f)), movement.z * Z_SPEED * deltaT, glm::vec3(0.0f, 0.0f, 1.0f));
 			}
 			Mplane.Wm = glm::translate(Mplane.Wm * rotationMatrix, glm::vec3(0.0f, 0.0f, 1.0f) * SPEED * speedFactor * deltaT);
 		}
@@ -315,23 +314,23 @@ class CGProject : public BaseProject {
 		{
 			switch (direction) {			
 			case FRONT:
-				cameraOffset = - glm::normalize(glm::vec3(Mplane.Wm[2])) * glm::mix(minDistance, maxDistance, cameraFactor / maxCameraFactor);
+				cameraOffset = - glm::normalize(glm::vec3(Mplane.Wm[2])) * glm::mix(minDistance, maxDistance, zoom / maxZoom);
 				desiredCamPos = planePosition - cameraOffset + glm::normalize(glm::vec3(Mplane.Wm[1])) * camOffset;
 				break;			
 			case BACK:
-				cameraOffset = glm::normalize(glm::vec3(Mplane.Wm[2])) * glm::mix(minDistance, maxDistance, cameraFactor / maxCameraFactor);
+				cameraOffset = glm::normalize(glm::vec3(Mplane.Wm[2])) * glm::mix(minDistance, maxDistance, zoom / maxZoom);
 				desiredCamPos = planePosition - cameraOffset + glm::normalize(glm::vec3(Mplane.Wm[1])) * camOffset;
 				break;
 			case UP:
-				cameraOffset = glm::normalize(glm::vec3(Mplane.Wm[1])) * glm::mix(minDistance, maxDistance, cameraFactor / maxCameraFactor);
+				cameraOffset = glm::normalize(glm::vec3(Mplane.Wm[1])) * glm::mix(minDistance, maxDistance, zoom / maxZoom);
 				desiredCamPos = planePosition - cameraOffset + glm::normalize(glm::vec3(Mplane.Wm[1])) * camOffset;
 				break;
 			case LEFT:
-				cameraOffset = glm::normalize(glm::vec3(Mplane.Wm[0])) * glm::mix(minDistance, maxDistance, cameraFactor / maxCameraFactor);
+				cameraOffset = glm::normalize(glm::vec3(Mplane.Wm[0])) * glm::mix(minDistance, maxDistance, zoom / maxZoom);
 				desiredCamPos = planePosition - cameraOffset + glm::normalize(glm::vec3(Mplane.Wm[0])) * camOffset;
 				break;
 			case RIGHT:
-				cameraOffset = - glm::normalize(glm::vec3(Mplane.Wm[0])) * glm::mix(minDistance, maxDistance, cameraFactor / maxCameraFactor);
+				cameraOffset = - glm::normalize(glm::vec3(Mplane.Wm[0])) * glm::mix(minDistance, maxDistance, zoom / maxZoom);
 				desiredCamPos = planePosition - cameraOffset - glm::normalize(glm::vec3(Mplane.Wm[0])) * camOffset;
 				break;
 			}
