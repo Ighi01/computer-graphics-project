@@ -143,7 +143,8 @@
 		{"id": "apt004","model": "models/buildings/center/apartment_1_004.mgcg","format": "MGCG"},
 		{"id": "dw&st004","model": "models/buildings/center/dwelling&store_004.mgcg","format": "MGCG"},
 		{"id": "dw003","model": "models/buildings/center/dwelling_003.mgcg","format": "MGCG"},
-		{"id": "dw011","model": "models/buildings/center/dwelling_011.mgcg","format": "MGCG"}
+		{"id": "dw011","model": "models/buildings/center/dwelling_011.mgcg","format": "MGCG"},
+		{"id": "sphere","model": "models/Sphere.obj","format": "OBJ"}
 	],
 	"textures": [
 		{"id": "t0","texture": "textures/Textures_City.png"},
@@ -153,7 +154,9 @@
 		{"id": "t4","texture": "textures/SPW_Natures_01.png"},
 		{"id": "t5","texture": "textures/Textures-Animals.png"},
 		{"id": "t6","texture": "textures/lake.png"},
-		{"id": "t7","texture": "textures/helic.png"}
+		{"id": "t7","texture": "textures/helic.png"},
+		{"id": "t8","texture": "textures/sun.png"},
+		{"id": "t9","texture": "textures/moon.png"}
 	],
 	"instances": [
 		{"id": "port003",   "model": "port003",   "texture": "t0",
@@ -1995,6 +1998,16 @@
 		 "transform": [0, 0, -1, -56,
 					   0, 1.2, 0, 0,
 					   1.2, 0, 0, -88,
+					   0, 0, 0, 1]},
+	{"id": "sun",   "model": "sphere",   "texture": "t8",
+		 "transform": [5, 0, 0, 0,
+					   0, 5, 0, 30,
+					   0, 0, 5, 0,
+					   0, 0, 0, 1]},
+		{"id": "moon",   "model": "sphere",   "texture": "t9",
+		 "transform": [2, 0, 0, 40,
+					   0, 2, 0, 30,
+					   0, 0, 2, 0,
 					   0, 0, 0, 1]}
 	]
 }
