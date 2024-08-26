@@ -33,12 +33,20 @@ struct SimpleMatParUniformBufferObject {
 	alignas(4)  float Power;
 };
 
+struct skyBoxUniformBufferObject {
+	alignas(16) glm::mat4 mvpMat;
+};
+
+
 struct SimpleVertex {
 	glm::vec3 pos;
 	glm::vec3 norm;
 	glm::vec2 UV;
 };
 
+struct skyBoxVertex {
+	glm::vec3 pos;
+};
 
 // MAIN ! 
 class CGProject : public BaseProject {
@@ -48,14 +56,23 @@ class CGProject : public BaseProject {
     DescriptorSet DSGlobal;
 	DescriptorSetLayout DSLCity;
 	DescriptorSet DSPlane;
+	DescriptorSetLayout DSLskyBox;
+	DescriptorSet DSskyBox;
 
     VertexDescriptor VDSimple;
+	VertexDescriptor VDskyBox;
 	Pipeline PSimple;
+	Pipeline PskyBox;
 
 	Scene SC;
 
 	Model Mplane;
 	Texture Tcity;
+
+	Model MskyBox;
+	Texture TskyBox;
+	
+
     TextMaker txt;
 
 	glm::vec3 CamPos = glm::vec3(9.5, 2.5, 8.0);
@@ -100,6 +117,10 @@ class CGProject : public BaseProject {
 					{2, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, sizeof(SimpleMatParUniformBufferObject), 1}
 			});
 
+		DSLskyBox.init(this, {
+					{0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, sizeof(skyBoxUniformBufferObject), 1},
+					{1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 0, 1}
+			});
 
 		VDSimple.init(this, {
 				  {0, sizeof(SimpleVertex), VK_VERTEX_INPUT_RATE_VERTEX}
@@ -112,19 +133,31 @@ class CGProject : public BaseProject {
 					sizeof(glm::vec2), UV}
 		});
 
+		VDskyBox.init(this, {
+				  {0, sizeof(skyBoxVertex), VK_VERTEX_INPUT_RATE_VERTEX}
+			}, {
+			  {0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(skyBoxVertex, pos),
+					 sizeof(glm::vec3), POSITION}
+			});
+
 		PSimple.init(this, &VDSimple, "shaders/SimpleVert.spv", "shaders/SimpleFrag.spv", { &DSLGlobal, &DSLCity });
 		PSimple.setAdvancedFeatures(VK_COMPARE_OP_LESS_OR_EQUAL, VK_POLYGON_MODE_FILL,
 			VK_CULL_MODE_NONE, false);
+		PskyBox.init(this, &VDskyBox, "shaders/SkyBoxVert.spv", "shaders/SkyBoxFrag.spv", { &DSLskyBox });
+		PskyBox.setAdvancedFeatures(VK_COMPARE_OP_LESS_OR_EQUAL, VK_POLYGON_MODE_FILL,
+			VK_CULL_MODE_BACK_BIT, false);
 
+		MskyBox.init(this, &VDskyBox, "models/SkyBoxCube.obj", OBJ);
+		TskyBox.init(this, "textures/sky.png");
 		Mplane.init(this, &VDSimple, "models/transport_air_008_transport_air_008.001.mgcg", MGCG);
 		SC.init(this, &VDSimple, DSLCity, PSimple, "models/scene.json");
 		
 
 		Tcity.init(this, "textures/Textures_City.png");
 
-		DPSZs.uniformBlocksInPool = 350;
-		DPSZs.texturesInPool = 200;
-		DPSZs.setsInPool = 200;
+		DPSZs.uniformBlocksInPool = 1000;
+		DPSZs.texturesInPool = 1000;
+		DPSZs.setsInPool = 1000;
 
 		std::cout << "Initializing text\n";
 		txt.init(this, &outText);
@@ -201,10 +234,13 @@ class CGProject : public BaseProject {
 	
 	// Here you create your pipelines and Descriptor Sets!
 	void pipelinesAndDescriptorSetsInit() {
+		PskyBox.create1();
 		PSimple.create();
 
+		DSskyBox.init(this, &DSLskyBox, { &TskyBox });
 		DSGlobal.init(this, &DSLGlobal, {});
 		DSPlane.init(this, &DSLCity, { &Tcity });
+		
 		SC.pipelinesAndDescriptorSetsInit(DSLCity);
 		txt.pipelinesAndDescriptorSetsInit();		
 	}
@@ -212,8 +248,10 @@ class CGProject : public BaseProject {
 	// Here you destroy your pipelines and Descriptor Sets!
 	// All the object classes defined in Starter.hpp have a method .cleanup() for this purpose
 	void pipelinesAndDescriptorSetsCleanup() {
+		PskyBox.cleanup();
 		PSimple.cleanup();
 
+		DSskyBox.cleanup();
 		DSGlobal.cleanup();
 		DSPlane.cleanup();
 		SC.pipelinesAndDescriptorSetsCleanup();
@@ -229,7 +267,11 @@ class CGProject : public BaseProject {
 		DSLGlobal.cleanup();
 		Tcity.cleanup();
 		Mplane.cleanup();
+		TskyBox.cleanup();
+		MskyBox.cleanup();
+		DSLskyBox.cleanup();
 		SC.localCleanup();
+		PskyBox.destroy();
 		PSimple.destroy();
 		txt.localCleanup();		
 	}
@@ -239,6 +281,12 @@ class CGProject : public BaseProject {
 	// with their buffers and textures
 	
 	void populateCommandBuffer(VkCommandBuffer commandBuffer, int currentImage) {
+		PskyBox.bind(commandBuffer);
+		MskyBox.bind(commandBuffer);
+		DSskyBox.bind(commandBuffer, PskyBox, 0, currentImage);
+		vkCmdDrawIndexed(commandBuffer,
+			static_cast<uint32_t>(MskyBox.indices.size()), 1, 0, 0, 0);
+		
 		PSimple.bind(commandBuffer);
 		Mplane.bind(commandBuffer);
 		DSGlobal.bind(commandBuffer, PSimple, 0, currentImage);
@@ -397,6 +445,9 @@ class CGProject : public BaseProject {
 		DSGlobal.map(currentImage, &gubo, 0);
 
 		// objects
+		skyBoxUniformBufferObject sbubo{};
+		sbubo.mvpMat = M * glm::mat4(glm::mat3(Mv));
+		DSskyBox.map(currentImage, &sbubo, 0);
 
 		SimpleUniformBufferObject simpleUbo{};
 		SimpleMatParUniformBufferObject simpleMatParUbo{};

@@ -5,6 +5,7 @@
 		{"id": "port003","model": "models/port/port_tile_1x1_003.mgcg","format": "MGCG"},
 		{"id": "rail004","model": "models/port/railing_004.mgcg","format": "MGCG"},
 		{"id": "sea","model": "models/port/tile_for_home_1x1_023.mgcg","format": "MGCG"},
+		{"id": "sea1","model": "models/SkyBoxCube.obj","format": "OBJ"},
 		{"id": "cruise","model": "models/port/transport_water_006_transport_water_006.001.mgcg","format": "MGCG"},
 	  {"id": "merch","model": "models/port/transport_water_005_transport_water_005.002.mgcg","format": "MGCG"},
 		{"id": "3cross","model": "models/roads/road_tile_1x1_008.mgcg","format": "MGCG"},
@@ -156,7 +157,8 @@
 		{"id": "t6","texture": "textures/lake.png"},
 		{"id": "t7","texture": "textures/helic.png"},
 		{"id": "t8","texture": "textures/sun.png"},
-		{"id": "t9","texture": "textures/moon.png"}
+		{"id": "t9","texture": "textures/moon.png"},
+		{"id": "t10","texture": "textures/sea.png"}
 	],
 	"instances": [
 		{"id": "port003",   "model": "port003",   "texture": "t0",
@@ -180,9 +182,9 @@
 					   -1, 0, 0, 40,
 					   0, 0, 0, 1]},
 		{"id": "sea",   "model": "sea",   "texture": "t0",
-		 "transform": [40, 0, 0, 0,
-					   0, 40, 0, -1,
-					   0, 0, 40, 0,
+		 "transform": [-200, 0, 0, 0,
+					   0, 0.005, 0, -1,
+					   0, 0, -200, 0,
 					   0, 0, 0, 1]},
 		{"id": "cruise",   "model": "cruise",   "texture": "t0",
 		 "transform": [0, 0, 0.6, 8,
