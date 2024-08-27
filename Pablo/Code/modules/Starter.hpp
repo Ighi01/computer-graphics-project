@@ -13,6 +13,7 @@
 #include <array>
 #include <cmath>
 #include <math.h>
+#include <future>
 
 #define GLM_FORCE_RADIANS
 #define GLM_FORCE_DEFAULT_ALIGNED_GENTYPES
@@ -313,7 +314,8 @@ struct Pipeline {
   	void setAdvancedFeatures(VkCompareOp _compareOp, VkPolygonMode _polyModel,
  						VkCullModeFlagBits _CM, bool _transp);
   	void create();
-  	void destroy();
+	void create1();
+	void destroy();
   	void bind(VkCommandBuffer commandBuffer);
   	
   	VkShaderModule createShaderModule(const std::vector<char>& code);
@@ -1580,14 +1582,20 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 			}
 		}
 	}
-	double now = -0.1f;
-	void setBackgroundColor(const glm::vec3& color) {
-		if ((static_cast<double>(std::time(nullptr)) - now) >= 0.1f){
+
+	double now = -0.01f;
+
+	void setBackgroundColorAsync(const glm::vec3& color) {
+		if ((static_cast<double>(std::time(nullptr)) - now) >= 0.01f) {
 			now = static_cast<double>(std::time(nullptr));
+			std::async(std::launch::async, &BaseProject::setBackgroundColor, this, color);
+		}
+	}
+
+	void setBackgroundColor(const glm::vec3& color) {
 			initialBackgroundColor = { {color.r, color.g, color.b, 1.0f} };
 			vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
 			createCommandBuffers();
-		}
 	}
     
     void createSyncObjects() {
@@ -1821,55 +1829,23 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 			}
 		}
 	}
-		
-	int oldCameraDirection = -1;
-	float oldSpeedFactor = 1.0f;
 
-	void handle_commands(bool& start, float& speedFactor, int& cameraDirection, bool& instantCamera) {
+	enum Direction {
+		UP,
+		RIGHT,
+		LEFT,
+		FRONT,
+		BACK
+	};
 
+	float minSpeedFactor = 0.5f;
+	float maxSpeedFactor = 3.0f;
+	float maxZoom = 4.0f;
+	int images = 0;
+	Direction defaultDirection = Direction::FRONT;
+	Direction oldDirection = defaultDirection;
 
-		if (glfwGetKey(window, GLFW_KEY_ESCAPE)) {
-			glfwSetWindowShouldClose(window, GL_TRUE);
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_SPACE)) {
-			start = true;
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_1)) {
-			oldSpeedFactor = 0.5f;
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_2)) {
-			oldSpeedFactor = 1.0f;
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_3)) {
-			oldSpeedFactor = 1.5f;
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_4)) {
-			oldSpeedFactor = 2.0f;
-		}
-
-		speedFactor = oldSpeedFactor;
-		cameraDirection = -1;
-		instantCamera = false;
-
-
-		if (glfwGetKey(window, GLFW_KEY_B)) {
-			cameraDirection = 1;
-		}
-
-		if (cameraDirection != oldCameraDirection) {
-			instantCamera = true;
-		}
-
-		oldCameraDirection = cameraDirection;
-
-	}
-
-	void getSixAxis(float& deltaT, glm::vec3& m) {
+	void handleCommands(float& deltaT, glm::vec3& movement, bool& start, float& zoom, float& speedFactor, Direction& direction, bool& instantCamera, uint32_t currentImage) {
 
 		static auto startTime = std::chrono::high_resolution_clock::now();
 		static float lastTime = 0.0f;
@@ -1880,30 +1856,102 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 		deltaT = time - lastTime;
 		lastTime = time;
 
+		direction = defaultDirection;
+		instantCamera = false;
+
 		if (glfwGetKey(window, GLFW_KEY_W)) {
-			m.x = 1.0f;
+			movement.x = 1.0f;
 		}
 		if (glfwGetKey(window, GLFW_KEY_S)) {
-			m.x = -1.0f;
+			movement.x = -1.0f;
 		}
 		if (glfwGetKey(window, GLFW_KEY_Q)) {
-			m.z = -1.0f;
+			movement.z = -1.0f;
 		}
 		if (glfwGetKey(window, GLFW_KEY_E)) {
-			m.z = 1.0f;
+			movement.z = 1.0f;
 		}
 		if (glfwGetKey(window, GLFW_KEY_A)) {
-			m.y = 1.0f;
+			movement.y = 1.0f;
 		}
 		if (glfwGetKey(window, GLFW_KEY_D)) {
-			m.y = -1.0f;
+			movement.y = -1.0f;
 		}
+
 		/* TODO
 		handleGamePad(GLFW_JOYSTICK_1, m, r, fire);
 		handleGamePad(GLFW_JOYSTICK_2, m, r, fire);
 		handleGamePad(GLFW_JOYSTICK_3, m, r, fire);
 		handleGamePad(GLFW_JOYSTICK_4, m, r, fire);
 		*/
+
+		if (glfwGetKey(window, GLFW_KEY_ESCAPE)) {
+			glfwSetWindowShouldClose(window, GL_TRUE);
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_SPACE)) {
+			if (start) {
+				char buf[50];
+				sprintf_s(buf, "../Images/CGProject_%d.png", images++);
+				std::async(std::launch::async, &BaseProject::saveScreenshot, this, buf, currentImage);
+			}
+			else {
+				start = true;
+			}
+		}
+
+		if (start) {
+
+			if (glfwGetKey(window, GLFW_KEY_1)) {
+				speedFactor -= 0.15f;
+				if (speedFactor <= minSpeedFactor){
+					speedFactor = minSpeedFactor;
+				}
+			}
+
+			if (glfwGetKey(window, GLFW_KEY_2)) {
+				speedFactor += 0.15f;
+				if (speedFactor >= maxSpeedFactor) {
+					speedFactor = maxSpeedFactor;
+				}
+			}
+
+			if (glfwGetKey(window, GLFW_KEY_9)) {
+				zoom -= 0.15f;
+				if (zoom <= 0.0f) {
+					zoom = 0.0f;
+				}
+			}
+
+			if (glfwGetKey(window, GLFW_KEY_0)) {
+				zoom += 0.15f;
+				if (zoom >= maxZoom) {
+					zoom = maxZoom;
+				}
+			}
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_DOWN)) {
+			direction = Direction::BACK;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_UP)) {
+			direction = Direction::UP;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_LEFT)) {
+			direction = Direction::LEFT;
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_RIGHT)) {
+			direction = Direction::RIGHT;
+		}
+
+		if ((oldDirection == Direction::BACK && direction != Direction::BACK) || (direction == Direction::BACK && oldDirection != Direction::BACK)) {
+			instantCamera = true;
+		}
+
+		oldDirection = direction;
 	}
 	
 	// Public part of the base class
@@ -2105,8 +2153,8 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 	
 	public:
 	bool screenshotSaved = false;
-	
-	void saveScreenshot(const char *filename, int currentBuffer) {
+
+	void saveScreenshot(const std::string& path, int currentBuffer){
 		VkResult result;
 		uint32_t width = swapChainExtent.width;
 		uint32_t height = swapChainExtent.height;
@@ -2355,10 +2403,11 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 			}
 			data += subResourceLayout.rowPitch;
 		}
-		stbi_write_png(filename, width, height, 3, pixelArray, width*3);
+
+		stbi_write_png(path.c_str(), width, height, 3, pixelArray, width * 3);
 		free(pixelArray);
 
-		std::cout << "Screenshot saved to disk" << std::endl;
+		std::cout << "Screenshot saved to " << path << std::endl;
 
 		// Clean up resources
 		vkUnmapMemory(device, dstImageMemory);
@@ -3245,6 +3294,180 @@ void Pipeline::create() {
 		throw std::runtime_error("failed to create graphics pipeline!");
 	}
 	
+}
+
+void Pipeline::create1() {
+	VkPipelineShaderStageCreateInfo vertShaderStageInfo{};
+	vertShaderStageInfo.sType =
+		VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+	vertShaderStageInfo.stage = VK_SHADER_STAGE_VERTEX_BIT;
+	vertShaderStageInfo.module = vertShaderModule;
+	vertShaderStageInfo.pName = "main";
+
+	VkPipelineShaderStageCreateInfo fragShaderStageInfo{};
+	fragShaderStageInfo.sType =
+		VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+	fragShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+	fragShaderStageInfo.module = fragShaderModule;
+	fragShaderStageInfo.pName = "main";
+
+	VkPipelineShaderStageCreateInfo shaderStages[] =
+	{ vertShaderStageInfo, fragShaderStageInfo };
+
+	VkPipelineVertexInputStateCreateInfo vertexInputInfo{};
+	vertexInputInfo.sType =
+		VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+	auto bindingDescription = VD->getBindingDescription();
+	auto attributeDescriptions = VD->getAttributeDescriptions();
+
+	vertexInputInfo.vertexBindingDescriptionCount = static_cast<uint32_t>(bindingDescription.size());
+	vertexInputInfo.vertexAttributeDescriptionCount =
+		static_cast<uint32_t>(attributeDescriptions.size());
+	vertexInputInfo.pVertexBindingDescriptions = bindingDescription.data();
+	vertexInputInfo.pVertexAttributeDescriptions =
+		attributeDescriptions.data();
+
+	VkPipelineInputAssemblyStateCreateInfo inputAssembly{};
+	inputAssembly.sType =
+		VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+	inputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+	inputAssembly.primitiveRestartEnable = VK_FALSE;
+
+	VkViewport viewport{};
+	viewport.x = 0.0f;
+	viewport.y = 0.0f;
+	viewport.width = (float)BP->swapChainExtent.width;
+	viewport.height = (float)BP->swapChainExtent.height;
+	viewport.minDepth = 0.0f;
+	viewport.maxDepth = 1.0f;
+
+	VkRect2D scissor{};
+	scissor.offset = { 0, 0 };
+	scissor.extent = BP->swapChainExtent;
+
+	VkPipelineViewportStateCreateInfo viewportState{};
+	viewportState.sType =
+		VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
+	viewportState.viewportCount = 1;
+	viewportState.pViewports = &viewport;
+	viewportState.scissorCount = 1;
+	viewportState.pScissors = &scissor;
+
+	VkPipelineRasterizationStateCreateInfo rasterizer{};
+	rasterizer.sType =
+		VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
+	rasterizer.depthClampEnable = VK_FALSE;
+	rasterizer.rasterizerDiscardEnable = VK_FALSE;
+	rasterizer.polygonMode = polyModel;
+	rasterizer.lineWidth = 1.0f;
+	rasterizer.cullMode = CM;
+	rasterizer.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
+	rasterizer.depthBiasEnable = VK_FALSE;
+	rasterizer.depthBiasConstantFactor = 0.0f; // Optional
+	rasterizer.depthBiasClamp = 0.0f; // Optional
+	rasterizer.depthBiasSlopeFactor = 0.0f; // Optional
+
+	VkPipelineMultisampleStateCreateInfo multisampling{};
+	multisampling.sType =
+		VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
+	multisampling.sampleShadingEnable = VK_TRUE;
+	multisampling.rasterizationSamples = BP->msaaSamples;
+	multisampling.minSampleShading = 1.0f; // Optional
+	multisampling.pSampleMask = nullptr; // Optional
+	multisampling.alphaToCoverageEnable = VK_FALSE; // Optional
+	multisampling.alphaToOneEnable = VK_FALSE; // Optional
+
+	VkPipelineColorBlendAttachmentState colorBlendAttachment{};
+	colorBlendAttachment.colorWriteMask =
+		VK_COLOR_COMPONENT_R_BIT |
+		VK_COLOR_COMPONENT_G_BIT |
+		VK_COLOR_COMPONENT_B_BIT |
+		VK_COLOR_COMPONENT_A_BIT;
+	colorBlendAttachment.blendEnable = transp ? VK_TRUE : VK_FALSE;
+	colorBlendAttachment.srcColorBlendFactor =
+		transp ? VK_BLEND_FACTOR_SRC_ALPHA : VK_BLEND_FACTOR_ONE;
+	colorBlendAttachment.dstColorBlendFactor =
+		transp ? VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA : VK_BLEND_FACTOR_ZERO;
+	colorBlendAttachment.colorBlendOp =
+		VK_BLEND_OP_ADD; // Optional
+	colorBlendAttachment.srcAlphaBlendFactor =
+		VK_BLEND_FACTOR_ONE; // Optional
+	colorBlendAttachment.dstAlphaBlendFactor =
+		VK_BLEND_FACTOR_ZERO; // Optional
+	colorBlendAttachment.alphaBlendOp =
+		VK_BLEND_OP_ADD; // Optional
+
+	VkPipelineColorBlendStateCreateInfo colorBlending{};
+	colorBlending.sType =
+		VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
+	colorBlending.logicOpEnable = VK_FALSE;
+	colorBlending.logicOp = VK_LOGIC_OP_COPY; // Optional
+	colorBlending.attachmentCount = 1;
+	colorBlending.pAttachments = &colorBlendAttachment;
+	colorBlending.blendConstants[0] = 0.0f; // Optional
+	colorBlending.blendConstants[1] = 0.0f; // Optional
+	colorBlending.blendConstants[2] = 0.0f; // Optional
+	colorBlending.blendConstants[3] = 0.0f; // Optional
+
+	std::vector<VkDescriptorSetLayout> DSL(D.size());
+	for (int i = 0; i < D.size(); i++) {
+		DSL[i] = D[i]->descriptorSetLayout;
+	}
+
+	VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
+	pipelineLayoutInfo.sType =
+		VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+	pipelineLayoutInfo.setLayoutCount = DSL.size();
+	pipelineLayoutInfo.pSetLayouts = DSL.data();
+	pipelineLayoutInfo.pushConstantRangeCount = 0; // Optional
+	pipelineLayoutInfo.pPushConstantRanges = nullptr; // Optional
+
+	VkResult result = vkCreatePipelineLayout(BP->device, &pipelineLayoutInfo, nullptr,
+		&pipelineLayout);
+	if (result != VK_SUCCESS) {
+		PrintVkError(result);
+		throw std::runtime_error("failed to create pipeline layout!");
+	}
+
+	VkPipelineDepthStencilStateCreateInfo depthStencil{};
+	depthStencil.sType =
+		VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
+	depthStencil.depthTestEnable = VK_TRUE;
+	depthStencil.depthWriteEnable = VK_FALSE;
+	depthStencil.depthCompareOp = compareOp;
+	depthStencil.depthBoundsTestEnable = VK_FALSE;
+	depthStencil.minDepthBounds = 0.0f; // Optional
+	depthStencil.maxDepthBounds = 1.0f; // Optional
+	depthStencil.stencilTestEnable = VK_FALSE;
+	depthStencil.front = {}; // Optional
+	depthStencil.back = {}; // Optional
+
+	VkGraphicsPipelineCreateInfo pipelineInfo{};
+	pipelineInfo.sType =
+		VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
+	pipelineInfo.stageCount = 2;
+	pipelineInfo.pStages = shaderStages;
+	pipelineInfo.pVertexInputState = &vertexInputInfo;
+	pipelineInfo.pInputAssemblyState = &inputAssembly;
+	pipelineInfo.pViewportState = &viewportState;
+	pipelineInfo.pRasterizationState = &rasterizer;
+	pipelineInfo.pMultisampleState = &multisampling;
+	pipelineInfo.pDepthStencilState = &depthStencil;
+	pipelineInfo.pColorBlendState = &colorBlending;
+	pipelineInfo.pDynamicState = nullptr; // Optional
+	pipelineInfo.layout = pipelineLayout;
+	pipelineInfo.renderPass = BP->renderPass;
+	pipelineInfo.subpass = 0;
+	pipelineInfo.basePipelineHandle = VK_NULL_HANDLE; // Optional
+	pipelineInfo.basePipelineIndex = -1; // Optional
+
+	result = vkCreateGraphicsPipelines(BP->device, VK_NULL_HANDLE, 1,
+		&pipelineInfo, nullptr, &graphicsPipeline);
+	if (result != VK_SUCCESS) {
+		PrintVkError(result);
+		throw std::runtime_error("failed to create graphics pipeline!");
+	}
+
 }
 
 void Pipeline::destroy() {

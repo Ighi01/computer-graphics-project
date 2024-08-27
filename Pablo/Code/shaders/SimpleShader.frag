@@ -13,9 +13,9 @@ layout(location = 0) out vec4 outColor;
 // are used. Note that each definition must match the one used in the CPP code
 // put GLOBAL instead of Blinn
 layout(set = 0, binding = 0) uniform GlobalUniformBufferObject {
-	vec3 lightDir[6];
-	vec3 lightPos[6];
-	vec4 lightColor[6];
+	vec3 lightDir[14];
+	vec3 lightPos[14];
+	vec4 lightColor[14];
 	float cosIn;
 	float cosOut;
 	vec3 eyePos;
@@ -89,40 +89,72 @@ void main() {
 
 	vec3 RendEqSol = vec3(0);
 
-	// First light
-	LD = point_light_dir(fragPos, 0);
-	LC = point_light_color(fragPos, 0);
-	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+	// DAY NIGHT CYCLE
+	LD = direct_light_dir(fragPos, 0);
+	LC = direct_light_color(fragPos, 0);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.y;
 
-	// Second light
-	LD = point_light_dir(fragPos, 1);
-	LC = point_light_color(fragPos, 1);
-	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+	// Plane light
+	LD = spot_light_dir(fragPos, 1);
+	LC = spot_light_color(fragPos, 1);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.z;
 
-	// Third light
+	// Point light
+
 	LD = point_light_dir(fragPos, 2);
 	LC = point_light_color(fragPos, 2);
 	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
 
-	// New light
 	LD = point_light_dir(fragPos, 3);
 	LC = point_light_color(fragPos, 3);
 	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
 
-	// Fourth light
-	LD = direct_light_dir(fragPos, 4);
-	LC = direct_light_color(fragPos, 4);
-	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.y;
+	LD = point_light_dir(fragPos, 4);
+	LC = point_light_color(fragPos, 4);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
 
-	// Fift light
-	LD = spot_light_dir(fragPos, 5);
-	LC = spot_light_color(fragPos, 5);
-	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.z;
+	LD = point_light_dir(fragPos, 5);
+	LC = point_light_color(fragPos, 5);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
 
-	// DAY NIGHT CYCLE
-	LD = direct_light_dir(fragPos, 4);
-	LC = direct_light_color(fragPos, 4);
-	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.y;
+	LD = point_light_dir(fragPos, 6);
+	LC = point_light_color(fragPos, 6);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 7);
+	LC = point_light_color(fragPos, 7);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 8);
+	LC = point_light_color(fragPos, 8);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 9);
+	LC = point_light_color(fragPos, 9);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 10);
+	LC = point_light_color(fragPos, 10);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 11);
+	LC = point_light_color(fragPos, 11);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 12);
+	LC = point_light_color(fragPos, 12);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 13);
+	LC = point_light_color(fragPos, 13);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+
+	// int i;
+	// for(i = 2; i < 14; i++) {
+		
+	// }
+
 
 	// Indirect illumination simulation
 	// A special type of non-uniform ambient color, invented for this course
