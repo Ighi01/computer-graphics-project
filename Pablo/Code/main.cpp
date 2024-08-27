@@ -13,9 +13,9 @@ std::vector<SingleText> outText = {
 };
 
 struct GlobalUniformBufferObject {
-	alignas(16) glm::vec3 lightDir[14];
-	alignas(16) glm::vec3 lightPos[14];
-	alignas(16) glm::vec4 lightColor[14];
+	alignas(16) glm::vec3 lightDir[63];
+	alignas(16) glm::vec3 lightPos[63];
+	alignas(16) glm::vec4 lightColor[63];
 	alignas(4) float cosIn;
 	alignas(4) float cosOut;
 	alignas(16) glm::vec3 eyePos;
@@ -80,9 +80,9 @@ class CGProject : public BaseProject {
 
 	float Ar;
 
-	glm::mat4 LWm[12];
-	glm::vec3 LCol[12];
-	float LInt[12];
+	glm::mat4 LWm[61];
+	glm::vec3 LCol[61];
+	float LInt[61];
 	float ScosIn, ScosOut;
 	glm::vec4 lightOn;
 
@@ -185,7 +185,7 @@ class CGProject : public BaseProject {
 			ifs.close();
 			nlohmann::json ns = js["nodes"];
 			nlohmann::json ld = js["extensions"]["KHR_lights_punctual"]["lights"];
-			for (int i = 0; i < 12; i++) {
+			for (int i = 0; i < 61; i++) {
 				glm::vec3 T;
 				glm::vec3 S;
 				glm::quat Q;
@@ -455,7 +455,7 @@ class CGProject : public BaseProject {
 
 		// CITY POINT LIGHTS
 
-		for (int i = 0; i < 12; i++) {
+		for (int i = 0; i < 61; i++) {
 			gubo.lightColor[i+2] = glm::vec4(LCol[i], LInt[i]);
 			gubo.lightDir[i+2] = LWm[i] * glm::vec4(0, 0, 1, 0);
 			gubo.lightPos[i+2] = LWm[i] * glm::vec4(0, 0, 0, 1);

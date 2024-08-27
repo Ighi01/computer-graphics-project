@@ -131,7 +131,498 @@
                     "intensity" : 3,
                     "type" : "point",
                     "name" : "3cross_11"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road9"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road9_1"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road9_2"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road9_3"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road9_4"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road9_5"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road9_6"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road9_7"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road9_8"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road9_9"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road9_10"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road10"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_1"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_2"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_3"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_4"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_5"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_6"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_7"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_8"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_9"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_10"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_11"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_12"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_13"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_14"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_15"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_16"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_17"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_18"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_19"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_20"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_21"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_22"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_23"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_24"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_25"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_26"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_27"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_28"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_29"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_30"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_31"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_32"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_33"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_34"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_35"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "road1_36"
                 }
+                
             ]
         }
     },
@@ -151,7 +642,56 @@
                 8,
                 9,
                 10,
-                11
+                11,
+                12,
+                13,
+                14,
+                15,
+                16,
+                17,
+                18,
+                19,
+                20,
+                21,
+                22,
+                23,
+                24,
+                25,
+                26,
+                27,
+                28,
+                29,
+                30,
+                31,
+                32,
+                33,
+                34,
+                35,
+                36,
+                37,
+                38,
+                39,
+                40,
+                41,
+                42,
+                43,
+                44,
+                45,
+                46,
+                47,
+                48,
+                49,
+                50,
+                51,
+                52,
+                53,
+                54,
+                55,
+                56,
+                57,
+                58,
+                59,
+                60
             ]
         }
     ],
@@ -382,6 +922,937 @@
                 -0.7,
                 4.7,
                 -43.7
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 12
+                }
+            },
+            "name" : "road9",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                28.3,
+                4.7,
+                8.7
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 13
+                }
+            },
+            "name" : "road9_1",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                43.7,
+                4.7,
+                7.3
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 14
+                }
+            },
+            "name" : "road9_2",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                35.7,
+                4.7,
+                -16.7
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 15
+                }
+            },
+            "name" : "road9_3",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                43.7,
+                4.7,
+                -16.7
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 16
+                }
+            },
+            "name" : "road9_4",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                56.7,
+                4.7,
+                -4.3
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 17
+                }
+            },
+            "name" : "road9_5",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                -20.3,
+                4.7,
+                7.3
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 18
+                }
+            },
+            "name" : "road9_6",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                -36.3,
+                4.7,
+                -48.7
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 19
+                }
+            },
+            "name" : "road9_7",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                -28.3,
+                4.7,
+                -48.7
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 20
+                }
+            },
+            "name" : "road9_8",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                27.7,
+                4.7,
+                -40.7
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 21
+                }
+            },
+            "name" : "road9_9",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                67.7,
+                4.7,
+                -40.7
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 22
+                }
+            },
+            "name" : "road9_10",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                120.7,
+                4.7,
+                -12.3
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 23
+                }
+            },
+            "name" : "road10",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                11.7,
+                4.7,
+                -16.7
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 24
+                }
+            },
+            "name" : "road1",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                51.7,
+                4.7,
+                7.3
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 25
+                }
+            },
+            "name" : "road1_1",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                51.7,
+                4.7,
+                -16.7
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 26
+                }
+            },
+            "name" : "road1_2",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                59.7,
+                4.7,
+                -0.7
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 27
+                }
+            },
+            "name" : "road1_3",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                -12.3,
+                4.7,
+                7.3
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 28
+                }
+            },
+            "name" : "road1_4",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                19.7,
+                4.7,
+                -15.3
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 29
+                }
+            },
+            "name" : "road1_5",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                -7.3,
+                4.7,
+                3.7
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 30
+                }
+            },
+            "name" : "road1_6",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                -7.3,
+                4.7,
+                -4.3
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 31
+                }
+            },
+            "name" : "road1_7",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                -7.3,
+                4.7,
+                -12.3
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 32
+                }
+            },
+            "name" : "road1_8",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                -12.3,
+                4.7,
+                -24.7
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 33
+                }
+            },
+            "name" : "road1_9",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                -44.3,
+                4.7,
+                -48.7
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 34
+                }
+            },
+            "name" : "road1_10",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                19.7,
+                4.7,
+                -40.7
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 35
+                }
+            },
+            "name" : "road1_11",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                35.7,
+                4.7,
+                -40.7
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 36
+                }
+            },
+            "name" : "road1_12",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                44.7,
+                4.7,
+                -40.7
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 37
+                }
+            },
+            "name" : "road1_13",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                51.7,
+                4.7,
+                -40.7
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 38
+                }
+            },
+            "name" : "road1_14",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                59.7,
+                4.7,
+                -40.7
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 39
+                }
+            },
+            "name" : "road1_15",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                75.7,
+                4.7,
+                -40.7
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 40
+                }
+            },
+            "name" : "road1_16",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                -7.3,
+                4.7,
+                -36.3
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 41
+                }
+            },
+            "name" : "road1_17",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                -7.3,
+                4.7,
+                -28.3
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 42
+                }
+            },
+            "name" : "road1_18",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                -0.7,
+                0,
+                -28.3
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 43
+                }
+            },
+            "name" : "road1_19",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                107.7,
+                4.7,
+                -40.7
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 44
+                }
+            },
+            "name" : "road1_20",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                115.7,
+                4.7,
+                -40.7
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 45
+                }
+            },
+            "name" : "road1_21",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                119.3,
+                4.7,
+                -52.3
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 46
+                }
+            },
+            "name" : "road1_22",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                120.7,
+                4.7,
+                -44.3
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 47
+                }
+            },
+            "name" : "road1_23",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                120.7,
+                4.7,
+                -28.3
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 48
+                }
+            },
+            "name" : "road1_24",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                120.7,
+                4.7,
+                -20.3
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 49
+                }
+            },
+            "name" : "road1_25",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                120.7,
+                4.7,
+                -4.3
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 50
+                }
+            },
+            "name" : "road1_26",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                -0.7,
+                0,
+                -59.7
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 51
+                }
+            },
+            "name" : "road1_27",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                -24.7,
+                0,
+                -59.7
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 52
+                }
+            },
+            "name" : "road1_28",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                -12.3,
+                4.7,
+                -48.7
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 53
+                }
+            },
+            "name" : "road1_29",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                -4.3,
+                4.7,
+                -64.7
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 54
+                }
+            },
+            "name" : "road1_30",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                -12.3,
+                4.7,
+                -64.7
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 55
+                }
+            },
+            "name" : "road1_31",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                -55.3,
+                4.7,
+                -52.3
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 56
+                }
+            },
+            "name" : "road1_32",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                -55.3,
+                4.7,
+                -60.3
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 57
+                }
+            },
+            "name" : "road1_33",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                -47.3,
+                4.7,
+                -76.3
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 58
+                }
+            },
+            "name" : "road1_34",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                -47.3,
+                4.7,
+                -84.3
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 59
+                }
+            },
+            "name" : "road1_35",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                -47.3,
+                4.7,
+                -92.3
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 60
+                }
+            },
+            "name" : "road1_36",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                -47.3,
+                4.7,
+                -100.3
             ]
         }
     ]

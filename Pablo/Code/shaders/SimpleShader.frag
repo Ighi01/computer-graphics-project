@@ -13,9 +13,9 @@ layout(location = 0) out vec4 outColor;
 // are used. Note that each definition must match the one used in the CPP code
 // put GLOBAL instead of Blinn
 layout(set = 0, binding = 0) uniform GlobalUniformBufferObject {
-	vec3 lightDir[14];
-	vec3 lightPos[14];
-	vec4 lightColor[14];
+	vec3 lightDir[63];
+	vec3 lightPos[63];
+	vec4 lightColor[63];
 	float cosIn;
 	float cosOut;
 	vec3 eyePos;
@@ -148,6 +148,203 @@ void main() {
 	LD = point_light_dir(fragPos, 13);
 	LC = point_light_color(fragPos, 13);
 	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 14);
+	LC = point_light_color(fragPos, 14);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 15);
+	LC = point_light_color(fragPos, 15);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 16);
+	LC = point_light_color(fragPos, 16);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 17);
+	LC = point_light_color(fragPos, 17);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 18);
+	LC = point_light_color(fragPos, 18);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 19);
+	LC = point_light_color(fragPos, 19);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 20);
+	LC = point_light_color(fragPos, 20);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 21);
+	LC = point_light_color(fragPos, 21);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 22);
+	LC = point_light_color(fragPos, 22);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 23);
+	LC = point_light_color(fragPos, 23);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 24);
+	LC = point_light_color(fragPos, 24);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 25);
+	LC = point_light_color(fragPos, 25);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 26);
+	LC = point_light_color(fragPos, 26);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 27);
+	LC = point_light_color(fragPos, 27);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 28);
+	LC = point_light_color(fragPos, 28);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 29);
+	LC = point_light_color(fragPos, 29);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 30);
+	LC = point_light_color(fragPos, 30);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 31);
+	LC = point_light_color(fragPos, 31);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 32);
+	LC = point_light_color(fragPos, 32);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 33);
+	LC = point_light_color(fragPos, 33);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 34);
+	LC = point_light_color(fragPos, 34);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 35);
+	LC = point_light_color(fragPos, 35);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 36);
+	LC = point_light_color(fragPos, 36);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 37);
+	LC = point_light_color(fragPos, 37);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 38);
+	LC = point_light_color(fragPos, 38);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 39);
+	LC = point_light_color(fragPos, 39);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 40);
+	LC = point_light_color(fragPos, 40);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 41);
+	LC = point_light_color(fragPos, 41);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 42);
+	LC = point_light_color(fragPos, 42);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 43);
+	LC = point_light_color(fragPos, 43);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 44);
+	LC = point_light_color(fragPos, 44);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 45);
+	LC = point_light_color(fragPos, 45);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 46);
+	LC = point_light_color(fragPos, 46);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 47);
+	LC = point_light_color(fragPos, 47);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 48);
+	LC = point_light_color(fragPos, 48);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 49);
+	LC = point_light_color(fragPos, 49);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 50);
+	LC = point_light_color(fragPos, 50);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 51);
+	LC = point_light_color(fragPos, 51);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 52);
+	LC = point_light_color(fragPos, 52);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 53);
+	LC = point_light_color(fragPos, 53);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 54);
+	LC = point_light_color(fragPos, 54);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 55);
+	LC = point_light_color(fragPos, 55);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 56);
+	LC = point_light_color(fragPos, 56);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 57);
+	LC = point_light_color(fragPos, 57);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 58);
+	LC = point_light_color(fragPos, 58);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 59);
+	LC = point_light_color(fragPos, 59);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 60);
+	LC = point_light_color(fragPos, 60);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 61);
+	LC = point_light_color(fragPos, 61);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
+	LD = point_light_dir(fragPos, 62);
+	LC = point_light_color(fragPos, 62);
+	RendEqSol += BRDF(Albedo, Norm, EyeDir, LD) * LC         * gubo.lightOn.x;
+
 
 
 	// int i;
