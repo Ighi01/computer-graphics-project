@@ -1844,107 +1844,198 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 	int images = 0;
 	Direction defaultDirection = Direction::FRONT;
 	Direction oldDirection = defaultDirection;
-
-	void handleCommands(float& deltaT, glm::vec3& movement, bool& start, float& zoom, float& speedFactor, Direction& direction, bool& instantCamera, uint32_t currentImage) {
+	bool tabPressed = false;
+	void handleCommands(float& deltaT, glm::vec3& movement, bool& start, float& zoom, float& speedFactor, Direction& direction, bool& instantCamera, bool& thirdPerson, uint32_t currentImage) {
 
 		static auto startTime = std::chrono::high_resolution_clock::now();
 		static float lastTime = 0.0f;
 
 		auto currentTime = std::chrono::high_resolution_clock::now();
-		float time = std::chrono::duration<float, std::chrono::seconds::period>
-			(currentTime - startTime).count();
+		float time = std::chrono::duration<float, std::chrono::seconds::period>(currentTime - startTime).count();
 		deltaT = time - lastTime;
 		lastTime = time;
 
 		direction = defaultDirection;
 		instantCamera = false;
 
-		if (glfwGetKey(window, GLFW_KEY_W)) {
-			movement.x = 1.0f;
-		}
-		if (glfwGetKey(window, GLFW_KEY_S)) {
-			movement.x = -1.0f;
-		}
-		if (glfwGetKey(window, GLFW_KEY_Q)) {
-			movement.z = -1.0f;
-		}
-		if (glfwGetKey(window, GLFW_KEY_E)) {
-			movement.z = 1.0f;
-		}
-		if (glfwGetKey(window, GLFW_KEY_A)) {
-			movement.y = 1.0f;
-		}
-		if (glfwGetKey(window, GLFW_KEY_D)) {
-			movement.y = -1.0f;
-		}
+		int id = GLFW_JOYSTICK_1;
 
-		/* TODO
-		handleGamePad(GLFW_JOYSTICK_1, m, r, fire);
-		handleGamePad(GLFW_JOYSTICK_2, m, r, fire);
-		handleGamePad(GLFW_JOYSTICK_3, m, r, fire);
-		handleGamePad(GLFW_JOYSTICK_4, m, r, fire);
-		*/
+		if (glfwJoystickIsGamepad(id)) {
+			GLFWgamepadstate state;
+			if (glfwGetGamepadState(id, &state)) {
+				float deadZone = 0.3f;
 
-		if (glfwGetKey(window, GLFW_KEY_ESCAPE)) {
-			glfwSetWindowShouldClose(window, GL_TRUE);
+				if (fabs(state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y]) > deadZone) {
+					movement.x -= state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y];
+				}
+				if (fabs(state.axes[GLFW_GAMEPAD_AXIS_LEFT_X]) > deadZone) {
+					movement.y -= state.axes[GLFW_GAMEPAD_AXIS_LEFT_X];
+				}
+				if (fabs(state.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER]) > deadZone) {
+					movement.z -= state.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER];
+				}
+				if (fabs(state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER]) > deadZone) {
+					movement.z += state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER];
+				}
+
+				if (fabs(state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X]) > deadZone) {
+					if (state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X] > 0.5f) {
+						direction = Direction::RIGHT;
+					}
+					else if (state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X] < -0.5f) {
+						direction = Direction::LEFT;
+					}
+				}
+				if (fabs(state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y]) > deadZone) {
+					if (state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y] > 0.5f) {
+						direction = Direction::UP;
+					}
+					else if (state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y] < -0.5f) {
+						direction = Direction::BACK;
+					}
+				}
+
+				if (start) {
+					if (state.buttons[GLFW_GAMEPAD_BUTTON_LEFT_BUMPER]) {
+						speedFactor -= 0.15f;
+						if (speedFactor <= minSpeedFactor) {
+							speedFactor = minSpeedFactor;
+						}
+					}
+					if (state.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER]) {
+						speedFactor += 0.15f;
+						if (speedFactor >= maxSpeedFactor) {
+							speedFactor = maxSpeedFactor;
+						}
+					}
+
+					if (state.buttons[GLFW_GAMEPAD_BUTTON_LEFT_THUMB]) {
+						zoom -= 0.15f;
+						if (zoom <= 0.0f) {
+							zoom = 0.0f;
+						}
+					}
+					if (state.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_THUMB]) {
+						zoom += 0.15f;
+						if (zoom >= maxZoom) {
+							zoom = maxZoom;
+						}
+					}
+				}
+
+				if (state.buttons[GLFW_GAMEPAD_BUTTON_START] || state.buttons[GLFW_GAMEPAD_BUTTON_A]) {
+					if (start) {
+						char buf[50];
+						sprintf_s(buf, "../Images/CGProject_%d.png", images++);
+						std::async(std::launch::async, &BaseProject::saveScreenshot, this, buf, currentImage);
+					}
+					else {
+						start = true;
+					}
+				}
+
+				if (state.buttons[GLFW_GAMEPAD_BUTTON_Y]) {
+					if (!tabPressed) {
+						thirdPerson = !thirdPerson;
+						tabPressed = true;
+					}
+				}
+				else {
+					tabPressed = false;
+				}
+
+				if (state.buttons[GLFW_GAMEPAD_BUTTON_B]) {
+					glfwSetWindowShouldClose(window, GL_TRUE);
+				}
+			}
 		}
+		else {
 
-		if (glfwGetKey(window, GLFW_KEY_SPACE)) {
+			if (glfwGetKey(window, GLFW_KEY_W)) {
+				movement.x = 1.0f;
+			}
+			if (glfwGetKey(window, GLFW_KEY_S)) {
+				movement.x = -1.0f;
+			}
+			if (glfwGetKey(window, GLFW_KEY_Q)) {
+				movement.z = -1.0f;
+			}
+			if (glfwGetKey(window, GLFW_KEY_E)) {
+				movement.z = 1.0f;
+			}
+			if (glfwGetKey(window, GLFW_KEY_A)) {
+				movement.y = 1.0f;
+			}
+			if (glfwGetKey(window, GLFW_KEY_D)) {
+				movement.y = -1.0f;
+			}
+
+			if (glfwGetKey(window, GLFW_KEY_DOWN)) {
+				direction = Direction::BACK;
+			}
+			if (glfwGetKey(window, GLFW_KEY_UP)) {
+				direction = Direction::UP;
+			}
+			if (glfwGetKey(window, GLFW_KEY_LEFT)) {
+				direction = Direction::LEFT;
+			}
+			if (glfwGetKey(window, GLFW_KEY_RIGHT)) {
+				direction = Direction::RIGHT;
+			}
+			
 			if (start) {
-				char buf[50];
-				sprintf_s(buf, "../Images/CGProject_%d.png", images++);
-				std::async(std::launch::async, &BaseProject::saveScreenshot, this, buf, currentImage);
-			}
-			else {
-				start = true;
-			}
-		}
+				if (glfwGetKey(window, GLFW_KEY_1)) {
+					speedFactor -= 0.15f;
+					if (speedFactor <= minSpeedFactor) {
+						speedFactor = minSpeedFactor;
+					}
+				}
 
-		if (start) {
+				if (glfwGetKey(window, GLFW_KEY_2)) {
+					speedFactor += 0.15f;
+					if (speedFactor >= maxSpeedFactor) {
+						speedFactor = maxSpeedFactor;
+					}
+				}
 
-			if (glfwGetKey(window, GLFW_KEY_1)) {
-				speedFactor -= 0.15f;
-				if (speedFactor <= minSpeedFactor){
-					speedFactor = minSpeedFactor;
+				if (glfwGetKey(window, GLFW_KEY_9)) {
+					zoom -= 0.15f;
+					if (zoom <= 0.0f) {
+						zoom = 0.0f;
+					}
+				}
+
+				if (glfwGetKey(window, GLFW_KEY_0)) {
+					zoom += 0.15f;
+					if (zoom >= maxZoom) {
+						zoom = maxZoom;
+					}
 				}
 			}
 
-			if (glfwGetKey(window, GLFW_KEY_2)) {
-				speedFactor += 0.15f;
-				if (speedFactor >= maxSpeedFactor) {
-					speedFactor = maxSpeedFactor;
+			if (glfwGetKey(window, GLFW_KEY_SPACE)) {
+				if (start) {
+					char buf[50];
+					sprintf_s(buf, "../Images/CGProject_%d.png", images++);
+					std::async(std::launch::async, &BaseProject::saveScreenshot, this, buf, currentImage);
+				}
+				else {
+					start = true;
 				}
 			}
 
-			if (glfwGetKey(window, GLFW_KEY_9)) {
-				zoom -= 0.15f;
-				if (zoom <= 0.0f) {
-					zoom = 0.0f;
-				}
+			if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS && !tabPressed) {
+				thirdPerson = !thirdPerson;
+				tabPressed = true;
 			}
 
-			if (glfwGetKey(window, GLFW_KEY_0)) {
-				zoom += 0.15f;
-				if (zoom >= maxZoom) {
-					zoom = maxZoom;
-				}
+			if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_RELEASE) {
+				tabPressed = false;
 			}
-		}
 
-		if (glfwGetKey(window, GLFW_KEY_DOWN)) {
-			direction = Direction::BACK;
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_UP)) {
-			direction = Direction::UP;
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_LEFT)) {
-			direction = Direction::LEFT;
-		}
-
-		if (glfwGetKey(window, GLFW_KEY_RIGHT)) {
-			direction = Direction::RIGHT;
+			if (glfwGetKey(window, GLFW_KEY_ESCAPE)) {
+				glfwSetWindowShouldClose(window, GL_TRUE);
+			}
 		}
 
 		if ((oldDirection == Direction::BACK && direction != Direction::BACK) || (direction == Direction::BACK && oldDirection != Direction::BACK)) {
@@ -1953,7 +2044,8 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 
 		oldDirection = direction;
 	}
-	
+
+
 	// Public part of the base class
 	public:
 	// Debug commands
