@@ -308,6 +308,7 @@ class CGProject : public BaseProject {
 	float SPEED = 7.5f;
 
 	float followSpeed = 1.0f;
+	float followSpeedFirst = 5.0f;
 	float minDistance = -0.5f;
 	float maxDistance = -3.5f;
 	float camOffset = 0.5f;
@@ -321,6 +322,7 @@ class CGProject : public BaseProject {
 	float speedFactor = 1.0f;
 	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 	bool thirdPerson = true;
+	glm::vec3 targetPos;
 
 	void updateUniformBuffer(uint32_t currentImage) {
 
@@ -328,6 +330,7 @@ class CGProject : public BaseProject {
 		glm::vec3 movement = glm::vec3(0.0f);
 		bool instantCamera;
 		Direction direction;
+		glm::vec3 firstDirection = glm::vec3(0.0f);
 
 		handleCommands(deltaT, movement, start, zoom, speedFactor, direction, instantCamera, thirdPerson, currentImage);
 
@@ -357,6 +360,7 @@ class CGProject : public BaseProject {
 
 		glm::vec3 planePosition = glm::vec3(Mplane.Wm[3]);
 		glm::vec3 desiredCamPos{};
+		glm::vec3 desiredTargetPos{};
 		glm::vec3 cameraOffset;
 
 		if (start)
@@ -388,7 +392,7 @@ class CGProject : public BaseProject {
 				CamPos = desiredCamPos;
 			}
 			else{
-				CamPos += (desiredCamPos - CamPos) * followSpeed * speedFactor * deltaT;
+				CamPos += (desiredCamPos - CamPos) * followSpeed * deltaT;
 			}
 
 			if (CamPos.y < 0)
@@ -397,6 +401,12 @@ class CGProject : public BaseProject {
 			}
 
 			up += (glm::normalize(glm::vec3(Mplane.Wm[1])) - up) * followSpeed * deltaT;
+
+			desiredTargetPos = planePosition + glm::vec3(10.0f) * glm::normalize(glm::vec3(Mplane.Wm[2]));
+			targetPos += (desiredTargetPos - targetPos) * followSpeedFirst * deltaT;
+		}
+		else {
+			targetPos = planePosition + glm::vec3(10.0) * glm::normalize(glm::vec3(Mplane.Wm[2]));
 		}
 
 		if (thirdPerson) {
@@ -404,7 +414,7 @@ class CGProject : public BaseProject {
 		}
 		else {
 			glm::vec3 firstCamPos = planePosition - glm::vec3(0.1176) * glm::normalize(glm::vec3(Mplane.Wm[2])) + glm::vec3(0.108) * glm::normalize(glm::vec3(Mplane.Wm[1]));
-			ViewMatrix = glm::lookAt(firstCamPos, planePosition + glm::vec3(10.0) * glm::normalize(glm::vec3(Mplane.Wm[2])), glm::normalize(glm::vec3(Mplane.Wm[1])));
+			ViewMatrix = glm::lookAt(firstCamPos, targetPos, glm::vec3(Mplane.Wm[1]));
 		}
 
 		glm::mat4 M = glm::perspective(glm::radians(45.0f), Ar, 0.1f, 160.0f);
