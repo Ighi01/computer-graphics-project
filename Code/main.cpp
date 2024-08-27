@@ -320,6 +320,7 @@ class CGProject : public BaseProject {
 	float zoom = 1.0f;
 	float speedFactor = 1.0f;
 	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+	bool thirdPerson = true;
 
 	void updateUniformBuffer(uint32_t currentImage) {
 
@@ -328,7 +329,7 @@ class CGProject : public BaseProject {
 		bool instantCamera;
 		Direction direction;
 
-		handleCommands(deltaT, movement, start, zoom, speedFactor, direction, instantCamera, currentImage);
+		handleCommands(deltaT, movement, start, zoom, speedFactor, direction, instantCamera, thirdPerson, currentImage);
 
 		if (start)
 		{
@@ -398,7 +399,13 @@ class CGProject : public BaseProject {
 			up += (glm::normalize(glm::vec3(Mplane.Wm[1])) - up) * followSpeed * deltaT;
 		}
 
-		ViewMatrix = glm::lookAt(CamPos, planePosition, up);
+		if (thirdPerson) {
+			ViewMatrix = glm::lookAt(CamPos, planePosition, up);
+		}
+		else {
+			glm::vec3 firstCamPos = planePosition - glm::vec3(0.1176) * glm::normalize(glm::vec3(Mplane.Wm[2])) + glm::vec3(0.108) * glm::normalize(glm::vec3(Mplane.Wm[1]));
+			ViewMatrix = glm::lookAt(firstCamPos, planePosition + glm::vec3(10.0) * glm::normalize(glm::vec3(Mplane.Wm[2])), glm::normalize(glm::vec3(Mplane.Wm[1])));
+		}
 
 		glm::mat4 M = glm::perspective(glm::radians(45.0f), Ar, 0.1f, 160.0f);
 		M[1][1] *= -1;
