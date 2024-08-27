@@ -14,67 +14,123 @@
             "lights" : [
                 {
                     "color" : [
-                        0,
-                        0,
-                        1
+                        1,
+                        1,
+                        0.5
                     ],
-                    "intensity" : 5,
+                    "intensity" : 3,
                     "type" : "point",
-                    "name" : "Light"
-                },
-                {
-                    "color" : [
-                        0,
-                        0,
-                        1
-                    ],
-                    "intensity" : 5,
-                    "type" : "point",
-                    "name" : "Light.001"
-                },
-                {
-                    "color" : [
-                        0,
-                        0,
-                        1
-                    ],
-                    "intensity" : 5,
-                    "type" : "point",
-                    "name" : "Light.002"
+                    "name" : "3cross"
                 },
                 {
                     "color" : [
                         1,
-                        0,
-                        0
+                        1,
+                        0.5
                     ],
-                    "intensity" : 5,
+                    "intensity" : 3,
                     "type" : "point",
-                    "name" : "Light.new"
-                },
-                {
-                    "color" : [
-                        0.01,
-                        0.01,
-                        0.01
-                    ],
-                    "intensity" : 0.00001,
-                    "type" : "directional",
-                    "name" : "Sun"
+                    "name" : "3cross_1"
                 },
                 {
                     "color" : [
                         1,
-                        0,
-                        0
+                        1,
+                        0.5
                     ],
-                    "intensity" : 30,
-                    "spot" : {
-                        "innerConeAngle" : 0.40,
-                        "outerConeAngle" : 0.50
-                    },
-                    "type" : "spot",
-                    "name" : "Spot"
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "3cross_2"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "3cross_3"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "3cross_4"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "3cross_5"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "3cross_6"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "3cross_7"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "3cross_8"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "3cross_9"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "3cross_10"
+                },
+                {
+                    "color" : [
+                        1,
+                        1,
+                        0.5
+                    ],
+                    "intensity" : 3,
+                    "type" : "point",
+                    "name" : "3cross_11"
                 }
             ]
         }
@@ -89,7 +145,13 @@
                 2,
                 3,
                 4,
-                5
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11
             ]
         }
     ],
@@ -100,17 +162,17 @@
                     "light" : 0
                 }
             },
-            "name" : "Light",
+            "name" : "3cross",
             "rotation" : [
-                -0.2841663062572479,
-                0.7269423604011536,
-                0.34203392267227173,
-                0.5232754349708557
+                0,
+                0,
+                0,
+                0
             ],
             "translation" : [
-                10,
-                0,
-                10
+                -11.7,
+                4.7,
+                40.7
             ]
         },
         {
@@ -119,17 +181,17 @@
                     "light" : 1
                 }
             },
-            "name" : "Light.001",
+            "name" : "3cross_1",
             "rotation" : [
-                -0.2841663062572479,
-                0.7269423604011536,
-                0.34203392267227173,
-                0.5232754349708557
+                0,
+                0,
+                0,
+                0
             ],
             "translation" : [
-                -10,
-                0,
-                -10
+                20.3,
+                4.7,
+                8.7
             ]
         },
         {
@@ -138,17 +200,17 @@
                     "light" : 2
                 }
             },
-            "name" : "Light.002",
+            "name" : "3cross_2",
             "rotation" : [
-                -0.2841663062572479,
-                0.7269423604011536,
-                0.34203392267227173,
-                0.5232754349708557
+                0,
+                0,
+                0,
+                0
             ],
             "translation" : [
-                -10,
-                0,
-                10
+                27.7,
+                4.7,
+                -15.3
             ]
         },
         {
@@ -157,17 +219,17 @@
                     "light" : 3
                 }
             },
-            "name" : "Light.new",
+            "name" : "3cross_3",
             "rotation" : [
-                -0.2841663062572479,
-                0.7269423604011536,
-                0.34203392267227173,
-                0.5232754349708557
+                0,
+                0,
+                0,
+                0
             ],
             "translation" : [
-                10,
-                0,
-                -10
+                0.7,
+                4.7,
+                -20.3
             ]
         },
         {
@@ -176,17 +238,17 @@
                     "light" : 4
                 }
             },
-            "name" : "Sun",
+            "name" : "3cross_4",
             "rotation" : [
-                -0.3960249125957489,
-                0.1478610783815384,
-                -0.1478610783815384,
-                0.8941132426261902
+                0,
+                0,
+                0,
+                0
             ],
             "translation" : [
-                0,
-                200,
-                0
+                -27.7,
+                4.7,
+                -23.3
             ]
         },
         {
@@ -195,17 +257,131 @@
                     "light" : 5
                 }
             },
-            "name" : "Spot",
+            "name" : "3cross_5",
             "rotation" : [
-                0.1763041513,
-                0.7058715707,
-                0.1977983877,
-                0.6587033873
+                0,
+                0,
+                0,
+                0
             ],
             "translation" : [
+                4.3,
+                4.7,
+                -39.3
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 6
+                }
+            },
+            "name" : "3cross_6",
+            "rotation" : [
                 0,
-                2,
+                0,
+                0,
                 0
+            ],
+            "translation" : [
+                76.3,
+                4.7,
+                -39.3
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 7
+                }
+            },
+            "name" : "3cross_7",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                120.7,
+                4.7,
+                -36.5
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 8
+                }
+            },
+            "name" : "3cross_8",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                -4.3,
+                4.7,
+                -39.3
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 9
+                }
+            },
+            "name" : "3cross_9",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                -27.7,
+                4.7,
+                -47.3
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 10
+                }
+            },
+            "name" : "3cross_10",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                0.7,
+                0,
+                -44.3
+            ]
+        },
+        {
+            "extensions" : {
+                "KHR_lights_punctual" : {
+                    "light" : 11
+                }
+            },
+            "name" : "3cross_11",
+            "rotation" : [
+                0,
+                0,
+                0,
+                0
+            ],
+            "translation" : [
+                -0.7,
+                4.7,
+                -43.7
             ]
         }
     ]
