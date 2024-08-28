@@ -189,6 +189,7 @@ class CGProject : public BaseProject {
 		
 		nlohmann::json js;
 		std::ifstream ifs("models/Lights.json");
+
 		if (!ifs.is_open()) {
 			std::cout << "Error! Lights file not found!";
 			exit(-1);
@@ -401,6 +402,9 @@ class CGProject : public BaseProject {
 			case 0:
 				Mplane = InitialPlane;
 				up = glm::vec3(0.0f, 1.0f, 0.0f);
+				zoom = 1.0f;
+				speedFactor = 1.0f;
+				thirdPerson = true;
 				break;
 			case 1:
 				Mplane.Wm[3].x = 10.0f;
