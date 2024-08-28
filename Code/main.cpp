@@ -13,9 +13,9 @@ std::vector<SingleText> outText = {
 };
 
 struct GlobalUniformBufferObject {
-	alignas(16) glm::vec3 lightDir[6];
-	alignas(16) glm::vec3 lightPos[6];
-	alignas(16) glm::vec4 lightColor[6];
+	alignas(16) glm::vec3 lightDir[63];
+	alignas(16) glm::vec3 lightPos[63];
+	alignas(16) glm::vec4 lightColor[63];
 	alignas(4) float cosIn;
 	alignas(4) float cosOut;
 	alignas(16) glm::vec3 eyePos;
@@ -80,9 +80,9 @@ class CGProject : public BaseProject {
 
 	float Ar;
 
-	glm::mat4 LWm[6];
-	glm::vec3 LCol[6];
-	float LInt[5];
+	glm::mat4 LWm[61];
+	glm::vec3 LCol[61];
+	float LInt[61];
 	float ScosIn, ScosOut;
 	glm::vec4 lightOn;
 
@@ -185,7 +185,7 @@ class CGProject : public BaseProject {
 			ifs.close();
 			nlohmann::json ns = js["nodes"];
 			nlohmann::json ld = js["extensions"]["KHR_lights_punctual"]["lights"];
-			for (int i = 0; i < 5; i++) {
+			for (int i = 0; i < 61; i++) {
 				glm::vec3 T;
 				glm::vec3 S;
 				glm::quat Q;
@@ -221,8 +221,6 @@ class CGProject : public BaseProject {
 				LCol[i] = glm::vec3(cl[0], cl[1], cl[2]);
 				LInt[i] = ld[i]["intensity"];
 			}
-			ScosIn = cos((float)ld[5]["spot"]["innerConeAngle"]);
-			ScosOut = cos((float)ld[5]["spot"]["outerConeAngle"]);
 		}
 		catch (const nlohmann::json::exception& e) {
 			std::cout << e.what() << '\n';
@@ -428,6 +426,15 @@ class CGProject : public BaseProject {
 		glm::mat4 ViewPrj = M * Mv;
 		glm::mat4 baseTr = glm::mat4(1.0f);
 
+		// ------------ LIGHTS ------------
+
+
+ 		GlobalUniformBufferObject gubo{};
+
+
+
+		// DAY NIGHT CYCLE
+
 		static float cTime = 50.0;
 		const float turnTime = 300.0f;
 
@@ -435,18 +442,6 @@ class CGProject : public BaseProject {
 			cTime += deltaT;
 
 		float angle = cTime * 2.0f * M_PI / turnTime;
-
-		GlobalUniformBufferObject gubo{};
-
-		for (int i = 0; i < 5; i++) {
-			gubo.lightColor[i] = glm::vec4(LCol[i], LInt[i]);
-			gubo.lightDir[i] = LWm[i] * glm::vec4(0, 0, 1, 0);
-			gubo.lightPos[i] = LWm[i] * glm::vec4(0, 0, 0, 1);
-		}
-
-		gubo.cosIn = ScosIn;
-		gubo.cosOut = ScosOut;
-		gubo.lightOn = lightOn;
 
 		float lightIntensity = glm::clamp(sin(angle) * 0.5f + 0.5f, 0.0f, 1.0f);
 		
@@ -458,10 +453,34 @@ class CGProject : public BaseProject {
 		setBackgroundColorAsync(backgroundColor);
 
 		if (sin(angle) > 0.01) {
-			gubo.lightDir[6] = glm::vec3(0.0f, sin(angle), cos(angle));;
-			gubo.lightColor[6] = glm::vec4(lightIntensity, lightIntensity, lightIntensity, 1.0f);
+			gubo.lightDir[0] = glm::vec3(0.0f, sin(angle), cos(angle));;
+			gubo.lightColor[0] = glm::vec4(lightIntensity, lightIntensity, lightIntensity, 1.0f);
 			gubo.eyePos = glm::vec3(glm::inverse(ViewMatrix) * glm::vec4(0, 0, 0, 1));
 		}
+
+		// PLANE SPOT LIGHT
+
+		gubo.lightColor[1] = glm::vec4(1);
+		gubo.lightDir[1] = glm::vec4(1);
+		gubo.lightPos[1] = glm::vec4(1);
+
+		ScosIn = 0.4;
+		ScosOut = 0.5;
+
+		gubo.cosIn = ScosIn;
+		gubo.cosOut = ScosOut;
+
+
+		// CITY POINT LIGHTS
+
+		for (int i = 0; i < 61; i++) {
+			gubo.lightColor[i+2] = glm::vec4(LCol[i], LInt[i]);
+			gubo.lightDir[i+2] = LWm[i] * glm::vec4(0, 0, 1, 0);
+			gubo.lightPos[i+2] = LWm[i] * glm::vec4(0, 0, 0, 1);
+		}
+
+		gubo.lightOn = lightOn;
+
 		DSGlobal.map(currentImage, &gubo, 0);
 
 		// objects
