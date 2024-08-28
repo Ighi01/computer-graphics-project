@@ -85,7 +85,6 @@ class CGProject : public BaseProject {
 	Model MskyBox;
 	Texture TskyBox;
 	
-
     TextMaker txt;
 
 	glm::vec3 CamPos = glm::vec3(9.5, 2.5, 8.0);
@@ -245,6 +244,9 @@ class CGProject : public BaseProject {
 		Mplane.Wm = glm::rotate(Mplane.Wm, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		Mplane.Wm = glm::translate(Mplane.Wm, glm::vec3(-8.0f, 2.0f, 10.0f));
 		Mplane.Wm *= glm::scale(glm::mat4(1.0f), glm::vec3(0.04f));
+
+		Msun.Wm *= glm::scale(glm::mat4(1.0f), glm::vec3(7.5f));
+		Mmoon.Wm *= glm::scale(glm::mat4(1.0f), glm::vec3(7.5f));
 
 		InitialPlane = Mplane;
 		glm::vec3 CamPos = glm::vec3(9.5, 2.5, 8.0);
@@ -504,8 +506,8 @@ class CGProject : public BaseProject {
 
 		// DAY NIGHT CYCLE
 
-		static float cTime = 50.0;
-		const float turnTime = 300.0f;
+		static float cTime = 0.0;
+		const float turnTime = 30.0f;
 
 		if (!glfwGetKey(window, GLFW_KEY_Z))
 			cTime += deltaT;
@@ -521,6 +523,14 @@ class CGProject : public BaseProject {
 
 		setBackgroundColorAsync(backgroundColor);
 
+		Msun.Wm[3].z = 200.0f * cos(angle);
+		Msun.Wm[3].y = 200.0f * sin(angle);
+		Msun.Wm[3].x = 0.0f;
+
+		Mmoon.Wm[3].z = - 200.0f * cos(angle);
+		Mmoon.Wm[3].y = - 200.0f * sin(angle);
+		Mmoon.Wm[3].x = 0.0f;
+
 		if (sin(angle) > 0.01) {
 			gubo.lightDir[0] = glm::vec3(0.0f, sin(angle), cos(angle));;
 			gubo.lightColor[0] = glm::vec4(lightIntensity, lightIntensity, lightIntensity, 1.0f);
@@ -530,8 +540,8 @@ class CGProject : public BaseProject {
 		// PLANE SPOT LIGHT
 
 		gubo.lightColor[1] = glm::vec4(1);
-		gubo.lightDir[1] = glm::vec4(1);
-		gubo.lightPos[1] = glm::vec4(1);
+		gubo.lightDir[1] = -glm::normalize(glm::vec3(Mplane.Wm[2]));
+		gubo.lightPos[1] = planePosition;
 
 		ScosIn = 0.4;
 		ScosOut = 0.5;
