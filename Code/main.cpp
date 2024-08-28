@@ -489,7 +489,7 @@ class CGProject : public BaseProject {
 			ViewMatrix = glm::lookAt(firstCamPos, targetPos, glm::vec3(Mplane.Wm[1]));
 		}
 
-		glm::mat4 M = glm::perspective(glm::radians(45.0f), Ar, 0.1f, 160.0f);
+		glm::mat4 M = glm::perspective(glm::radians(45.0f), Ar, 0.1f, 300.0f);
 		M[1][1] *= -1;
 
 		glm::mat4 Mv = ViewMatrix;
