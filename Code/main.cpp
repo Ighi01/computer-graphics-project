@@ -308,7 +308,7 @@ class CGProject : public BaseProject {
 	float SPEED = 7.5f;
 
 	float followSpeed = 1.0f;
-	float followSpeedFirst = 5.0f;
+	float followSpeedFirst = 10.0f;
 	float minDistance = -0.5f;
 	float maxDistance = -3.5f;
 	float camOffset = 0.5f;
@@ -369,22 +369,27 @@ class CGProject : public BaseProject {
 			case FRONT:
 				cameraOffset = - glm::normalize(glm::vec3(Mplane.Wm[2])) * glm::mix(minDistance, maxDistance, zoom / maxZoom);
 				desiredCamPos = planePosition - cameraOffset + glm::normalize(glm::vec3(Mplane.Wm[1])) * camOffset;
+				desiredTargetPos = planePosition + glm::vec3(10.0f) * glm::normalize(glm::vec3(Mplane.Wm[2]));
 				break;			
 			case BACK:
 				cameraOffset = glm::normalize(glm::vec3(Mplane.Wm[2])) * glm::mix(minDistance, maxDistance, zoom / maxZoom);
 				desiredCamPos = planePosition - cameraOffset + glm::normalize(glm::vec3(Mplane.Wm[1])) * camOffset;
+				desiredTargetPos = planePosition + glm::vec3(10.0f) * glm::normalize(glm::vec3(Mplane.Wm[2]));
 				break;
 			case UP:
 				cameraOffset = glm::normalize(glm::vec3(Mplane.Wm[1])) * glm::mix(minDistance, maxDistance, zoom / maxZoom);
 				desiredCamPos = planePosition - cameraOffset + glm::normalize(glm::vec3(Mplane.Wm[1])) * camOffset;
+				desiredTargetPos = planePosition + glm::vec3(10.0f) * glm::normalize(glm::vec3(Mplane.Wm[2]));
 				break;
 			case LEFT:
 				cameraOffset = glm::normalize(glm::vec3(Mplane.Wm[0])) * glm::mix(minDistance, maxDistance, zoom / maxZoom);
 				desiredCamPos = planePosition - cameraOffset + glm::normalize(glm::vec3(Mplane.Wm[0])) * camOffset;
+				desiredTargetPos = planePosition + glm::vec3(10.0f) * glm::normalize(glm::vec3(Mplane.Wm[0]));
 				break;
 			case RIGHT:
 				cameraOffset = - glm::normalize(glm::vec3(Mplane.Wm[0])) * glm::mix(minDistance, maxDistance, zoom / maxZoom);
 				desiredCamPos = planePosition - cameraOffset - glm::normalize(glm::vec3(Mplane.Wm[0])) * camOffset;
+				desiredTargetPos = planePosition - glm::vec3(10.0f) * glm::normalize(glm::vec3(Mplane.Wm[0]));
 				break;
 			}
 
@@ -401,19 +406,17 @@ class CGProject : public BaseProject {
 			}
 
 			up += (glm::normalize(glm::vec3(Mplane.Wm[1])) - up) * followSpeed * deltaT;
-
-			desiredTargetPos = planePosition + glm::vec3(10.0f) * glm::normalize(glm::vec3(Mplane.Wm[2]));
 			targetPos += (desiredTargetPos - targetPos) * followSpeedFirst * deltaT;
 		}
 		else {
 			targetPos = planePosition + glm::vec3(10.0) * glm::normalize(glm::vec3(Mplane.Wm[2]));
 		}
 
-		if (thirdPerson) {
+		if (thirdPerson || !start) {
 			ViewMatrix = glm::lookAt(CamPos, planePosition, up);
 		}
 		else {
-			glm::vec3 firstCamPos = planePosition - glm::vec3(0.1176) * glm::normalize(glm::vec3(Mplane.Wm[2])) + glm::vec3(0.108) * glm::normalize(glm::vec3(Mplane.Wm[1]));
+			glm::vec3 firstCamPos = planePosition - glm::vec3(0.1175) * glm::normalize(glm::vec3(Mplane.Wm[2])) + glm::vec3(0.108) * glm::normalize(glm::vec3(Mplane.Wm[1]));
 			ViewMatrix = glm::lookAt(firstCamPos, targetPos, glm::vec3(Mplane.Wm[1]));
 		}
 
