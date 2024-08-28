@@ -1795,40 +1795,8 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 	void RebuildPipeline() {
 		framebufferResized = true;
 	}
-	
-	
-	// Control Wrapper
-	void handleGamePad(int id,  glm::vec3 &m, glm::vec3 &r, bool &fire) {
-		const float deadZone = 0.1f;
-		
-		if(glfwJoystickIsGamepad(id)) {
-			GLFWgamepadstate state;
-			if (glfwGetGamepadState(id, &state)) {
-				if(fabs(state.axes[GLFW_GAMEPAD_AXIS_LEFT_X]) > deadZone) {
-					m.x += state.axes[GLFW_GAMEPAD_AXIS_LEFT_X];
-				}
-				if(fabs(state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y]) > deadZone) {
-					m.z += state.axes[GLFW_GAMEPAD_AXIS_LEFT_Y];
-				}
-				if(fabs(state.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER]) > deadZone) {
-					m.y -= state.axes[GLFW_GAMEPAD_AXIS_LEFT_TRIGGER];
-				}
-				if(fabs(state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER]) > deadZone) {
-					m.y += state.axes[GLFW_GAMEPAD_AXIS_RIGHT_TRIGGER];
-				}
 
-				if(fabs(state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X]) > deadZone) {
-					r.y += state.axes[GLFW_GAMEPAD_AXIS_RIGHT_X];
-				}
-				if(fabs(state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y]) > deadZone) {
-					r.x += state.axes[GLFW_GAMEPAD_AXIS_RIGHT_Y];
-				}
-				r.z += state.buttons[GLFW_GAMEPAD_BUTTON_LEFT_BUMPER] ? 1.0f : 0.0f;
-				r.z -= state.buttons[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER] ? 1.0f : 0.0f;
-				fire = fire | (bool)state.buttons[GLFW_GAMEPAD_BUTTON_A] | (bool)state.buttons[GLFW_GAMEPAD_BUTTON_B];
-			}
-		}
-	}
+	// Control Wrapper
 
 	enum Direction {
 		UP,
@@ -1844,8 +1812,10 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 	int images = 0;
 	Direction defaultDirection = Direction::FRONT;
 	Direction oldDirection = defaultDirection;
-	bool tabPressed = false;
-	void handleCommands(float& deltaT, glm::vec3& movement, bool& start, float& zoom, float& speedFactor, Direction& direction, bool& instantCamera, bool& thirdPerson, uint32_t currentImage) {
+	bool tabPressed = false, spacePressed = false, escPressed = false;
+	double screenshotTime = 0.0;
+
+	void handleCommands(float& deltaT, glm::vec3& movement, bool& start, float& zoom, float& speedFactor, Direction& direction, bool& instantCamera, bool& thirdPerson, int& currentScene, uint32_t currentImage) {
 
 		static auto startTime = std::chrono::high_resolution_clock::now();
 		static float lastTime = 0.0f;
@@ -1923,29 +1893,55 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 					}
 				}
 
-				if (state.buttons[GLFW_GAMEPAD_BUTTON_START] || state.buttons[GLFW_GAMEPAD_BUTTON_A]) {
+				if ((state.buttons[GLFW_GAMEPAD_BUTTON_START] == GLFW_PRESS || state.buttons[GLFW_GAMEPAD_BUTTON_A] == GLFW_PRESS) && !spacePressed) {
 					if (start) {
 						char buf[50];
 						sprintf_s(buf, "../Images/CGProject_%d.png", images++);
-						std::async(std::launch::async, &BaseProject::saveScreenshot, this, buf, currentImage);
+						saveScreenshot(buf, currentImage, currentScene);
+						screenshotTime = static_cast<double>(std::time(nullptr));
+						currentScene = 5;
 					}
 					else {
 						start = true;
+						currentScene = 4;
 					}
+					spacePressed = true;
 				}
 
-				if (state.buttons[GLFW_GAMEPAD_BUTTON_Y]) {
-					if (!tabPressed) {
-						thirdPerson = !thirdPerson;
-						tabPressed = true;
-					}
+				if (state.buttons[GLFW_GAMEPAD_BUTTON_START] == GLFW_RELEASE && state.buttons[GLFW_GAMEPAD_BUTTON_A] == GLFW_RELEASE) {
+					spacePressed = false;
 				}
-				else {
+
+				if (state.buttons[GLFW_GAMEPAD_BUTTON_Y] == GLFW_PRESS && !tabPressed) {
+					if (start) {
+						thirdPerson = !thirdPerson;
+					}
+					else {
+						currentScene++;
+						if (currentScene > 3) {
+							currentScene = 0;
+						}
+					}
+					tabPressed = true;
+				}
+
+				if (state.buttons[GLFW_GAMEPAD_BUTTON_Y] == GLFW_RELEASE) {
 					tabPressed = false;
 				}
 
-				if (state.buttons[GLFW_GAMEPAD_BUTTON_B]) {
-					glfwSetWindowShouldClose(window, GL_TRUE);
+				if (state.buttons[GLFW_GAMEPAD_BUTTON_B] == GLFW_PRESS && !escPressed) {
+					if (start) {
+						currentScene = 0;
+						start = false;
+					}
+					else {
+						glfwSetWindowShouldClose(window, GL_TRUE);
+					}
+					escPressed = true;
+				}
+
+				if (state.buttons[GLFW_GAMEPAD_BUTTON_B] == GLFW_RELEASE) {
+					escPressed = false;
 				}
 			}
 		}
@@ -2013,19 +2009,35 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 				}
 			}
 
-			if (glfwGetKey(window, GLFW_KEY_SPACE)) {
+			if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !spacePressed) {
 				if (start) {
 					char buf[50];
 					sprintf_s(buf, "../Images/CGProject_%d.png", images++);
-					std::async(std::launch::async, &BaseProject::saveScreenshot, this, buf, currentImage);
+					saveScreenshot(buf, currentImage, currentScene);
+					screenshotTime = static_cast<double>(std::time(nullptr));
+					currentScene = 5;
 				}
 				else {
 					start = true;
+					currentScene = 4;
 				}
+				spacePressed = true;
+			}
+
+			if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
+				spacePressed = false;
 			}
 
 			if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS && !tabPressed) {
-				thirdPerson = !thirdPerson;
+				if (start) {
+					thirdPerson = !thirdPerson;
+				}
+				else {
+					currentScene++;
+					if (currentScene > 3) {
+						currentScene = 0;
+					}
+				}
 				tabPressed = true;
 			}
 
@@ -2033,8 +2045,19 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 				tabPressed = false;
 			}
 
-			if (glfwGetKey(window, GLFW_KEY_ESCAPE)) {
-				glfwSetWindowShouldClose(window, GL_TRUE);
+			if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS && !escPressed) {
+				if (start) {
+					currentScene = 0;
+					start = false;
+				}
+				else {
+					glfwSetWindowShouldClose(window, GL_TRUE);
+				}
+				escPressed = true;
+			}
+
+			if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_RELEASE) {
+				escPressed = false;
 			}
 		}
 
@@ -2043,6 +2066,10 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 		}
 
 		oldDirection = direction;
+
+		if (currentScene == 5 && (static_cast<double>(std::time(nullptr)) - screenshotTime) > 3.0) {
+			currentScene = 4;
+		}
 	}
 
 
@@ -2246,7 +2273,7 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 	public:
 	bool screenshotSaved = false;
 
-	void saveScreenshot(const std::string& path, int currentBuffer){
+	void saveScreenshot(const std::string& path, int currentBuffer, int currentScene){
 		VkResult result;
 		uint32_t width = swapChainExtent.width;
 		uint32_t height = swapChainExtent.height;
@@ -2507,6 +2534,7 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 		vkDestroyImage(device, dstImage, nullptr);
 
 		screenshotSaved = true;
+		currentScene = 5;
 	}	
 };
 

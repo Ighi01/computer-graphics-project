@@ -9,7 +9,13 @@
 #include "modules/Scene.hpp"
 
 std::vector<SingleText> outText = {
-	{2, {"Plane Simulator", "Press SPACE to start the engine","",""}, 0, 0}
+	{3, {"Plane Simulator", "CITY", "Press SPACE to start the engine, TAB to change place.",""}, 0, 0},
+	{3, {"Plane Simulator", "MOUNTAIN", "Press SPACE to start the engine, TAB to change place.",""}, 0, 0},
+	{3, {"Plane Simulator", "PORT", "Press SPACE to start the engine, TAB to change place.",""}, 0, 0},
+	{3, {"Plane Simulator", "COUNTRY", "Press SPACE to start the engine, TAB to change place.",""}, 0, 0},
+	{0, {"","","",""}, 0, 0},
+	{1, {"ScreenShoot Saved !", "", "",""}, 0, 0},
+
 };
 
 struct GlobalUniformBufferObject {
@@ -69,6 +75,7 @@ class CGProject : public BaseProject {
 	Scene SC;
 
 	Model Mplane;
+	Model Mplane, InitialPlane;
 	Model Msun;
 	Model Mmoon;
 	Texture Tcity;
@@ -85,6 +92,7 @@ class CGProject : public BaseProject {
 	glm::mat4 ViewMatrix;
 
 	float Ar;
+	int currScene = 0;
 
 	glm::mat4 LWm[61];
 	glm::vec3 LCol[61];
@@ -178,10 +186,6 @@ class CGProject : public BaseProject {
 		std::cout << "Descriptor Sets in the Pool : " << DPSZs.setsInPool << "\n";
 		
 		ViewMatrix = glm::translate(glm::mat4(1), -CamPos);
-		Mplane.Wm = glm::rotate(Mplane.Wm, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		Mplane.Wm = glm::rotate(Mplane.Wm, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		Mplane.Wm = glm::translate(Mplane.Wm, glm::vec3(-8.0f, 2.0f, 10.0f));
-		Mplane.Wm *= glm::scale(glm::mat4(1.0f), glm::vec3(0.04f));
 		
 		nlohmann::json js;
 		std::ifstream ifs("models/Lights.json");
@@ -235,6 +239,14 @@ class CGProject : public BaseProject {
 		catch (const nlohmann::json::exception& e) {
 			std::cout << e.what() << '\n';
 		}
+
+		Mplane.Wm = glm::rotate(Mplane.Wm, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		Mplane.Wm = glm::rotate(Mplane.Wm, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		Mplane.Wm = glm::translate(Mplane.Wm, glm::vec3(-8.0f, 2.0f, 10.0f));
+		Mplane.Wm *= glm::scale(glm::mat4(1.0f), glm::vec3(0.04f));
+
+		InitialPlane = Mplane;
+		glm::vec3 CamPos = glm::vec3(9.5, 2.5, 8.0);
 
 		lightOn = glm::vec4(1);
 		std::cout << "Light initialization completed!\n";
@@ -323,7 +335,7 @@ class CGProject : public BaseProject {
 			static_cast<uint32_t>(Mmoon.indices.size()), 1, 0, 0, 0);
 
 		SC.populateCommandBuffer(commandBuffer, currentImage, PSimple);
-		txt.populateCommandBuffer(commandBuffer, currentImage, 0);
+		txt.populateCommandBuffer(commandBuffer, currentImage, currScene);
 	}
 
 	// Here is where you update the uniforms.
@@ -360,7 +372,7 @@ class CGProject : public BaseProject {
 		Direction direction;
 		glm::vec3 firstDirection = glm::vec3(0.0f);
 
-		handleCommands(deltaT, movement, start, zoom, speedFactor, direction, instantCamera, thirdPerson, currentImage);
+		handleCommands(deltaT, movement, start, zoom, speedFactor, direction, instantCamera, thirdPerson, currScene, currentImage);
 
 		if (start)
 		{
@@ -379,11 +391,33 @@ class CGProject : public BaseProject {
 				rotationMatrix = glm::rotate(rotationMatrix, -Y_SPEED * deltaT, glm::vec3(0.0f, 1.0f, 0.0f));
 				block = true;
 			}
-
 			if (!block) {
 				rotationMatrix = glm::rotate(glm::rotate(glm::rotate(glm::mat4(1.0f), movement.x * X_SPEED * deltaT, glm::vec3(1.0f, 0.0f, 0.0f)), movement.y * Y_SPEED * deltaT, glm::vec3(0.0f, 1.0f, 0.0f)), movement.z * Z_SPEED * deltaT, glm::vec3(0.0f, 0.0f, 1.0f));
 			}
 			Mplane.Wm = glm::translate(Mplane.Wm * rotationMatrix, glm::vec3(0.0f, 0.0f, 1.0f) * SPEED * speedFactor * deltaT);
+		}
+		else {
+			switch (currScene) {
+			case 0:
+				Mplane = InitialPlane;
+				up = glm::vec3(0.0f, 1.0f, 0.0f);
+				break;
+			case 1:
+				Mplane.Wm[3].x = 10.0f;
+				Mplane.Wm[3].y = 4.0f;
+				Mplane.Wm[3].z = 0.0f;
+				break;
+			case 2:
+				Mplane.Wm[3].x = 0.0f;
+				Mplane.Wm[3].y = 10.0f;
+				Mplane.Wm[3].z = 0.0f;
+				break;
+			case 3:
+				Mplane.Wm[3].x = 10.0f;
+				Mplane.Wm[3].y = 10.0f;
+				Mplane.Wm[3].z = 10.0f;
+				break;
+			}
 		}
 
 		glm::vec3 planePosition = glm::vec3(Mplane.Wm[3]);
@@ -438,6 +472,7 @@ class CGProject : public BaseProject {
 		}
 		else {
 			targetPos = planePosition + glm::vec3(10.0) * glm::normalize(glm::vec3(Mplane.Wm[2]));
+			CamPos = planePosition + glm::normalize(glm::vec3(Mplane.Wm[2])) * glm::mix(minDistance, maxDistance, zoom / maxZoom) + glm::normalize(glm::vec3(Mplane.Wm[1])) * camOffset;
 		}
 
 		if (thirdPerson || !start) {
@@ -537,7 +572,7 @@ class CGProject : public BaseProject {
 		simpleMatParUbo.Power = 300.0;
 		DSPlane.map(currentImage, &simpleMatParUbo, 2);
 	
-		simpleUbo.mMat = MSun.Wm * baseTr;
+		simpleUbo.mMat = Msun.Wm * baseTr;
 		simpleUbo.mvpMat = ViewPrj * simpleUbo.mMat;
 		simpleUbo.nMat = glm::inverse(glm::transpose(simpleUbo.mMat));
 		DSSun.map(currentImage, &simpleUbo, 0);
