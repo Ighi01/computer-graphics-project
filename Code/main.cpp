@@ -74,10 +74,10 @@ class CGProject : public BaseProject {
 
 	Scene SC;
 
-	Model Mplane;
 	Model Mplane, InitialPlane;
 	Model Msun;
 	Model Mmoon;
+
 	Texture Tcity;
 	Texture Tsun;
 	Texture Tmoon;
