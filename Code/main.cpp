@@ -12,7 +12,7 @@ std::vector<SingleText> outText = {
 	{3, {"Plane Simulator", "COUNTRY", "Press SPACE to start the engine, TAB to change place.",""}, 0, 0},
 	{3, {"Plane Simulator", "PORT", "Press SPACE to start the engine, TAB to change place.",""}, 0, 0},
 	{3, {"Plane Simulator", "BEACH", "Press SPACE to start the engine, TAB to change place.",""}, 0, 0},
-	{3, {"Plane Simulator", "MOUNTAIN", "Press SPACE to start the engine, TAB to change place.",""}, 0, 0},
+	{3, {"Plane Simulator", "CITY", "Press SPACE to start the engine, TAB to change place.",""}, 0, 0},
 	{0, {"","","",""}, 0, 0},
 	{1, {"ScreenShoot Saved !", "", "",""}, 0, 0},
 	{1, {"Don't go out of the scene!", "", "",""}, 0, 0}
@@ -39,6 +39,10 @@ struct SimpleMatParUniformBufferObject {
 	alignas(4)  float Power;
 };
 
+struct SunMoonUniformBufferObject {
+	alignas(16) glm::mat4 mvpMat;
+};
+
 struct skyBoxUniformBufferObject {
 	alignas(16) glm::mat4 mvpMat;
 };
@@ -54,6 +58,11 @@ struct skyBoxVertex {
 	glm::vec3 pos;
 };
 
+struct SunMoonVertex {
+	glm::vec3 pos;
+	glm::vec2 UV;
+};
+
 // MAIN ! 
 class CGProject : public BaseProject {
 	protected:
@@ -62,6 +71,7 @@ class CGProject : public BaseProject {
     DescriptorSet DSGlobal;
 	DescriptorSetLayout DSLCity;
 	DescriptorSet DSPlane;
+	DescriptorSetLayout DSLSunMoon;
 	DescriptorSet DSSun;
 	DescriptorSet DSMoon;
 	DescriptorSetLayout DSLskyBox;
@@ -69,8 +79,10 @@ class CGProject : public BaseProject {
 
     VertexDescriptor VDSimple;
 	VertexDescriptor VDskyBox;
+	VertexDescriptor VDsunMoon;
 	Pipeline PSimple;
 	Pipeline PskyBox;
+	Pipeline PSunMoon;
 
 	Scene SC;
 
@@ -161,6 +173,11 @@ class CGProject : public BaseProject {
 					{2, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT, sizeof(SimpleMatParUniformBufferObject), 1}
 			});
 
+		DSLSunMoon.init(this, {
+					{0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, sizeof(SunMoonUniformBufferObject), 1},
+					{1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 0, 1},
+			});
+
 		DSLskyBox.init(this, {
 					{0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_VERTEX_BIT, sizeof(skyBoxUniformBufferObject), 1},
 					{1, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_FRAGMENT_BIT, 0, 1}
@@ -184,21 +201,34 @@ class CGProject : public BaseProject {
 					 sizeof(glm::vec3), POSITION}
 			});
 
+		VDsunMoon.init(this, {
+				  {0, sizeof(SimpleVertex), VK_VERTEX_INPUT_RATE_VERTEX}
+			}, {
+				{0, 0, VK_FORMAT_R32G32B32_SFLOAT, offsetof(SunMoonVertex, pos),
+						sizeof(glm::vec3), POSITION},
+				{0, 1, VK_FORMAT_R32G32_SFLOAT, offsetof(SunMoonVertex, UV),
+						sizeof(glm::vec2), UV}
+			});
+
+
+		PskyBox.init(this, &VDskyBox, "shaders/SkyBoxVert.spv", "shaders/SkyBoxFrag.spv", { &DSLskyBox });
+		PskyBox.setAdvancedFeatures(VK_COMPARE_OP_LESS_OR_EQUAL, VK_POLYGON_MODE_FILL,
+			VK_CULL_MODE_BACK_BIT, true);
+		PSunMoon.init(this, &VDsunMoon, "shaders/SunMoonVert.spv", "shaders/SunMoonFrag.spv", { &DSLSunMoon });
+		PSunMoon.setAdvancedFeatures(VK_COMPARE_OP_LESS_OR_EQUAL, VK_POLYGON_MODE_FILL,
+			VK_CULL_MODE_NONE, false);
 		PSimple.init(this, &VDSimple, "shaders/SimpleVert.spv", "shaders/SimpleFrag.spv", { &DSLGlobal, &DSLCity });
 		PSimple.setAdvancedFeatures(VK_COMPARE_OP_LESS_OR_EQUAL, VK_POLYGON_MODE_FILL,
 			VK_CULL_MODE_NONE, false);
-		PskyBox.init(this, &VDskyBox, "shaders/SkyBoxVert.spv", "shaders/SkyBoxFrag.spv", { &DSLskyBox });
-		PskyBox.setAdvancedFeatures(VK_COMPARE_OP_LESS_OR_EQUAL, VK_POLYGON_MODE_FILL,
-			VK_CULL_MODE_BACK_BIT, false);
 
 		MskyBox.init(this, &VDskyBox, "models/SkyBoxCube.obj", OBJ);
-		TskyBox.init(this, "textures/sky.png");
-		Mplane.init(this, &VDSimple, "models/transport_air_008_transport_air_008.001.mgcg", MGCG);
 		Msun.init(this, &VDSimple, "models/Sphere.obj", OBJ);
 		Mmoon.init(this, &VDSimple, "models/Sphere1.obj", OBJ);
+		Mplane.init(this, &VDSimple, "models/transport_air_008_transport_air_008.001.mgcg", MGCG);
+		
 		SC.init(this, &VDSimple, DSLCity, PSimple, "models/scene.json");
 		
-
+		TskyBox.init(this, "textures/sky.png");
 		Tcity.init(this, "textures/Textures_City.png");
 		Tsun.init(this, "textures/sun.png");
 		Tmoon.init(this, "textures/moon.png");
@@ -279,13 +309,14 @@ class CGProject : public BaseProject {
 	// Here you create your pipelines and Descriptor Sets!
 	void pipelinesAndDescriptorSetsInit() {
 		PskyBox.create1();
+		PSunMoon.create();
 		PSimple.create();
-
+		
 		DSskyBox.init(this, &DSLskyBox, { &TskyBox });
+		DSSun.init(this, &DSLSunMoon, { &Tsun });
+		DSMoon.init(this, &DSLSunMoon, { &Tmoon });
 		DSGlobal.init(this, &DSLGlobal, {});
 		DSPlane.init(this, &DSLCity, { &Tcity });
-		DSSun.init(this, &DSLCity, { &Tsun });
-		DSMoon.init(this, &DSLCity, { &Tmoon });
 		
 		SC.pipelinesAndDescriptorSetsInit(DSLCity);
 		txt.pipelinesAndDescriptorSetsInit();		
@@ -295,13 +326,15 @@ class CGProject : public BaseProject {
 	// All the object classes defined in Starter.hpp have a method .cleanup() for this purpose
 	void pipelinesAndDescriptorSetsCleanup() {
 		PskyBox.cleanup();
+		PSunMoon.cleanup();
 		PSimple.cleanup();
 
 		DSskyBox.cleanup();
-		DSGlobal.cleanup();
-		DSPlane.cleanup();
 		DSSun.cleanup();
 		DSMoon.cleanup();
+		DSGlobal.cleanup();
+		DSPlane.cleanup();
+		
 		SC.pipelinesAndDescriptorSetsCleanup();
 		txt.pipelinesAndDescriptorSetsCleanup();
 	}
@@ -313,18 +346,22 @@ class CGProject : public BaseProject {
 	void localCleanup() {
 		DSLCity.cleanup();
 		DSLGlobal.cleanup();
+		DSLSunMoon.cleanup();
+
 		Tcity.cleanup();
 		Tsun.cleanup();
 		Tmoon.cleanup();
+		TskyBox.cleanup();
+
 		Mplane.cleanup();
 		Msun.cleanup();
 		Mmoon.cleanup();
-		TskyBox.cleanup();
 		MskyBox.cleanup();
-		DSLskyBox.cleanup();
+		
 		SC.localCleanup();
 		PskyBox.destroy();
 		PSimple.destroy();
+		PSunMoon.destroy();
 		txt.localCleanup();		
 	}
 	
@@ -339,24 +376,24 @@ class CGProject : public BaseProject {
 		vkCmdDrawIndexed(commandBuffer,
 			static_cast<uint32_t>(MskyBox.indices.size()), 1, 0, 0, 0);
 		
+		PSunMoon.bind(commandBuffer);
+		Msun.bind(commandBuffer);
+		DSSun.bind(commandBuffer, PSunMoon, 0, currentImage);
+		vkCmdDrawIndexed(commandBuffer,
+			static_cast<uint32_t>(Msun.indices.size()), 1, 0, 0, 0);
+
+		PSunMoon.bind(commandBuffer);
+		Mmoon.bind(commandBuffer);
+		DSMoon.bind(commandBuffer, PSunMoon, 0, currentImage);
+		vkCmdDrawIndexed(commandBuffer,
+			static_cast<uint32_t>(Mmoon.indices.size()), 1, 0, 0, 0);
+
 		PSimple.bind(commandBuffer);
 		Mplane.bind(commandBuffer);
 		DSGlobal.bind(commandBuffer, PSimple, 0, currentImage);
 		DSPlane.bind(commandBuffer, PSimple, 1, currentImage);
 		vkCmdDrawIndexed(commandBuffer,
 			static_cast<uint32_t>(Mplane.indices.size()), 1, 0, 0, 0);
-
-		Msun.bind(commandBuffer);
-		DSGlobal.bind(commandBuffer, PSimple, 0, currentImage);
-		DSSun.bind(commandBuffer, PSimple, 1, currentImage);
-		vkCmdDrawIndexed(commandBuffer,
-			static_cast<uint32_t>(Msun.indices.size()), 1, 0, 0, 0);
-
-		Mmoon.bind(commandBuffer);
-		DSGlobal.bind(commandBuffer, PSimple, 0, currentImage);
-		DSMoon.bind(commandBuffer, PSimple, 1, currentImage);
-		vkCmdDrawIndexed(commandBuffer,
-			static_cast<uint32_t>(Mmoon.indices.size()), 1, 0, 0, 0);
 
 		SC.populateCommandBuffer(commandBuffer, currentImage, PSimple);
 		txt.populateCommandBuffer(commandBuffer, currentImage, currScene);
@@ -445,10 +482,10 @@ class CGProject : public BaseProject {
 				break;
 			case 1:
 				Mplane.Wm = glm::mat4(
-					0.0f, 0.0f, scaleFactor, 0.0f,
+					0.0f, 0.0f, -scaleFactor, 0.0f,
 					0.0f, scaleFactor, 0.0f, 0.0f,
-					- scaleFactor, 0.0f, 0.0f, 0.0f,
-					8.0f, 2.0f, 40.0f, 1.0f
+					scaleFactor, 0.0f, 0.0f, 0.0f,
+					-24.0f, 2.0f, 40.0f, 1.0f
 				);
 				break;
 			case 2:
@@ -460,9 +497,12 @@ class CGProject : public BaseProject {
 				);
 				break;
 			case 3:
-				Mplane.Wm[3].x = 10.0f;
-				Mplane.Wm[3].y = 10.0f;
-				Mplane.Wm[3].z = 10.0f;
+				Mplane.Wm = glm::mat4(
+					0.0f, 0.0f, scaleFactor, 0.0f,
+					0.0f, scaleFactor, 0.0f, 0.0f,
+					-scaleFactor, 0.0f, 0.0f, 0.0f,
+					16.0f, 2.0f, -72.0f, 1.0f
+				);
 				break;
 			}
 		}
@@ -603,10 +643,18 @@ class CGProject : public BaseProject {
 
 		DSGlobal.map(currentImage, &gubo, 0);
 
-		// objects
+		// SCENE
 		skyBoxUniformBufferObject sbubo{};
 		sbubo.mvpMat = M * glm::mat4(glm::mat3(Mv));
 		DSskyBox.map(currentImage, &sbubo, 0);
+
+		SunMoonUniformBufferObject sunmoonUbo{};
+
+		sunmoonUbo.mvpMat = ViewPrj * Msun.Wm * baseTr;
+		DSSun.map(currentImage, &sunmoonUbo, 0);
+
+		sunmoonUbo.mvpMat = ViewPrj * Mmoon.Wm * baseTr;
+		DSMoon.map(currentImage, &sunmoonUbo, 0);
 
 		SimpleUniformBufferObject simpleUbo{};
 		SimpleMatParUniformBufferObject simpleMatParUbo{};
@@ -627,20 +675,6 @@ class CGProject : public BaseProject {
 		simpleMatParUbo.Power = 300.0;
 		DSPlane.map(currentImage, &simpleMatParUbo, 2);
 	
-		simpleUbo.mMat = Msun.Wm * baseTr;
-		simpleUbo.mvpMat = ViewPrj * simpleUbo.mMat;
-		simpleUbo.nMat = glm::inverse(glm::transpose(simpleUbo.mMat));
-		DSSun.map(currentImage, &simpleUbo, 0);
-		simpleMatParUbo.Power = 300.0;
-		DSSun.map(currentImage, &simpleMatParUbo, 2);
-
-		simpleUbo.mMat = Mmoon.Wm * baseTr;
-		simpleUbo.mvpMat = ViewPrj * simpleUbo.mMat;
-		simpleUbo.nMat = glm::inverse(glm::transpose(simpleUbo.mMat));
-		DSMoon.map(currentImage, &simpleUbo, 0);
-		simpleMatParUbo.Power = 300.0;
-		DSMoon.map(currentImage, &simpleMatParUbo, 2);
-
 	}
 };
 

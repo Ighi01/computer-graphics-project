@@ -10,8 +10,9 @@ void main()
     // Calcoliamo le coordinate UV da TexCoords
     vec2 uv = vec2(
         atan(TexCoords.z, TexCoords.x) / (2.0 * 3.14159265359) + 0.5,
-        asin(TexCoords.y) / 3.14159265359 + 0.5
+        -(asin(TexCoords.y) / 3.14159265359 + 0.5)
     );
+    vec4 texColor = texture(skyboxTexture, uv);
 
-    FragColor = texture(skyboxTexture, uv);
+    FragColor = vec4(texColor.rgb, 0.5);
 }
