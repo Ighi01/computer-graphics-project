@@ -9,7 +9,6 @@
 #include "modules/Scene.hpp"
 
 std::vector<SingleText> outText = {
-	{3, {"Plane Simulator", "CITY", "Press SPACE to start the engine, TAB to change place.",""}, 0, 0},
 	{3, {"Plane Simulator", "COUNTRY", "Press SPACE to start the engine, TAB to change place.",""}, 0, 0},
 	{3, {"Plane Simulator", "PORT", "Press SPACE to start the engine, TAB to change place.",""}, 0, 0},
 	{3, {"Plane Simulator", "BEACH", "Press SPACE to start the engine, TAB to change place.",""}, 0, 0},
