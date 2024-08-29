@@ -10,9 +10,10 @@
 
 std::vector<SingleText> outText = {
 	{3, {"Plane Simulator", "CITY", "Press SPACE to start the engine, TAB to change place.",""}, 0, 0},
-	{3, {"Plane Simulator", "MOUNTAIN", "Press SPACE to start the engine, TAB to change place.",""}, 0, 0},
-	{3, {"Plane Simulator", "PORT", "Press SPACE to start the engine, TAB to change place.",""}, 0, 0},
 	{3, {"Plane Simulator", "COUNTRY", "Press SPACE to start the engine, TAB to change place.",""}, 0, 0},
+	{3, {"Plane Simulator", "PORT", "Press SPACE to start the engine, TAB to change place.",""}, 0, 0},
+	{3, {"Plane Simulator", "BEACH", "Press SPACE to start the engine, TAB to change place.",""}, 0, 0},
+	{3, {"Plane Simulator", "MOUNTAIN", "Press SPACE to start the engine, TAB to change place.",""}, 0, 0},
 	{0, {"","","",""}, 0, 0},
 	{1, {"ScreenShoot Saved !", "", "",""}, 0, 0},
 
@@ -74,7 +75,7 @@ class CGProject : public BaseProject {
 
 	Scene SC;
 
-	Model Mplane, InitialPlane;
+	Model Mplane;
 	Model Msun;
 	Model Mmoon;
 
@@ -87,11 +88,42 @@ class CGProject : public BaseProject {
 	
     TextMaker txt;
 
-	glm::vec3 CamPos = glm::vec3(9.5, 2.5, 8.0);
+	glm::vec3 CamPos;
 	glm::mat4 ViewMatrix;
 
 	float Ar;
 	int currScene = 0;
+	float scaleFactor = 0.04f;
+
+	bool start = false;
+
+	float X_SPEED = 0.6f;
+	float Y_SPEED = 0.4f;
+	float Z_SPEED = 1.1f;
+	float SPEED = 7.5f;
+
+	float followSpeed = 1.0f;
+	float followSpeedFirst = 10.0f;
+	float minDistance = -0.5f;
+	float maxDistance = -3.5f;
+	float camOffset = 0.5f;
+
+	float minX = -150.0f;
+	float maxX = 200.0f;
+	float minZ = -200.0f;
+	float maxZ = 100.0f;
+	float maxDown = 1.0f;
+	float maxUp = 50.0f;
+
+	float accumulatedRotationY = 0.0f;
+	float accumulatedRotationZ = 0.0f;
+	float accumulatedRotationX = 0.0f;
+
+	float zoom = 1.0f;
+	float speedFactor = 1.0f;
+	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+	bool thirdPerson = true;
+	glm::vec3 targetPos;
 
 	glm::mat4 LWm[61];
 	glm::vec3 LCol[61];
@@ -184,8 +216,6 @@ class CGProject : public BaseProject {
 		std::cout << "Textures in the Pool        : " << DPSZs.texturesInPool << "\n";
 		std::cout << "Descriptor Sets in the Pool : " << DPSZs.setsInPool << "\n";
 		
-		ViewMatrix = glm::translate(glm::mat4(1), -CamPos);
-		
 		nlohmann::json js;
 		std::ifstream ifs("models/Lights.json");
 
@@ -240,16 +270,8 @@ class CGProject : public BaseProject {
 			std::cout << e.what() << '\n';
 		}
 
-		Mplane.Wm = glm::rotate(Mplane.Wm, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		Mplane.Wm = glm::rotate(Mplane.Wm, glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		Mplane.Wm = glm::translate(Mplane.Wm, glm::vec3(-8.0f, 2.0f, 10.0f));
-		Mplane.Wm *= glm::scale(glm::mat4(1.0f), glm::vec3(0.04f));
-
 		Msun.Wm *= glm::scale(glm::mat4(1.0f), glm::vec3(7.5f));
 		Mmoon.Wm *= glm::scale(glm::mat4(1.0f), glm::vec3(7.5f));
-
-		InitialPlane = Mplane;
-		glm::vec3 CamPos = glm::vec3(9.5, 2.5, 8.0);
 
 		lightOn = glm::vec4(1);
 		std::cout << "Light initialization completed!\n";
@@ -343,29 +365,6 @@ class CGProject : public BaseProject {
 
 	// Here is where you update the uniforms.
 	// Very likely this will be where you will be writing the logic of your application.
-	bool start = false;
-
-	float X_SPEED = 0.6f;
-	float Y_SPEED = 0.4f;
-	float Z_SPEED = 1.1f;
-	float SPEED = 7.5f;
-
-	float followSpeed = 1.0f;
-	float followSpeedFirst = 10.0f;
-	float minDistance = -0.5f;
-	float maxDistance = -3.5f;
-	float camOffset = 0.5f;
-
-	float maxX = 100.0f;
-	float maxZ = 100.0f;
-	float maxDown = 1.0f;
-	float maxUp = 50.0f;
-
-	float zoom = 1.0f;
-	float speedFactor = 1.0f;
-	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-	bool thirdPerson = true;
-	glm::vec3 targetPos;
 
 	void updateUniformBuffer(uint32_t currentImage) {
 
@@ -383,17 +382,41 @@ class CGProject : public BaseProject {
 			bool block = false;
 
 			if (Mplane.Wm[3].y <= maxDown) {
-				rotationMatrix = glm::rotate(rotationMatrix, -X_SPEED * deltaT, glm::vec3(1.0f, 0.0f, 0.0f));
+				if (accumulatedRotationX < glm::radians(180.0f)) {
+					float rotationStep = - X_SPEED * deltaT;
+					rotationMatrix = glm::rotate(rotationMatrix, rotationStep, glm::vec3(1.0f, 0.0f, 0.0f));
+					accumulatedRotationX += glm::abs(rotationStep);
+				}
 				block = true;
 			}
+			else{
+				accumulatedRotationX = 0.0;
+			}
+
 			if (Mplane.Wm[3].y >= maxUp) {
-				rotationMatrix = glm::rotate(rotationMatrix, X_SPEED * deltaT, glm::vec3(1.0f, 0.0f, 0.0f));
+				if (accumulatedRotationX < glm::radians(180.0f)){
+					float rotationStep = X_SPEED * deltaT;
+					rotationMatrix = glm::rotate(rotationMatrix, rotationStep, glm::vec3(1.0f, 0.0f, 0.0f));
+					accumulatedRotationX += glm::abs(rotationStep);
+				}
 				block = true;
 			}
-			if (glm::abs(Mplane.Wm[3].x) >= maxX || glm::abs(Mplane.Wm[3].z) >= maxZ) {
-				rotationMatrix = glm::rotate(rotationMatrix, -Y_SPEED * deltaT, glm::vec3(0.0f, 1.0f, 0.0f));
+			else {
+				accumulatedRotationX = 0.0;
+			}
+
+			if (Mplane.Wm[3].x >= maxX || Mplane.Wm[3].z >= maxZ || Mplane.Wm[3].x <= minX || Mplane.Wm[3].z <= minZ) {
+				if (accumulatedRotationY < glm::radians(180.0f)) {
+					float rotationStep = -Y_SPEED * deltaT;
+					rotationMatrix = glm::rotate(rotationMatrix, rotationStep, glm::vec3(0.0f, 1.0f, 0.0f));
+					accumulatedRotationY += glm::abs(rotationStep);
+				}
 				block = true;
 			}
+			else {
+				accumulatedRotationY = 0.0;
+			}
+
 			if (!block) {
 				rotationMatrix = glm::rotate(glm::rotate(glm::rotate(glm::mat4(1.0f), movement.x * X_SPEED * deltaT, glm::vec3(1.0f, 0.0f, 0.0f)), movement.y * Y_SPEED * deltaT, glm::vec3(0.0f, 1.0f, 0.0f)), movement.z * Z_SPEED * deltaT, glm::vec3(0.0f, 0.0f, 1.0f));
 			}
@@ -402,21 +425,32 @@ class CGProject : public BaseProject {
 		else {
 			switch (currScene) {
 			case 0:
-				Mplane = InitialPlane;
+				Mplane.Wm = glm::mat4(
+					scaleFactor, 0.0f, 0.0f, 0.0f,
+					0.0f, scaleFactor, 0.0f, 0.0f,
+					0.0f, 0.0f, scaleFactor, 0.0f,
+					48.0f, 2.0f, -112.0f, 1.0f
+				);
 				up = glm::vec3(0.0f, 1.0f, 0.0f);
 				zoom = 1.0f;
 				speedFactor = 1.0f;
 				thirdPerson = true;
 				break;
 			case 1:
-				Mplane.Wm[3].x = 10.0f;
-				Mplane.Wm[3].y = 4.0f;
-				Mplane.Wm[3].z = 0.0f;
+				Mplane.Wm = glm::mat4(
+					0.0f, 0.0f, scaleFactor, 0.0f,
+					0.0f, scaleFactor, 0.0f, 0.0f,
+					- scaleFactor, 0.0f, 0.0f, 0.0f,
+					8.0f, 2.0f, 40.0f, 1.0f
+				);
 				break;
 			case 2:
-				Mplane.Wm[3].x = 0.0f;
-				Mplane.Wm[3].y = 10.0f;
-				Mplane.Wm[3].z = 0.0f;
+				Mplane.Wm = glm::mat4(
+					scaleFactor, 0.0f, 0.0f, 0.0f,
+					0.0f, scaleFactor, 0.0f, 0.0f,
+					0.0f, 0.0f, scaleFactor, 0.0f,
+					120.0f, 2.0f, -56.0f, 1.0f
+				);
 				break;
 			case 3:
 				Mplane.Wm[3].x = 10.0f;
@@ -517,7 +551,7 @@ class CGProject : public BaseProject {
 		float lightIntensity = glm::clamp(sin(angle) * 0.5f + 0.5f, 0.0f, 1.0f);
 		
 		glm::vec3 dayColor = glm::vec3(0.4f, 0.7f, 1.0f);  
-		glm::vec3 nightColor = glm::vec3(0.01f, 0.01f, 0.05f);
+		glm::vec3 nightColor = glm::vec3(0.1f, 0.4f, 0.7f);
 
 		glm::vec3 backgroundColor = glm::mix(nightColor, dayColor, lightIntensity);
 
