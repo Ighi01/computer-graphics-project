@@ -15,7 +15,7 @@ std::vector<SingleText> outText = {
 	{3, {"Plane Simulator", "MOUNTAIN", "Press SPACE to start the engine, TAB to change place.",""}, 0, 0},
 	{0, {"","","",""}, 0, 0},
 	{1, {"ScreenShoot Saved !", "", "",""}, 0, 0},
-
+	{1, {"Don't go out of the scene!", "", "",""}, 0, 0}
 };
 
 struct GlobalUniformBufferObject {
@@ -419,6 +419,14 @@ class CGProject : public BaseProject {
 			if (!block) {
 				rotationMatrix = glm::rotate(glm::rotate(glm::rotate(glm::mat4(1.0f), movement.x * X_SPEED * deltaT, glm::vec3(1.0f, 0.0f, 0.0f)), movement.y * Y_SPEED * deltaT, glm::vec3(0.0f, 1.0f, 0.0f)), movement.z * Z_SPEED * deltaT, glm::vec3(0.0f, 0.0f, 1.0f));
 			}
+
+			if (block && currScene == 4) {
+				currScene = 6;
+			}
+			else if(currScene == 6){
+				currScene = 4;
+			}
+
 			Mplane.Wm = glm::translate(Mplane.Wm * rotationMatrix, glm::vec3(0.0f, 0.0f, 1.0f) * SPEED * speedFactor * deltaT);
 		}
 		else {
