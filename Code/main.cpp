@@ -4,6 +4,8 @@
 #define GLM_FORCE_DEPTH_ZERO_TO_ONE
 #define GLM_FORCE_RADIANS
 #define _CRT_SECURE_NO_WARNINGS
+#define NUMLIGHTS 63
+
 #include "modules/Starter.hpp"
 #include "modules/TextMaker.hpp"
 #include "modules/Scene.hpp"
@@ -19,14 +21,15 @@ std::vector<SingleText> outText = {
 };
 
 struct GlobalUniformBufferObject {
-	alignas(16) glm::vec3 lightDir[63];
-	alignas(16) glm::vec3 lightPos[63];
-	alignas(16) glm::vec4 lightColor[63];
+	alignas(16) glm::vec3 lightDir[NUMLIGHTS];
+	alignas(16) glm::vec3 lightPos[NUMLIGHTS];
+	alignas(16) glm::vec4 lightColor[NUMLIGHTS];
 	alignas(4) float cosIn;
 	alignas(4) float cosOut;
 	alignas(16) glm::vec3 eyePos;
 	alignas(16) glm::vec4 eyeDir;
 	alignas(16) glm::vec4 lightOn;
+	alignas(16) glm::mat4 mvpMat;
 };
 
 struct SimpleUniformBufferObject {
@@ -258,7 +261,7 @@ class CGProject : public BaseProject {
 			ifs.close();
 			nlohmann::json ns = js["nodes"];
 			nlohmann::json ld = js["extensions"]["KHR_lights_punctual"]["lights"];
-			for (int i = 0; i < 61; i++) {
+			for (int i = 0; i < (NUMLIGHTS - 2); i++) {
 				glm::vec3 T;
 				glm::vec3 S;
 				glm::quat Q;
@@ -580,9 +583,7 @@ class CGProject : public BaseProject {
 
 		// ------------ LIGHTS ------------
 
-
  		GlobalUniformBufferObject gubo{};
-
 
 
 		// DAY NIGHT CYCLE
@@ -612,11 +613,12 @@ class CGProject : public BaseProject {
 		Mmoon.Wm[3].y = - 200.0f * sin(angle);
 		Mmoon.Wm[3].x = 0.0f;
 
-		if (sin(angle) > 0.01) {
-			gubo.lightDir[0] = glm::vec3(0.0f, sin(angle), cos(angle));;
-			gubo.lightColor[0] = glm::vec4(lightIntensity, lightIntensity, lightIntensity, 1.0f);
-			gubo.eyePos = glm::vec3(glm::inverse(ViewMatrix) * glm::vec4(0, 0, 0, 1));
-		}
+		float lightFactor = (sin(angle) + 1.0f) * 0.5f;
+
+		gubo.lightDir[0] = glm::vec3(0.0f, sin(angle), cos(angle));
+		gubo.lightColor[0] = glm::vec4(lightIntensity, lightIntensity, lightIntensity, 1.0f);
+		gubo.eyePos = glm::vec3(glm::inverse(ViewMatrix) * glm::vec4(0, 0, 0, 1));
+		gubo.lightOn.x = glm::clamp(lightFactor, 0.1f, 1.0f);
 
 		// PLANE SPOT LIGHT
 
@@ -630,13 +632,20 @@ class CGProject : public BaseProject {
 		gubo.cosIn = ScosIn;
 		gubo.cosOut = ScosOut;
 
+		gubo.mvpMat = ViewPrj;
+
 
 		// CITY POINT LIGHTS
-
-		for (int i = 0; i < 61; i++) {
-			gubo.lightColor[i+2] = glm::vec4(LCol[i], LInt[i]);
-			gubo.lightDir[i+2] = LWm[i] * glm::vec4(0, 0, 1, 0);
-			gubo.lightPos[i+2] = LWm[i] * glm::vec4(0, 0, 0, 1);
+		if (sin(angle) < 0.1) {
+			for (int i = 0; i < (NUMLIGHTS - 2); i++) {
+				gubo.lightColor[i + 2] = glm::vec4(LCol[i], LInt[i]);
+				gubo.lightDir[i + 2] = LWm[i] * glm::vec4(0, 0, 1, 0);
+				gubo.lightPos[i + 2] = LWm[i] * glm::vec4(0, 0, 0, 1);
+			}
+			gubo.lightOn.z = 1.0f;
+		}
+		else {
+			gubo.lightOn.z = 0.0f;
 		}
 
 		gubo.lightOn = lightOn;
