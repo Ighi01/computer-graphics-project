@@ -1812,10 +1812,10 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 	int images = 0;
 	Direction defaultDirection = Direction::FRONT;
 	Direction oldDirection = defaultDirection;
-	bool tabPressed = false, spacePressed = false, escPressed = false;
+	bool tabPressed = false, spacePressed = false, escPressed = false, rPressed = false;
 	double screenshotTime = 0.0;
 
-	void handleCommands(float& deltaT, glm::vec3& movement, bool& start, float& zoom, float& speedFactor, Direction& direction, bool& instantCamera, bool& thirdPerson, int& currentScene, uint32_t currentImage) {
+	void handleCommands(float& deltaT, glm::vec3& movement, bool& start, float& zoom, float& speedFactor, Direction& direction, bool& instantCamera, bool& thirdPerson, int& currentScene, float& planeLightOn, uint32_t currentImage) {
 
 		static auto startTime = std::chrono::high_resolution_clock::now();
 		static float lastTime = 0.0f;
@@ -2029,6 +2029,17 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 
 			if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
 				spacePressed = false;
+			}
+
+			if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS && !rPressed) {
+				if (start) {
+					planeLightOn = !planeLightOn;
+				}
+				rPressed = true;
+			}
+
+			if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
+				rPressed = false;
 			}
 
 			if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS && !tabPressed) {

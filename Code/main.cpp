@@ -143,7 +143,7 @@ class CGProject : public BaseProject {
 	glm::vec3 LCol[61];
 	float LInt[61];
 	float ScosIn, ScosOut;
-	glm::vec4 lightOn;
+	float planeLightOn = 0.0f;
 
 	// Here you set the main application parameters
 	void setWindowParameters() {
@@ -305,7 +305,6 @@ class CGProject : public BaseProject {
 		Msun.Wm *= glm::scale(glm::mat4(1.0f), glm::vec3(7.5f));
 		Mmoon.Wm *= glm::scale(glm::mat4(1.0f), glm::vec3(7.5f));
 
-		lightOn = glm::vec4(1);
 		std::cout << "Light initialization completed!\n";
 	}
 	
@@ -413,7 +412,7 @@ class CGProject : public BaseProject {
 		Direction direction;
 		glm::vec3 firstDirection = glm::vec3(0.0f);
 
-		handleCommands(deltaT, movement, start, zoom, speedFactor, direction, instantCamera, thirdPerson, currScene, currentImage);
+		handleCommands(deltaT, movement, start, zoom, speedFactor, direction, instantCamera, thirdPerson, currScene, planeLightOn, currentImage);
 
 		if (start)
 		{
@@ -618,7 +617,7 @@ class CGProject : public BaseProject {
 		gubo.lightDir[0] = glm::vec3(0.0f, sin(angle), cos(angle));
 		gubo.lightColor[0] = glm::vec4(lightIntensity, lightIntensity, lightIntensity, 1.0f);
 		gubo.eyePos = glm::vec3(glm::inverse(ViewMatrix) * glm::vec4(0, 0, 0, 1));
-		gubo.lightOn.x = glm::clamp(lightFactor, 0.1f, 1.0f);
+		gubo.lightOn.x = 1.0f;
 
 		// PLANE SPOT LIGHT
 
@@ -649,7 +648,7 @@ class CGProject : public BaseProject {
 			gubo.lightOn.z = 0.0f;
 		}
 
-		gubo.lightOn = lightOn;
+		gubo.lightOn.y = planeLightOn;
 
 		DSGlobal.map(currentImage, &gubo, 0);
 
