@@ -108,16 +108,18 @@ class CGProject : public BaseProject {
 	float Ar;
 	int currScene = 0;
 	float scaleFactor = 0.04f;
+	int currScene = 0, prevCurrScene = 0;
+	float scaleFactor = 0.05f;
 
 	bool start = false;
 
-	float X_SPEED = 0.6f;
-	float Y_SPEED = 0.4f;
-	float Z_SPEED = 1.1f;
-	float SPEED = 7.5f;
+	float X_SPEED = 0.75f;
+	float Y_SPEED = 0.5f;
+	float Z_SPEED = 1.25f;
+	float SPEED = 10.0f;
 
 	float followSpeed = 1.0f;
-	float followSpeedFirst = 10.0f;
+	float followSpeedFirst = 2.0f;
 	float minDistance = -0.5f;
 	float maxDistance = -3.5f;
 	float camOffset = 0.5f;
@@ -302,8 +304,8 @@ class CGProject : public BaseProject {
 			std::cout << e.what() << '\n';
 		}
 
-		Msun.Wm *= glm::scale(glm::mat4(1.0f), glm::vec3(7.5f));
-		Mmoon.Wm *= glm::scale(glm::mat4(1.0f), glm::vec3(7.5f));
+		Msun.Wm *= glm::scale(glm::mat4(1.0f), glm::vec3(10.0f));
+		Mmoon.Wm *= glm::scale(glm::mat4(1.0f), glm::vec3(10.0f));
 
 		std::cout << "Light initialization completed!\n";
 	}
@@ -564,15 +566,15 @@ class CGProject : public BaseProject {
 			CamPos = planePosition + glm::normalize(glm::vec3(Mplane.Wm[2])) * glm::mix(minDistance, maxDistance, zoom / maxZoom) + glm::normalize(glm::vec3(Mplane.Wm[1])) * camOffset;
 		}
 
-		if (thirdPerson || !start) {
+		if (thirdPerson) {
 			ViewMatrix = glm::lookAt(CamPos, planePosition, up);
 		}
 		else {
-			glm::vec3 firstCamPos = planePosition - glm::vec3(0.1175) * glm::normalize(glm::vec3(Mplane.Wm[2])) + glm::vec3(0.108) * glm::normalize(glm::vec3(Mplane.Wm[1]));
+			glm::vec3 firstCamPos = planePosition - glm::vec3(0.1f) * glm::normalize(glm::vec3(Mplane.Wm[2])) + glm::vec3(0.125f) * glm::normalize(glm::vec3(Mplane.Wm[1]));
 			ViewMatrix = glm::lookAt(firstCamPos, targetPos, glm::vec3(Mplane.Wm[1]));
 		}
 
-		glm::mat4 M = glm::perspective(glm::radians(45.0f), Ar, 0.1f, 300.0f);
+		glm::mat4 M = glm::perspective(glm::radians(45.0f), Ar, 0.1f, 650.0f);
 		M[1][1] *= -1;
 
 		glm::mat4 Mv = ViewMatrix;
@@ -587,41 +589,58 @@ class CGProject : public BaseProject {
 
 		// DAY NIGHT CYCLE
 
-		static float cTime = 0.0;
+		static float cTime = 5.0;
 		const float turnTime = 30.0f;
 
-		if (!glfwGetKey(window, GLFW_KEY_Z))
+		if (start) {
 			cTime += deltaT;
+			cTime = (cTime > turnTime) ? (cTime - turnTime) : cTime;
+		}
+		else {
+			cTime = 5.0;
+		}
 
 		float angle = cTime * 2.0f * M_PI / turnTime;
 
-		float lightIntensity = glm::clamp(sin(angle) * 0.5f + 0.5f, 0.0f, 1.0f);
-		
-		glm::vec3 dayColor = glm::vec3(0.4f, 0.7f, 1.0f);  
-		glm::vec3 nightColor = glm::vec3(0.1f, 0.4f, 0.7f);
+		float lightIntensity;
 
-		glm::vec3 backgroundColor = glm::mix(nightColor, dayColor, lightIntensity);
+		float zAngle = 30.0f * (M_PI / 180.0f);
 
-		setBackgroundColorAsync(backgroundColor);
+		Msun.Wm[3].x = 300.0f * (cos(angle) * cos(zAngle));
+		Msun.Wm[3].y = 300.0f * sin(angle);
+		Msun.Wm[3].z = 300.0f * (cos(angle) * sin(zAngle));
 
-		Msun.Wm[3].z = 200.0f * cos(angle);
-		Msun.Wm[3].y = 200.0f * sin(angle);
-		Msun.Wm[3].x = 0.0f;
+		Mmoon.Wm[3].x = -Msun.Wm[3].x;
+		Mmoon.Wm[3].y = -Msun.Wm[3].y; 
+		Mmoon.Wm[3].z = -Msun.Wm[3].z;
 
 		Mmoon.Wm[3].z = - 200.0f * cos(angle);
 		Mmoon.Wm[3].y = - 200.0f * sin(angle);
-		Mmoon.Wm[3].x = 0.0f;
 
-		float lightFactor = (sin(angle) + 1.0f) * 0.5f;
+		if (160.0f <= glm::radians(angle) <= 220.0f) {
+			gubo.lightDir[0] = glm::vec3(cos(glm::radians(160.0f)) * cos(zAngle), sin(glm::radians(160.0f)), cos(glm::radians(160.0f)) * sin(zAngle));
+			lightIntensity = glm::clamp(sin(angle) * 0.5f + 0.5f, 0.0f, 1.0f);
+		}
+		else if (320.0f < glm::radians(angle) <= 360.0f || 0.0f <= glm::radians(angle) <= 20.0f) {
+			gubo.lightDir[0] = glm::vec3(cos(glm::radians(20.0f) * cos(zAngle)), sin(glm::radians(20.0f)), cos(glm::radians(20.0f)) * sin(zAngle));
+			lightIntensity = glm::clamp(sin(angle) * 0.5f + 0.5f, 0.0f, 1.0f);
+		}
+		else if (sin(angle) > 0) {
+			gubo.lightDir[0] = glm::vec3(cos(angle) * cos(zAngle), sin(angle), cos(angle) * sin(zAngle));
+			lightIntensity = 1.0f;
+		}
+		else {
+			gubo.lightDir[0] = - glm::vec3(cos(angle) * cos(zAngle), sin(angle), cos(angle) * sin(zAngle));
+			lightIntensity = 0.5f;
+		}
 
-		gubo.lightDir[0] = glm::vec3(0.0f, sin(angle), cos(angle));
 		gubo.lightColor[0] = glm::vec4(lightIntensity, lightIntensity, lightIntensity, 1.0f);
 		gubo.eyePos = glm::vec3(glm::inverse(ViewMatrix) * glm::vec4(0, 0, 0, 1));
 		gubo.lightOn.x = 1.0f;
 
 		// PLANE SPOT LIGHT
 
-		gubo.lightColor[1] = glm::vec4(3);
+		gubo.lightColor[1] = glm::vec4(1.5);
 		gubo.lightColor[1].a = 5.0f;
 		gubo.lightDir[1] = - glm::normalize(glm::vec3(Mplane.Wm[2]));
 		gubo.lightPos[1] = planePosition;
@@ -683,7 +702,11 @@ class CGProject : public BaseProject {
 		DSPlane.map(currentImage, &simpleUbo, 0);
 		simpleMatParUbo.Power = 300.0;
 		DSPlane.map(currentImage, &simpleMatParUbo, 2);
-	
+		
+		if (currScene != prevCurrScene) {
+		}
+
+		prevCurrScene = currScene;
 	}
 };
 

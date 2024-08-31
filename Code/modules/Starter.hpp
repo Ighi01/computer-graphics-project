@@ -1905,7 +1905,6 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 						start = true;
 						currentScene = 4;
 					}
-					RebuildPipeline();
 					spacePressed = true;
 				}
 
@@ -1924,7 +1923,6 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 						}
 					}
 					tabPressed = true;
-					RebuildPipeline();
 				}
 
 				if (state.buttons[GLFW_GAMEPAD_BUTTON_Y] == GLFW_RELEASE) {
@@ -1940,7 +1938,6 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 						glfwSetWindowShouldClose(window, GL_TRUE);
 					}
 					escPressed = true;
-					RebuildPipeline();
 				}
 
 				if (state.buttons[GLFW_GAMEPAD_BUTTON_B] == GLFW_RELEASE) {
