@@ -5,6 +5,7 @@
 #define GLM_FORCE_RADIANS
 #define _CRT_SECURE_NO_WARNINGS
 #define NUMLIGHTS 63
+#define MAXLIGHTS 16
 
 #include "modules/Starter.hpp"
 #include "modules/TextMaker.hpp"
@@ -21,15 +22,15 @@ std::vector<SingleText> outText = {
 };
 
 struct GlobalUniformBufferObject {
-	alignas(16) glm::vec3 lightDir[NUMLIGHTS];
-	alignas(16) glm::vec3 lightPos[NUMLIGHTS];
-	alignas(16) glm::vec4 lightColor[NUMLIGHTS];
+	alignas(16) glm::vec3 lightDir[MAXLIGHTS];
+	alignas(16) glm::vec3 lightPos[MAXLIGHTS];
+	alignas(16) glm::vec4 lightColor[MAXLIGHTS];
+	alignas(16) glm::vec3 isOn[MAXLIGHTS];
 	alignas(4) float cosIn;
 	alignas(4) float cosOut;
 	alignas(16) glm::vec3 eyePos;
 	alignas(16) glm::vec4 eyeDir;
 	alignas(16) glm::vec4 lightOn;
-	alignas(16) glm::mat4 mvpMat;
 };
 
 struct SimpleUniformBufferObject {
@@ -113,7 +114,7 @@ class CGProject : public BaseProject {
 
 	float X_SPEED = 0.75f;
 	float Y_SPEED = 0.5f;
-	float Z_SPEED = 1.25f;
+	float Z_SPEED = 1.0f;
 	float SPEED = 10.0f;
 
 	float followSpeed = 1.0f;
@@ -627,12 +628,13 @@ class CGProject : public BaseProject {
 		}
 		else {
 			gubo.lightDir[0] = - glm::vec3(cos(angle) * cos(zAngle), sin(angle), cos(angle) * sin(zAngle));
-			lightIntensity = 0.5f;
+			lightIntensity = 0.05f;
 		}
 
 		gubo.lightColor[0] = glm::vec4(lightIntensity, lightIntensity, lightIntensity, 1.0f);
 		gubo.eyePos = glm::vec3(glm::inverse(ViewMatrix) * glm::vec4(0, 0, 0, 1));
 		gubo.lightOn.x = 1.0f;
+		gubo.lightOn.w = 1.0f;
 
 		// PLANE SPOT LIGHT
 
@@ -647,17 +649,39 @@ class CGProject : public BaseProject {
 		gubo.cosIn = ScosIn;
 		gubo.cosOut = ScosOut;
 
-		gubo.mvpMat = ViewPrj;
-
+		glm::vec3 fragPos = glm::vec3(ViewMatrix * glm::vec4(planePosition, 1.0f));
 
 		// CITY POINT LIGHTS
 		if (sin(angle) < 0.1) {
+			std::vector<std::pair<int, float>> lightDistances; 
+
 			for (int i = 0; i < (NUMLIGHTS - 2); i++) {
-				gubo.lightColor[i + 2] = glm::vec4(LCol[i], LInt[i]);
-				gubo.lightDir[i + 2] = LWm[i] * glm::vec4(0, 0, 1, 0);
-				gubo.lightPos[i + 2] = LWm[i] * glm::vec4(0, 0, 0, 1);
+				glm::vec3 lightPos = LWm[i] * glm::vec4(0, 0, 0, 1);
+				if (is_light_in_view(lightPos, ViewPrj)) {
+					float dist = glm::length(lightPos - fragPos);
+					lightDistances.push_back(std::make_pair(i, dist));
+				}
 			}
-			gubo.lightOn.z = 1.0f;
+
+			std::sort(lightDistances.begin(), lightDistances.end(),
+				[](const std::pair<int, float>& a, const std::pair<int, float>& b) {
+					return a.second < b.second;
+				});
+			
+			for (int i = 0; i < (MAXLIGHTS - 2); i++) {
+				if (i < lightDistances.size()) {
+					int lightIndex = lightDistances[i].first;
+					gubo.lightColor[i + 2] = glm::vec4(LCol[lightIndex], LInt[lightIndex]);
+					gubo.lightDir[i + 2] = LWm[lightIndex] * glm::vec4(0, 0, 1, 0);
+					gubo.lightPos[i + 2] = LWm[lightIndex] * glm::vec4(0, 0, 0, 1);
+					gubo.isOn[i + 2].x = 1.0f;
+				}
+				else {
+					gubo.isOn[i + 2].x = 0.0f;
+				}
+			}
+
+			gubo.lightOn.z = 1.0f; 
 		}
 		else {
 			gubo.lightOn.z = 0.0f;

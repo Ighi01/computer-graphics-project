@@ -1796,6 +1796,15 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 		framebufferResized = true;
 	}
 
+	float viewMargin = 2.0;
+
+	bool is_light_in_view(glm::vec3 lightPos, glm::mat4 viewPrj) {
+		glm::vec4 clipSpacePos = viewPrj * glm::vec4(lightPos, 1.0);
+		return abs(clipSpacePos.x) <= clipSpacePos.w * viewMargin &&
+			abs(clipSpacePos.y) <= clipSpacePos.w * viewMargin &&
+			clipSpacePos.z >= 0.0 && clipSpacePos.z <= clipSpacePos.w * viewMargin;
+	}
+
 	// Control Wrapper
 
 	enum Direction {
@@ -1927,6 +1936,17 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 
 				if (state.buttons[GLFW_GAMEPAD_BUTTON_Y] == GLFW_RELEASE) {
 					tabPressed = false;
+				}
+
+				if (state.buttons[GLFW_GAMEPAD_BUTTON_X] == GLFW_PRESS && !rPressed) {
+					if (start) {
+						planeLightOn = !planeLightOn;
+					}
+					rPressed = true;
+				}
+
+				if (state.buttons[GLFW_GAMEPAD_BUTTON_X] == GLFW_RELEASE) {
+					rPressed = false;
 				}
 
 				if (state.buttons[GLFW_GAMEPAD_BUTTON_B] == GLFW_PRESS && !escPressed) {

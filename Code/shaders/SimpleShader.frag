@@ -1,8 +1,6 @@
 #version 450
 #extension GL_ARB_separate_shader_objects : enable
-#define NUMLIGHTS 63
-#define MAXLIGHTS 20
-#define VIEW_MARGIN 2
+#define MAXLIGHTS 16
 
 layout(location = 0) in vec3 fragPos;
 layout(location = 1) in vec3 fragNorm;
@@ -10,15 +8,15 @@ layout(location = 2) in vec2 fragUV;
 layout(location = 0) out vec4 outColor;
 
 layout(set = 0, binding = 0) uniform GlobalUniformBufferObject {
-    vec3 lightDir[NUMLIGHTS];
-    vec3 lightPos[NUMLIGHTS];
-    vec4 lightColor[NUMLIGHTS];
+    vec3 lightDir[MAXLIGHTS];
+    vec3 lightPos[MAXLIGHTS];
+    vec4 lightColor[MAXLIGHTS];
+    vec3 isOn[MAXLIGHTS];
     float cosIn;
     float cosOut;
     vec3 eyePos;
     vec4 eyeDir;
     vec4 lightOn;
-    mat4 mvp;
 } gubo;
 
 layout(set = 1, binding = 2) uniform SimpleMatParUniformBufferObject {
@@ -65,13 +63,6 @@ vec3 BRDFSimple(vec3 Albedo, vec3 Norm, vec3 LD) {
     return Diffuse;
 }
 
-bool is_light_in_view(vec3 lightPos) {
-    vec4 clipSpacePos = gubo.mvp * vec4(lightPos, 1.0);
-    return abs(clipSpacePos.x) <= clipSpacePos.w * VIEW_MARGIN &&
-           abs(clipSpacePos.y) <= clipSpacePos.w * VIEW_MARGIN &&
-           clipSpacePos.z >= 0.0 && clipSpacePos.z <= clipSpacePos.w * VIEW_MARGIN;
-}
-
 void main() {
     vec3 norm = normalize(fragNorm);
     vec3 eyeDir = normalize(gubo.eyePos - fragPos);
@@ -88,13 +79,12 @@ void main() {
     
     // POINT LIGHTS
 
-    int numLights = 0;
-
-    for (int i = 2; i < (NUMLIGHTS - 2); i++) {            
-        if (gubo.lightOn.x > 0.0f && numLights < MAXLIGHTS && is_light_in_view(gubo.lightPos[i])) {
-            rendEqSol += BRDFSimple(albedo, norm, point_light_dir(fragPos, i)) * point_light_color(fragPos, i) * gubo.lightOn.z;
-            numLights ++;
-        }
+    if (gubo.lightOn.z > 0.0f) {
+        for (int i = 2; i < MAXLIGHTS ; i++) {
+            if(gubo.isOn[i].x>0.0){
+                rendEqSol += BRDFSimple(albedo, norm, point_light_dir(fragPos, i)) * point_light_color(fragPos, i) * gubo.lightOn.z;
+            }
+       }
     }
 
     //INDIRECT LIGHT
