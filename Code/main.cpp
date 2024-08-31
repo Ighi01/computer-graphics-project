@@ -106,8 +106,6 @@ class CGProject : public BaseProject {
 	glm::mat4 ViewMatrix;
 
 	float Ar;
-	int currScene = 0;
-	float scaleFactor = 0.04f;
 	int currScene = 0, prevCurrScene = 0;
 	float scaleFactor = 0.05f;
 
@@ -614,8 +612,6 @@ class CGProject : public BaseProject {
 		Mmoon.Wm[3].y = -Msun.Wm[3].y; 
 		Mmoon.Wm[3].z = -Msun.Wm[3].z;
 
-		Mmoon.Wm[3].z = - 200.0f * cos(angle);
-		Mmoon.Wm[3].y = - 200.0f * sin(angle);
 
 		if (160.0f <= glm::radians(angle) <= 220.0f) {
 			gubo.lightDir[0] = glm::vec3(cos(glm::radians(160.0f)) * cos(zAngle), sin(glm::radians(160.0f)), cos(glm::radians(160.0f)) * sin(zAngle));
