@@ -1814,8 +1814,8 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 		BACK
 	};
 
-	float minSpeedFactor = 0.5f;
-	float maxSpeedFactor = 3.0f;
+	float minSpeedFactor = 1.0f;
+	float maxSpeedFactor = 4.0f;
 	float maxZoom = 4.0f;
 	int currScreenshoot = 0;
 	Direction defaultDirection = Direction::FRONT;

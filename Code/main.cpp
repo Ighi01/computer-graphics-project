@@ -138,7 +138,7 @@ class CGProject : public BaseProject {
 	float accumulatedRotationX = 0.0f;
 
 	float zoom = 1.0f;
-	float speedFactor = 1.0f;
+	float speedFactor = 1.5f;
 	bool thirdPerson = true;
 
 	glm::vec3 firstCameraTarget;
@@ -419,7 +419,7 @@ class CGProject : public BaseProject {
 
 			if (MPlane.Wm[3].y <= maxDown) {
 				if (accumulatedRotationX < glm::radians(180.0f)) {
-					float rotationStep = - xSpeed * deltaT;
+					float rotationStep = - xSpeed * speedFactor * deltaT;
 					rotationMatrix = glm::rotate(rotationMatrix, rotationStep, glm::vec3(1.0f, 0.0f, 0.0f));
 					accumulatedRotationX += glm::abs(rotationStep);
 				}
@@ -431,7 +431,7 @@ class CGProject : public BaseProject {
 
 			if (MPlane.Wm[3].y >= maxUp) {
 				if (accumulatedRotationX < glm::radians(180.0f)){
-					float rotationStep = xSpeed * deltaT;
+					float rotationStep = xSpeed * speedFactor / 2 * deltaT;
 					rotationMatrix = glm::rotate(rotationMatrix, rotationStep, glm::vec3(1.0f, 0.0f, 0.0f));
 					accumulatedRotationX += glm::abs(rotationStep);
 				}
@@ -443,7 +443,7 @@ class CGProject : public BaseProject {
 
 			if (MPlane.Wm[3].x >= maxX || MPlane.Wm[3].z >= maxZ || MPlane.Wm[3].x <= minX || MPlane.Wm[3].z <= minZ) {
 				if (accumulatedRotationY < glm::radians(180.0f)) {
-					float rotationStep = -ySpeed * deltaT;
+					float rotationStep = - ySpeed * speedFactor / 2 * deltaT;
 					rotationMatrix = glm::rotate(rotationMatrix, rotationStep, glm::vec3(0.0f, 1.0f, 0.0f));
 					accumulatedRotationY += glm::abs(rotationStep);
 				}
@@ -454,7 +454,7 @@ class CGProject : public BaseProject {
 			}
 
 			if (!block) {
-				rotationMatrix = glm::rotate(glm::rotate(glm::rotate(glm::mat4(1.0f), movement.x * xSpeed * deltaT, glm::vec3(1.0f, 0.0f, 0.0f)), movement.y * ySpeed * deltaT, glm::vec3(0.0f, 1.0f, 0.0f)), movement.z * zSpeed * deltaT, glm::vec3(0.0f, 0.0f, 1.0f));
+				rotationMatrix = glm::rotate(glm::rotate(glm::rotate(glm::mat4(1.0f), movement.x * xSpeed * speedFactor / 2 * deltaT, glm::vec3(1.0f, 0.0f, 0.0f)), movement.y * ySpeed * speedFactor / 2 * deltaT, glm::vec3(0.0f, 1.0f, 0.0f)), movement.z * zSpeed * speedFactor / 2 * deltaT, glm::vec3(0.0f, 0.0f, 1.0f));
 			}
 
 			if (block && currScene == 4) {
@@ -477,7 +477,7 @@ class CGProject : public BaseProject {
 				);
 				up = glm::vec3(0.0f, 1.0f, 0.0f);
 				zoom = 1.0f;
-				speedFactor = 1.0f;
+				speedFactor = 1.5f;
 				thirdPerson = true;
 				break;
 			case 1:
@@ -546,7 +546,7 @@ class CGProject : public BaseProject {
 				thirdCamPos = desiredThirdCamPos;
 			}
 			else{
-				thirdCamPos += (desiredThirdCamPos - thirdCamPos) * followSpeedThirdCamera * deltaT;
+				thirdCamPos += (desiredThirdCamPos - thirdCamPos) * followSpeedThirdCamera * speedFactor * deltaT;
 			}
 
 			if (thirdCamPos.y < 0)
@@ -554,8 +554,8 @@ class CGProject : public BaseProject {
 				thirdCamPos.y = 0;
 			}
 
-			up += (glm::normalize(glm::vec3(MPlane.Wm[1])) - up) * followSpeedThirdCamera * deltaT;
-			firstCameraTarget += (desiredFirstCamTarget - firstCameraTarget) * followSpeedFirstCamera * deltaT;
+			up += (glm::normalize(glm::vec3(MPlane.Wm[1])) - up) * followSpeedThirdCamera  * speedFactor * deltaT;
+			firstCameraTarget += (desiredFirstCamTarget - firstCameraTarget) * followSpeedFirstCamera * speedFactor * deltaT;
 		}
 		else {
 			firstCameraTarget = planePosition + glm::vec3(10.0) * glm::normalize(glm::vec3(MPlane.Wm[2]));
