@@ -1805,6 +1805,14 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 			clipSpacePos.z >= 0.0 && clipSpacePos.z <= clipSpacePos.w * viewMargin;
 	}
 
+	float calculate_light_score(glm::vec3 fragPos, glm::vec3 lightPos, glm::mat4 viewPrj) {
+		float distance = glm::length(lightPos - fragPos);
+		glm::vec4 clipSpacePos = viewPrj * glm::vec4(lightPos, 1.0);
+		float screenCenterWeight = 100.0f * (1.0 - glm::length(glm::vec2(clipSpacePos.x, clipSpacePos.y)) / clipSpacePos.w);
+		return screenCenterWeight;
+
+	}
+
 	// Control Wrapper
 
 	enum Direction {

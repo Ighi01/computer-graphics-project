@@ -658,14 +658,14 @@ class CGProject : public BaseProject {
 			for (int i = 0; i < (NUMLIGHTS - 2); i++) {
 				glm::vec3 lightPos = LWm[i] * glm::vec4(0, 0, 0, 1);
 				if (is_light_in_view(lightPos, ViewPrj)) {
-					float dist = glm::length(lightPos - fragPos);
-					lightDistances.push_back(std::make_pair(i, dist));
+					float score = calculate_light_score(lightPos, ViewPrj);
+					lightDistances.push_back(std::make_pair(i, score));
 				}
 			}
 
 			std::sort(lightDistances.begin(), lightDistances.end(),
 				[](const std::pair<int, float>& a, const std::pair<int, float>& b) {
-					return a.second < b.second;
+					return a.second > b.second;
 				});
 			
 			for (int i = 0; i < (MAXLIGHTS - 2); i++) {
@@ -722,11 +722,6 @@ class CGProject : public BaseProject {
 		DSPlane.map(currentImage, &simpleUbo, 0);
 		simpleMatParUbo.Power = 300.0;
 		DSPlane.map(currentImage, &simpleMatParUbo, 2);
-		
-		if (currScene != prevCurrScene) {
-		}
-
-		prevCurrScene = currScene;
 	}
 };
 
