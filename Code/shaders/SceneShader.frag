@@ -87,7 +87,7 @@ void main() {
        }
     }
 
-    //INDIRECT LIGHT
+    // AMBIENT LIGHT
 
     const vec3 cxp = vec3(1.0, 0.5, 0.5) * 0.1;
     const vec3 cxn = vec3(0.9, 0.6, 0.4) * 0.1;

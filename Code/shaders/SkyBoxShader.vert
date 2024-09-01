@@ -5,6 +5,8 @@ layout(location = 0) out vec3 TexCoords;
 
 layout(set = 0, binding = 0) uniform skyBoxMatUniformBufferObject {
     mat4 mvpMat;
+    float lightIntensity;
+    float rotationAngle;
 } ubo;
 
 

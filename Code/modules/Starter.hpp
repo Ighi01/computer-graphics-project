@@ -1792,14 +1792,14 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 
 	float viewMargin = 2.0;
 
-	bool is_light_in_view(glm::vec3 lightPos, glm::mat4 viewPrj) {
+	bool isLightInView(glm::vec3 lightPos, glm::mat4 viewPrj) {
 		glm::vec4 clipSpacePos = viewPrj * glm::vec4(lightPos, 1.0);
-		return abs(clipSpacePos.x) <= clipSpacePos.w * viewMargin &&
+		return (abs(clipSpacePos.x) <= clipSpacePos.w * viewMargin &&
 			abs(clipSpacePos.y) <= clipSpacePos.w * viewMargin &&
-			clipSpacePos.z >= 0.0 && clipSpacePos.z <= clipSpacePos.w * viewMargin;
+			clipSpacePos.z >= 0.0 && clipSpacePos.z <= clipSpacePos.w * viewMargin);
 	}
 
-	float calculate_light_score(glm::vec3 lightPos, glm::mat4 viewPrj) {
+	float calculateLightScore(glm::vec3 lightPos, glm::mat4 viewPrj) {
 		glm::vec4 clipSpacePos = viewPrj * glm::vec4(lightPos, 1.0);
 		return 1.0 - glm::length(glm::vec2(clipSpacePos.x, clipSpacePos.y)) / clipSpacePos.w ;
 	}
@@ -1817,7 +1817,7 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 	float minSpeedFactor = 0.5f;
 	float maxSpeedFactor = 3.0f;
 	float maxZoom = 4.0f;
-	int images = 0;
+	int currScreenshoot = 0;
 	Direction defaultDirection = Direction::FRONT;
 	Direction oldDirection = defaultDirection;
 	bool tabPressed = false, spacePressed = false, escPressed = false, rPressed = false;
@@ -1904,7 +1904,7 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 				if ((state.buttons[GLFW_GAMEPAD_BUTTON_START] == GLFW_PRESS || state.buttons[GLFW_GAMEPAD_BUTTON_A] == GLFW_PRESS) && !spacePressed) {
 					if (start) {
 						char buf[50];
-						sprintf_s(buf, "../Images/CGProject_%d.png", images++);
+						sprintf_s(buf, "../Images/CGProject_%d.png", currScreenshoot++);
 						saveScreenshot(buf, currentImage, currentScene);
 						screenshotTime = static_cast<double>(std::time(nullptr));
 						currentScene = 5;
@@ -2031,7 +2031,7 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 			if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS && !spacePressed) {
 				if (start) {
 					char buf[50];
-					sprintf_s(buf, "../Images/CGProject_%d.png", images++);
+					sprintf_s(buf, "../Images/CGProject_%d.png", currScreenshoot++);
 					saveScreenshot(buf, currentImage, currentScene);
 					screenshotTime = static_cast<double>(std::time(nullptr));
 					currentScene = 5;
