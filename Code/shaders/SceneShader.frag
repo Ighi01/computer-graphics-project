@@ -81,8 +81,8 @@ void main() {
 
     if (gubo.lightOn.z > 0.0f) {
         for (int i = 2; i < MAXLIGHTS ; i++) {
-            if(gubo.isOn[i].x>0.0){
-                rendEqSol += BRDFSimple(albedo, norm, point_light_dir(fragPos, i)) * point_light_color(fragPos, i) * gubo.lightOn.z;
+            if(gubo.isOn[i].x > 0.0){
+                rendEqSol += BRDFSimple(albedo, norm, point_light_dir(fragPos, i)) * point_light_color(fragPos, i);
             }
        }
     }
