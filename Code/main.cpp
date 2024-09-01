@@ -722,6 +722,12 @@ class CGProject : public BaseProject {
 		DSPlane.map(currentImage, &simpleUbo, 0);
 		simpleMatParUbo.Power = 300.0;
 		DSPlane.map(currentImage, &simpleMatParUbo, 2);
+
+		if (currScene != prevCurrScene) {
+			reloadCommandBuffersAsync();
+		}
+
+		prevCurrScene = currScene;
 	}
 };
 

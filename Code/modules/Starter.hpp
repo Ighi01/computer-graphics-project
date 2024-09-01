@@ -1583,17 +1583,11 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 		}
 	}
 
-	double now = -0.01f;
-
-	void setBackgroundColorAsync(const glm::vec3& color) {
-		if ((static_cast<double>(std::time(nullptr)) - now) >= 0.01f) {
-			now = static_cast<double>(std::time(nullptr));
-			std::async(std::launch::async, &BaseProject::setBackgroundColor, this, color);
-		}
+	void reloadCommandBuffersAsync() {
+			std::async(std::launch::async, &BaseProject::reloadCommandBuffers, this);
 	}
 
-	void setBackgroundColor(const glm::vec3& color) {
-			initialBackgroundColor = { {color.r, color.g, color.b, 1.0f} };
+	void reloadCommandBuffers() {
 			vkFreeCommandBuffers(device, commandPool, static_cast<uint32_t>(commandBuffers.size()), commandBuffers.data());
 			createCommandBuffers();
 	}
@@ -1805,12 +1799,9 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 			clipSpacePos.z >= 0.0 && clipSpacePos.z <= clipSpacePos.w * viewMargin;
 	}
 
-	float calculate_light_score(glm::vec3 fragPos, glm::vec3 lightPos, glm::mat4 viewPrj) {
-		float distance = glm::length(lightPos - fragPos);
+	float calculate_light_score(glm::vec3 lightPos, glm::mat4 viewPrj) {
 		glm::vec4 clipSpacePos = viewPrj * glm::vec4(lightPos, 1.0);
-		float screenCenterWeight = 100.0f * (1.0 - glm::length(glm::vec2(clipSpacePos.x, clipSpacePos.y)) / clipSpacePos.w);
-		return screenCenterWeight;
-
+		return 1.0 - glm::length(glm::vec2(clipSpacePos.x, clipSpacePos.y)) / clipSpacePos.w ;
 	}
 
 	// Control Wrapper
