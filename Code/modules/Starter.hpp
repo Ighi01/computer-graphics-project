@@ -2054,7 +2054,7 @@ std::cout << "Starting createInstance()\n"  << std::flush;
 				rPressed = true;
 			}
 
-			if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE) {
+			if (glfwGetKey(window, GLFW_KEY_R) == GLFW_RELEASE) {
 				rPressed = false;
 			}
 
