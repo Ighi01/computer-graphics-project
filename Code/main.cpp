@@ -146,10 +146,11 @@ class CGProject : public BaseProject {
 	glm::mat4 ViewMatrix;
 	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 
-	glm::mat4 LWm[61];
-	glm::vec3 LCol[61];
-	float LInt[61];
-	float ScosIn, ScosOut;
+	glm::mat4 LWm[NUMLIGHTS - 2];
+	glm::vec3 LCol[NUMLIGHTS - 2];
+	float LInt[NUMLIGHTS - 2];
+	float ScosIn = 0.99f;
+	float ScosOut = 0.97f;
 	float planeLightOn = 0.0f;
 
 	float turnTime = 360.0f;
@@ -218,7 +219,6 @@ class CGProject : public BaseProject {
 				{0, 1, VK_FORMAT_R32G32_SFLOAT, offsetof(SunMoonVertex, UV),
 						sizeof(glm::vec2), UV}
 			});
-
 
 		PSkyBox.init(this, &VDSkyBox, "shaders/SkyBoxVert.spv", "shaders/SkyBoxFrag.spv", { &DSLSkyBox });
 		PSkyBox.setAdvancedFeatures(VK_COMPARE_OP_LESS_OR_EQUAL, VK_POLYGON_MODE_FILL,
@@ -643,15 +643,10 @@ class CGProject : public BaseProject {
 		gubo.lightDir[1] = - glm::normalize(glm::vec3(MPlane.Wm[2]));
 		gubo.lightPos[1] = planePosition;
 
-		ScosIn = 0.99;
-		ScosOut = 0.97;
-
 		gubo.cosIn = ScosIn;
 		gubo.cosOut = ScosOut;
 
 		// CITY POINT LIGHTS
-
-		glm::vec3 fragPos = glm::vec3(ViewMatrix * glm::vec4(planePosition, 1.0f));
 
 		if (sin(angle) < 0.0) {
 
