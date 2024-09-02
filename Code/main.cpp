@@ -639,12 +639,12 @@ class CGProject : public BaseProject {
 		// PLANE SPOT LIGHT
 
 		gubo.lightColor[1] = glm::vec4(1.5);
-		gubo.lightColor[1].a = 5.0f;
+		gubo.lightColor[1].a = 10.0f;
 		gubo.lightDir[1] = - glm::normalize(glm::vec3(MPlane.Wm[2]));
 		gubo.lightPos[1] = planePosition;
 
-		ScosIn = 0.6;
-		ScosOut = 0.0;
+		ScosIn = 0.99;
+		ScosOut = 0.97;
 
 		gubo.cosIn = ScosIn;
 		gubo.cosOut = ScosOut;
