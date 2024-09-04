@@ -460,7 +460,7 @@ class CGProject : public BaseProject {
 			if (block && currScene == 4) {
 				currScene = 6;
 			}
-			else if(currScene == 6){
+			else if(currScene == 6 && !block){
 				currScene = 4;
 			}
 
