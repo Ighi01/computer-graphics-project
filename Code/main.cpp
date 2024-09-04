@@ -7,7 +7,7 @@
 #include "modules/TextMaker.hpp"
 #include "modules/Scene.hpp"
 
-constexpr auto NUMLIGHTS = 63;
+constexpr auto NUMLIGHTS = 35;
 constexpr auto MAXLIGHTS = 16;
 
 std::vector<SingleText> outText = {
