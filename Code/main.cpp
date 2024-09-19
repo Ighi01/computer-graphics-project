@@ -84,8 +84,8 @@ class CGProject : public BaseProject {
 	DescriptorSet DSSkyBox;
 
     VertexDescriptor VDScene;
-	VertexDescriptor VDSkyBox;
 	VertexDescriptor VDSunMoon;
+	VertexDescriptor VDSkyBox;
 
 	Pipeline PScene;
 	Pipeline PSkyBox;
@@ -114,18 +114,21 @@ class CGProject : public BaseProject {
 	float sunScaleFactor = 10.0f;
 	float moonScaleFactor = 10.0f;
 
+	// speed of the models
 	float xSpeed = 0.75f;
 	float ySpeed = 0.5f;
 	float zSpeed = 1.0f;
 	float speed = 10.0f;
 	float skySpeed = 0.02f;
 
+	// spped and distance of camera
 	float followSpeedThirdCamera = 1.0f;
 	float followSpeedFirstCamera = 2.0f;
 	float minDistanceThirdCamera = -0.5f;
 	float maxDistanceThirdCamera = -3.5f;
 	float offsetThirdCamera = 0.5f;
 
+	// map limits
 	float minX = -150.0f;
 	float maxX = 200.0f;
 	float minZ = -200.0f;
@@ -221,8 +224,6 @@ class CGProject : public BaseProject {
 			});
 
 		PSkyBox.init(this, &VDSkyBox, "shaders/SkyBoxVert.spv", "shaders/SkyBoxFrag.spv", { &DSLSkyBox });
-		PSkyBox.setAdvancedFeatures(VK_COMPARE_OP_LESS_OR_EQUAL, VK_POLYGON_MODE_FILL,
-			VK_CULL_MODE_BACK_BIT, true);
 		PSunMoon.init(this, &VDSunMoon, "shaders/SunMoonVert.spv", "shaders/SunMoonFrag.spv", { &DSLSunMoon });
 		PSunMoon.setAdvancedFeatures(VK_COMPARE_OP_LESS_OR_EQUAL, VK_POLYGON_MODE_FILL,
 			VK_CULL_MODE_NONE, false);
@@ -242,9 +243,9 @@ class CGProject : public BaseProject {
 		TSun.init(this, "textures/sun.png");
 		TMoon.init(this, "textures/moon.png");
 
-		DPSZs.uniformBlocksInPool = 1000;
+		DPSZs.uniformBlocksInPool = 5;
 		DPSZs.texturesInPool = 1000;
-		DPSZs.setsInPool = 1000;
+		DPSZs.setsInPool = 397;
 
 		std::cout << "Initializing text\n";
 		txt.init(this, &outText);
@@ -485,7 +486,7 @@ class CGProject : public BaseProject {
 					0.0f, 0.0f, -planeScaleFactor, 0.0f,
 					0.0f, planeScaleFactor, 0.0f, 0.0f,
 					planeScaleFactor, 0.0f, 0.0f, 0.0f,
-					-24.0f, 2.0f, 40.0f, 1.0f
+					-33.0f, 2.0f, 41.5f, 1.0f
 				);
 				break;
 			case 2:
@@ -727,7 +728,7 @@ class CGProject : public BaseProject {
 			sceneUbo.mMat = SC.I[i].Wm * baseTr;
 			sceneUbo.mvpMat = ViewPrj * sceneUbo.mMat;
 			sceneUbo.nMat = glm::inverse(glm::transpose(sceneUbo.mMat));
-			simpleMatParUbo.Power = 300.0;
+			simpleMatParUbo.Power = 160.0;
 			SC.DS[i]->map(currentImage, &sceneUbo, 0);
 			SC.DS[i]->map(currentImage, &simpleMatParUbo, 2);
 		}
@@ -736,7 +737,7 @@ class CGProject : public BaseProject {
 		sceneUbo.mvpMat = ViewPrj * sceneUbo.mMat;
 		sceneUbo.nMat = glm::inverse(glm::transpose(sceneUbo.mMat));
 		DSPlane.map(currentImage, &sceneUbo, 0);
-		simpleMatParUbo.Power = 300.0;
+		simpleMatParUbo.Power = 160.0;
 		DSPlane.map(currentImage, &simpleMatParUbo, 2);
 
 		// -------- CHANGE SCENE --------

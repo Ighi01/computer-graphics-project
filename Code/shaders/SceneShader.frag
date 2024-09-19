@@ -53,7 +53,7 @@ vec3 BRDF(vec3 Albedo, vec3 Norm, vec3 EyeDir, vec3 LD) {
     float diff = max(dot(Norm, LD), 0.0);
     vec3 Diffuse = Albedo * diff;
     vec3 halfVector = normalize(EyeDir + LD);  
-    float spec = pow(max(dot(Norm, halfVector), 0.0), 160.0f); 
+    float spec = pow(max(dot(Norm, halfVector), 0.0), mubo.Pow); 
     vec3 Specular = vec3(spec);
     return Diffuse + Specular;
 }
