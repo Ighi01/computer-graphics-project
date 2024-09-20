@@ -243,9 +243,9 @@ class CGProject : public BaseProject {
 		TSun.init(this, "textures/sun.png");
 		TMoon.init(this, "textures/moon.png");
 
-		DPSZs.uniformBlocksInPool = 5;
+		DPSZs.uniformBlocksInPool = 1000;
 		DPSZs.texturesInPool = 1000;
-		DPSZs.setsInPool = 397;
+		DPSZs.setsInPool = 1000;
 
 		std::cout << "Initializing text\n";
 		txt.init(this, &outText);
